@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-09-12 17:00:27.706191",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "doctor",
+  "department",
+  "reference",
+  "class",
+  "item",
+  "number_of_visit",
+  "verified_visits"
+ ],
+ "fields": [
+  {
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Doctor",
+   "options": "Doctor"
+  },
+  {
+   "fetch_from": "doctor.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Link",
+   "label": "Reference",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "doctor.class",
+   "fieldname": "class",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Class",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "number_of_visit",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Number of Visit"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "verified_visits",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Verified visits"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-09-12 17:00:27.706191",
+ "modified_by": "Administrator",
+ "module": "Sales Person Management System",
+ "name": "Doctor Visit Goal",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
