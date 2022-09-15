@@ -32,7 +32,7 @@ app_license = "MIT"
 
 # include js in doctype views
 doctype_js = {
-	"Sales Invoice" : "public/js/sales_invoice_form.js",
+	"Sales Invoice" : "public/js/sales_invoice.js",
 	"Sales Order" : "public/js/sales_invoice_form.js"
 	}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -98,13 +98,11 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Sales Invoice": {
+		"on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
+	}
+}
 
 # Scheduled Tasks
 # ---------------
