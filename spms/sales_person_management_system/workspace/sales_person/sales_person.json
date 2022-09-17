@@ -1,6 +1,13 @@
 {
+ "cards_label": "Shortcuts",
  "category": "Modules",
- "charts": [],
+ "charts": [
+  {
+   "chart_name": "Sales Person Targets",
+   "label": "Collection Overview"
+  }
+ ],
+ "charts_label": "Dashboard",
  "creation": "2022-09-17 10:47:28.797094",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -106,9 +113,54 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Person reports",
+   "link_to": "Sales Person",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Person Commission Summary",
+   "link_to": "Sales Person Commission Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Person reports",
+   "link_to": "Sales Person Target Variance Based On Item Group",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Person-wise Transaction Summary",
+   "link_to": "Sales Person-wise Transaction Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Territory Target Variance Based On Item Group",
+   "link_to": "Territory Target Variance Based On Item Group",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-09-17 11:50:07.586258",
+ "modified": "2022-09-17 15:13:52.069518",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Person",
@@ -151,6 +203,24 @@
    "doc_view": "New",
    "label": "New Collect",
    "link_to": "Collecting",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "Tree",
+   "label": "Sales Person Tree",
+   "link_to": "Sales Person",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Employee",
+   "link_to": "Employee",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "Calendar",
+   "label": "Visiting Calendar",
+   "link_to": "Visit Goal",
    "type": "DocType"
   }
  ],
