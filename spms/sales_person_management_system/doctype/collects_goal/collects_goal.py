@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
-class VisitGoal(Document):
+class CollectsGoal(Document):
 	def before_save(self) -> None:
 		"""
 		if doc.number_of_days == 0:
