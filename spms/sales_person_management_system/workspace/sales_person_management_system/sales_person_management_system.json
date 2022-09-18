@@ -5,10 +5,14 @@
   {
    "chart_name": "Sales Person Targets",
    "label": "Collection Overview"
+  },
+  {
+   "chart_name": "Selling Percentage",
+   "label": "Collection Percentage"
   }
  ],
  "charts_label": "Dashboard",
- "creation": "2022-09-17 10:47:28.797094",
+ "creation": "2022-09-18 14:16:18.363329",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -19,7 +23,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Sales Person",
+ "label": "Sales Person Management System",
  "links": [
   {
    "hidden": 0,
@@ -160,15 +164,21 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-17 15:13:52.069518",
+ "modified": "2022-09-18 14:26:00.720603",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
- "name": "Sales Person",
+ "name": "Sales Person Management System",
  "onboarding": "",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 1,
  "shortcuts": [
+  {
+   "doc_view": "Dashboard",
+   "label": "Dashboard",
+   "link_to": "SPMS",
+   "type": "Dashboard"
+  },
   {
    "doc_view": "List",
    "label": "Visit Goal",

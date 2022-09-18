@@ -2,12 +2,19 @@
  "cards": [
   {
    "card": "Active Customers"
+  },
+  {
+   "card": "Total Incentives"
   }
  ],
  "charts": [
   {
    "chart": "Sales Person Targets",
    "width": "Full"
+  },
+  {
+   "chart": "Selling Percentage",
+   "width": "Half"
   }
  ],
  "creation": "2022-09-17 14:06:37.128526",
@@ -17,7 +24,7 @@
  "idx": 0,
  "is_default": 1,
  "is_standard": 1,
- "modified": "2022-09-17 14:50:20.109511",
+ "modified": "2022-09-18 15:22:40.511251",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "SPMS",
