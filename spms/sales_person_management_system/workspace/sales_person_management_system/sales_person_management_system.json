@@ -5,10 +5,6 @@
   {
    "chart_name": "Sales Person Targets",
    "label": "Collection Overview"
-  },
-  {
-   "chart_name": "Selling Percentage",
-   "label": "Collection Percentage"
   }
  ],
  "charts_label": "Dashboard",
@@ -164,7 +160,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-18 14:26:00.720603",
+ "modified": "2022-09-19 15:44:33.717092",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Person Management System",
