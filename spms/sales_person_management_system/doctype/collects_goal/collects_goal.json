@@ -19,6 +19,13 @@
   "number_of_days",
   "target_section",
   "customer_collects_goal",
+  "section_break_13",
+  "total_targets",
+  "column_break_15",
+  "total_collected",
+  "incentives",
+  "commissions_section",
+  "commissions_range",
   "amended_from"
  ],
  "fields": [
@@ -97,14 +104,59 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Visit Goal",
+   "options": "Collects Goal",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_targets",
+   "fieldtype": "Currency",
+   "label": "Total Targets",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_collected",
+   "fieldtype": "Currency",
+   "label": "Total Collected",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "incentives",
+   "fieldtype": "Currency",
+   "label": "Incentives",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "commissions_section",
+   "fieldtype": "Section Break",
+   "label": "Commissions"
+  },
+  {
+   "description": "The Commission Range On Which the Value of the Incentives is Based",
+   "fieldname": "commissions_range",
+   "fieldtype": "Table",
+   "label": "Commissions range",
+   "options": "Commissions range"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-17 11:06:08.439025",
+ "modified": "2022-09-20 09:45:55.561232",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
