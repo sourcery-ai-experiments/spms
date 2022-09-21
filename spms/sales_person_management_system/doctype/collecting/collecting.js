@@ -100,4 +100,4 @@ frappe.ui.form.on('Collecting', {
             d.show();
     	}).addClass("btn-primary").css({});
 	}
-});~
+});
