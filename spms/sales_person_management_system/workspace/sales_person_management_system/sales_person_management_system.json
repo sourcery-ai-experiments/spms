@@ -125,7 +125,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Person Commission Summary",
    "link_to": "Sales Person Commission Summary",
    "link_type": "Report",
@@ -134,7 +134,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Person reports",
    "link_to": "Sales Person Target Variance Based On Item Group",
    "link_type": "Report",
@@ -143,7 +143,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Sales Person-wise Transaction Summary",
    "link_to": "Sales Person-wise Transaction Summary",
    "link_type": "Report",
@@ -152,7 +152,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Territory Target Variance Based On Item Group",
    "link_to": "Territory Target Variance Based On Item Group",
    "link_type": "Report",
@@ -160,7 +160,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-21 16:05:07.833269",
+ "modified": "2022-09-22 09:50:08.298527",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Person Management System",
