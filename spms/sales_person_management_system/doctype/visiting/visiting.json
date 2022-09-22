@@ -34,17 +34,17 @@
   {
    "fieldname": "visited_by",
    "fieldtype": "Link",
-   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Visited By",
    "options": "Employee",
    "reqd": 1
   },
   {
+   "columns": 1,
    "fetch_from": "visited_by.first_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Full Name",
    "read_only": 1,
    "reqd": 1
@@ -102,9 +102,11 @@
    "read_only": 1
   },
   {
+   "columns": 1,
    "fetch_from": "visited_by.territory",
    "fieldname": "territory",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Territory",
    "read_only": 1,
    "reqd": 1
@@ -112,6 +114,8 @@
   {
    "fieldname": "doctor_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Doctor Name",
    "options": "Doctor",
    "reqd": 1
@@ -139,6 +143,8 @@
   {
    "fieldname": "item",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Item",
    "options": "Item",
    "reqd": 1
@@ -182,13 +188,14 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "SPM-VIS-.YYYY.-"
+   "options": "SPM-VIS-.YYYY.-",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-22 14:24:12.904900",
+ "modified": "2022-09-22 21:14:57.302759",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visiting",

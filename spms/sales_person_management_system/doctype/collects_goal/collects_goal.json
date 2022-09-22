@@ -31,7 +31,6 @@
   {
    "fieldname": "sales_person",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Sales Person",
    "options": "Employee",
@@ -41,6 +40,7 @@
    "fetch_from": "sales_person.first_name",
    "fieldname": "fullname",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "FullName",
    "read_only": 1,
    "reqd": 1
@@ -64,6 +64,7 @@
   {
    "fieldname": "from",
    "fieldtype": "Date",
+   "in_standard_filter": 1,
    "label": "From"
   },
   {
@@ -73,6 +74,7 @@
   {
    "fieldname": "to",
    "fieldtype": "Date",
+   "in_standard_filter": 1,
    "label": "To"
   },
   {
@@ -89,6 +91,7 @@
   {
    "fieldname": "customer_collects_goal",
    "fieldtype": "Table",
+   "in_standard_filter": 1,
    "label": "Customer Collects Goal",
    "options": "Customer Collects Goal"
   },
@@ -109,6 +112,7 @@
   {
    "fieldname": "total_targets",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Total Targets",
    "options": "Company:company:default_currency",
    "precision": "2",
@@ -119,8 +123,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "bold": 1,
    "fieldname": "total_collected",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Total Collected",
    "options": "Company:company:default_currency",
    "precision": "2",
@@ -129,6 +135,7 @@
   {
    "fieldname": "incentives",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Incentives",
    "options": "Company:company:default_currency",
    "precision": "2",
@@ -156,7 +163,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-22 14:32:39.087184",
+ "modified": "2022-09-22 21:40:48.281028",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
@@ -180,6 +187,5 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "fullname",
  "track_changes": 1
 }
