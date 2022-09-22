@@ -182,6 +182,10 @@ user_data_fields = [
 
 # Translation
 # --------------------------------
+fixtures = [
+	
+	"Translation"
+	]
 
 # Make link fields search translated document names for these DocTypes
 # Recommended only for DocTypes which have limited documents with untranslated names
