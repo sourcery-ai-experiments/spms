@@ -1,13 +1,12 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "field:goal_name",
+ "autoname": "naming_series:",
  "creation": "2022-09-17 11:06:08.439025",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "goal_name",
+  "naming_series",
   "sales_person",
   "fullname",
   "column_break_3",
@@ -30,16 +29,9 @@
  ],
  "fields": [
   {
-   "fieldname": "goal_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Goal Name",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
    "fieldname": "sales_person",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Sales Person",
    "options": "Employee",
@@ -50,7 +42,8 @@
    "fieldname": "fullname",
    "fieldtype": "Data",
    "label": "FullName",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "column_break_3",
@@ -152,15 +145,22 @@
    "fieldtype": "Table",
    "label": "Commissions range",
    "options": "Commissions range"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "SPM-CG-.YYYY.-",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-20 09:45:55.561232",
+ "modified": "2022-09-22 14:32:39.087184",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
- "name_case": "Title Case",
+ "name_case": "UPPER CASE",
  "owner": "Administrator",
  "permissions": [
   {
@@ -176,8 +176,10 @@
    "write": 1
   }
  ],
+ "search_fields": "fullname",
+ "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "goal_name",
+ "title_field": "fullname",
  "track_changes": 1
 }
