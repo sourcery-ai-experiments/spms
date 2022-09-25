@@ -20,7 +20,7 @@ class Collecting(Document):
 		# find if Doctor and Item is Match with Goal
 		for i in collect_goal_doc.customer_collects_goal:
 			if(i.customer == self.customer):
-				i.verified_collects = i.verified_collects + self.amount
+				i.verified_collects = i.verified_collects + self.amount_other_currency
 				break
 
 		# Calculate total amount for Verified Collects
@@ -60,7 +60,7 @@ class Collecting(Document):
 		# find if Doctor and Item is Match with Goal
 		for i in collect_goal_doc.customer_collects_goal:
 			if(i.customer == self.customer):
-				i.verified_collects = i.verified_collects - self.amount
+				i.verified_collects = i.verified_collects - self.amount_other_currency
 				break
 
 		# Calculate total amount for Verified Collects
@@ -83,3 +83,4 @@ class Collecting(Document):
 		# set total value for Total Collected in Collected Goal
 		collect_goal_doc.incentives = frappe.utils.flt(total_incentives)
 		collect_goal_doc.save()
+		

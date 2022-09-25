@@ -50,7 +50,12 @@ frappe.ui.form.on('Collecting', {
 // Calculate Amount On Change Of Amount Field
 frappe.ui.form.on('Collecting', {
 	amount: function (frm) {
-		calculateTheAmount(frm);
+		if (frm.doc.amount_currency != frm.doc.company_currency) {
+			calculateTheAmount(frm);
+		} else {
+			frm.set_value('amount_other_currency', frm.doc.amount);
+			frm.refresh();
+		}
 	}
 });
 
@@ -66,6 +71,9 @@ frappe.ui.form.on('Collecting', {
 				frm.refresh();
 			});
 			calculateTheAmount(frm);
+		} else {
+			frm.set_value('amount_other_currency', frm.doc.amount);
+			frm.refresh();
 		}
 	}
 });

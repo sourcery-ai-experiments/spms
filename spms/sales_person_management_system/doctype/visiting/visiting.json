@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2022-09-12 17:03:59.115435",
@@ -16,6 +17,7 @@
   "date",
   "visited_doctor_section",
   "doctor_name",
+  "doctor_full_name",
   "department",
   "class",
   "column_break_11",
@@ -28,7 +30,9 @@
   "latitude",
   "my_location",
   "current_address",
-  "amended_from"
+  "amended_from",
+  "route",
+  "published"
  ],
  "fields": [
   {
@@ -116,7 +120,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Doctor Name",
+   "label": "Doctor",
    "options": "Doctor",
    "reqd": 1
   },
@@ -190,12 +194,32 @@
    "label": "Series",
    "options": "SPM-VIS-.YYYY.-",
    "reqd": 1
+  },
+  {
+   "fetch_from": "doctor_name.full_name",
+   "fieldname": "doctor_full_name",
+   "fieldtype": "Data",
+   "label": "Doctor Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "default": "0",
+   "fieldname": "published",
+   "fieldtype": "Check",
+   "label": "Published"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "published",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-22 21:14:57.302759",
+ "modified": "2022-09-25 12:53:12.632046",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visiting",
@@ -214,6 +238,7 @@
    "write": 1
   }
  ],
+ "route": "visiting",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1,

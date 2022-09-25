@@ -160,8 +160,8 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-22 15:23:07.633899",
- "modified_by": "Administrator",
+ "modified": "2022-09-24 13:28:36.964902",
+ "modified_by": "osama@gmail.com",
  "module": "Sales Person Management System",
  "name": "Sales Person Management System",
  "onboarding": "",
@@ -221,12 +221,6 @@
    "doc_view": "List",
    "label": "Employee",
    "link_to": "Employee",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "Calendar",
-   "label": "Visiting Calendar",
-   "link_to": "Visit Goal",
    "type": "DocType"
   }
  ],
