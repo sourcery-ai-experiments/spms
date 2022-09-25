@@ -14,6 +14,8 @@
   "company",
   "company_currency",
   "date",
+  "column_break_8",
+  "qrcode_html",
   "customer_details_section",
   "qr_code",
   "customer",
@@ -38,7 +40,6 @@
   "image",
   "route",
   "published",
-  "qrcode_html",
   "amended_from"
  ],
  "fields": [
@@ -210,6 +211,7 @@
   {
    "fieldname": "qr_code",
    "fieldtype": "Image",
+   "hidden": 1,
    "label": "QR Code",
    "options": "image"
   },
@@ -222,11 +224,13 @@
   {
    "fieldname": "longitude",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Longitude"
   },
   {
    "fieldname": "latitude",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Latitude"
   },
   {
@@ -242,12 +246,14 @@
   {
    "fieldname": "image",
    "fieldtype": "Attach Image",
+   "hidden": 1,
    "label": "image"
   },
   {
    "fieldname": "route",
    "fieldtype": "Data",
-   "label": "Route"
+   "label": "Route",
+   "read_only": 1
   },
   {
    "default": "1",
@@ -259,7 +265,11 @@
    "fieldname": "qrcode_html",
    "fieldtype": "HTML",
    "label": "QRCode HTML",
-   "options": "<img alt=\"...\" class=\"rounded\" height=\"100\" src=\"{{ doc.image }}\" width=\"100\">"
+   "options": "<img alt=\"QRCode Will Show Here\" class=\"rounded\" height=\"100\" src=\"{{ doc.image }}\" width=\"100\">"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
   }
  ],
  "has_web_view": 1,
@@ -276,7 +286,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-09-25 16:11:29.342553",
+ "modified": "2022-09-25 16:37:42.223042",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",

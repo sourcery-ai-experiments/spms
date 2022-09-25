@@ -1,6 +1,7 @@
 # Copyright (c) 2022, aoai and contributors
 # For license information, please see license.txt
 
+from email.mime import image
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 from spms.methods.utils import generate_qrcode
@@ -88,7 +89,11 @@ class Collecting(WebsiteGenerator):
 		collect_goal_doc.save()
 
 	def before_submit(self):
-		self.route = hashlib.sha1(str(self.name).encode()).hexdigest()
-		site_name = cstr(frappe.local.site)
-		image_path = generate_qrcode(site_name=site_name, route_name=self.route)
-		self.image = image_path
+		"""
+		It takes the name of the route and generates a QR code image for it
+		"""
+		if not self.image:
+			self.route = hashlib.sha1(str(self.name).encode()).hexdigest()
+			site_name = cstr(frappe.local.site)
+			image_path = generate_qrcode(site_name=site_name, route_name=self.route)
+			self.image = image_path
