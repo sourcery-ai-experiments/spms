@@ -38,6 +38,7 @@
   "image",
   "route",
   "published",
+  "qrcode_html",
   "amended_from"
  ],
  "fields": [
@@ -209,7 +210,6 @@
   {
    "fieldname": "qr_code",
    "fieldtype": "Image",
-   "hidden": 1,
    "label": "QR Code",
    "options": "image"
   },
@@ -245,18 +245,26 @@
    "label": "image"
   },
   {
-    "fieldname": "route",
-    "fieldtype": "Data",
-    "label": "Route"
-   },
-   {
-    "default": "1",
-    "fieldname": "published",
-    "fieldtype": "Check",
-    "label": "Published"
-   }
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "default": "1",
+   "fieldname": "published",
+   "fieldtype": "Check",
+   "label": "Published"
+  },
+  {
+   "fieldname": "qrcode_html",
+   "fieldtype": "HTML",
+   "label": "QRCode HTML",
+   "options": "<img alt=\"...\" class=\"rounded\" height=\"100\" src=\"{{ doc.image }}\" width=\"100\">"
+  }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "published",
  "is_submittable": 1,
  "links": [
   {
@@ -268,8 +276,7 @@
    "link_fieldname": "company"
   }
  ],
- "has_web_view": 1,
- "modified": "2022-09-24 14:47:18.770781",
+ "modified": "2022-09-25 16:11:29.342553",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
@@ -289,6 +296,7 @@
    "write": 1
   }
  ],
+ "route": "collecting",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1,

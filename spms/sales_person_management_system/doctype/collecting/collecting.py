@@ -2,9 +2,12 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
+from spms.methods.utils import generate_qrcode
+from frappe.utils import cstr
+import hashlib
 
-class Collecting(Document):
+class Collecting(WebsiteGenerator):
 	def on_submit(self) -> None:
 		# Get name of Collects Goal Document Depend on Sales Person and Date
 		collect_goal_name = frappe.db.get_value('Collects Goal', {
@@ -83,4 +86,9 @@ class Collecting(Document):
 		# set total value for Total Collected in Collected Goal
 		collect_goal_doc.incentives = frappe.utils.flt(total_incentives)
 		collect_goal_doc.save()
-		
+
+	def before_submit(self):
+		self.route = hashlib.sha1(str(self.name).encode()).hexdigest()
+		site_name = cstr(frappe.local.site)
+		image_path = generate_qrcode(site_name=site_name, route_name=self.route)
+		self.image = image_path
