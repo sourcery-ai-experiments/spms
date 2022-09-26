@@ -4,22 +4,22 @@
    "card": "Active Customers"
   },
   {
-   "card": "Total Incentives"
-  },
-  {
    "card": "Sales Orders to Bill"
   },
   {
    "card": "Sales Orders to Deliver"
+  },
+  {
+   "card": "Total Outgoing Bills"
   }
  ],
  "charts": [
   {
-   "chart": "Sales Person Targets",
+   "chart": "Collecting Analysis",
    "width": "Full"
   },
   {
-   "chart": "Selling Percentage",
+   "chart": "Visitings By Item",
    "width": "Half"
   },
   {
@@ -54,7 +54,7 @@
  "idx": 0,
  "is_default": 1,
  "is_standard": 1,
- "modified": "2022-09-19 15:27:34.616698",
+ "modified": "2022-09-26 13:04:25.521797",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "SPMS",

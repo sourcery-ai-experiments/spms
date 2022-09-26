@@ -3,11 +3,11 @@
  "category": "Modules",
  "charts": [
   {
-   "chart_name": "Sales Person Targets",
+   "chart_name": "Collecting Analysis",
    "label": "Collection Overview"
   },
   {
-   "chart_name": "Territory Wise Sales"
+   "chart_name": "Weekly Collecting"
   }
  ],
  "charts_label": "Dashboard",
@@ -163,7 +163,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-26 11:05:01.667063",
+ "modified": "2022-09-26 13:31:32.751331",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Person Management System",
