@@ -32,9 +32,9 @@ app_license = "MIT"
 
 # include js in doctype views
 doctype_js = {
-	"Sales Invoice" : "public/js/sales_invoice.js",
-	"Sales Order" : "public/js/sales_invoice_form.js"
-	}
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Sales Order": "public/js/sales_invoice_form.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -99,9 +99,9 @@ doctype_js = {
 # Hook on document methods and events
 
 doc_events = {
-	"Sales Invoice": {
-		"on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
-	}
+    "Sales Invoice": {
+        "on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
+    }
 }
 
 # Scheduled Tasks
@@ -153,24 +153,24 @@ doc_events = {
 # --------------------
 
 user_data_fields = [
-	{
-		"doctype": "{doctype_1}",
-		"filter_by": "{filter_by}",
-		"redact_fields": ["{field_1}", "{field_2}"],
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_2}",
-		"filter_by": "{filter_by}",
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_3}",
-		"strict": False,
-	},
-	{
-		"doctype": "{doctype_4}"
-	}
+    {
+        "doctype": "{doctype_1}",
+        "filter_by": "{filter_by}",
+        "redact_fields": ["{field_1}", "{field_2}"],
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_2}",
+        "filter_by": "{filter_by}",
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_3}",
+        "strict": False,
+    },
+    {
+        "doctype": "{doctype_4}"
+    }
 ]
 
 # Authentication and authorization
@@ -183,9 +183,11 @@ user_data_fields = [
 # Translation
 # --------------------------------
 fixtures = [
-	
-	"Translation"
-	]
+
+    "Translation",
+    "Territory",
+
+]
 
 # Make link fields search translated document names for these DocTypes
 # Recommended only for DocTypes which have limited documents with untranslated names
