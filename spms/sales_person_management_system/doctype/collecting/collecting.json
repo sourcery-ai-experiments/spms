@@ -267,7 +267,7 @@
    "fieldname": "qrcode_html",
    "fieldtype": "HTML",
    "label": "QRCode HTML",
-   "options": "<img alt=\"QRCode Will Show Here\" class=\"rounded\" height=\"100\" src=\"{{ doc.image }}\" width=\"100\">"
+   "options": "<img alt=\"QRCode Will Show Here\" class=\"rounded\" height=\"150\" src=\"{{ doc.image }}\" width=\"150\">"
   },
   {
    "fieldname": "column_break_8",
@@ -295,7 +295,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-09-26 12:26:33.765392",
+ "modified": "2022-09-26 16:15:17.400988",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
