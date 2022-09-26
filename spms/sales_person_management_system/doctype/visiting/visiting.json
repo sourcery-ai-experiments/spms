@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2022-09-12 17:03:59.115435",
@@ -30,9 +29,7 @@
   "latitude",
   "my_location",
   "current_address",
-  "amended_from",
-  "route",
-  "published"
+  "amended_from"
  ],
  "fields": [
   {
@@ -201,25 +198,11 @@
    "fieldtype": "Data",
    "label": "Doctor Full Name",
    "read_only": 1
-  },
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route"
-  },
-  {
-   "default": "0",
-   "fieldname": "published",
-   "fieldtype": "Check",
-   "label": "Published"
   }
  ],
- "has_web_view": 1,
- "index_web_pages_for_search": 1,
- "is_published_field": "published",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-25 12:53:12.632046",
+ "modified": "2022-09-26 11:54:02.837239",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visiting",
@@ -238,7 +221,6 @@
    "write": 1
   }
  ],
- "route": "visiting",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1,

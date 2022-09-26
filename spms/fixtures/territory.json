@@ -18,14 +18,25 @@
   "docstatus": 0,
   "doctype": "Territory",
   "is_group": 1,
-  "modified": "2022-09-26 09:26:24.596645",
+  "modified": "2022-09-26 11:05:59.196696",
   "name": "Iraq",
   "old_parent": "All Territories",
   "parent": null,
   "parent_territory": "All Territories",
   "parentfield": null,
   "parenttype": null,
-  "targets": [],
+  "targets": [
+   {
+    "distribution_id": "MM",
+    "fiscal_year": "2022",
+    "item_group": "Products",
+    "parent": "Iraq",
+    "parentfield": "targets",
+    "parenttype": "Territory",
+    "target_amount": 18000.0,
+    "target_qty": 1000.0
+   }
+  ],
   "territory_manager": null,
   "territory_name": "Iraq"
  },

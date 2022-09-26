@@ -32,7 +32,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "sales_person.first_name",
+   "fetch_from": "sales_person.employee_name",
    "fieldname": "fullname",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -59,7 +59,8 @@
    "fieldname": "from",
    "fieldtype": "Date",
    "in_standard_filter": 1,
-   "label": "From"
+   "label": "From",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_7",
@@ -69,7 +70,8 @@
    "fieldname": "to",
    "fieldtype": "Date",
    "in_standard_filter": 1,
-   "label": "To"
+   "label": "To",
+   "reqd": 1
   },
   {
    "fieldname": "number_of_days",
@@ -116,7 +118,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-24 14:03:30.370327",
+ "modified": "2022-09-26 11:54:35.771799",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",

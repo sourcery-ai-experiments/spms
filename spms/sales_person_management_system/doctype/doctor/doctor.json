@@ -43,7 +43,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Department",
+   "label": "Speciality",
    "options": "Doctor Department",
    "reqd": 1
   },
@@ -101,7 +101,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-22 14:38:38.332808",
+ "modified": "2022-09-26 11:50:21.582752",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Doctor",

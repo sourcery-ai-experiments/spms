@@ -12,6 +12,7 @@
  "fields": [
   {
    "default": "0",
+   "description": "Enter Value in Percentage (%)",
    "fieldname": "from_",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -21,6 +22,7 @@
   },
   {
    "default": "0",
+   "description": "Enter Value in Percentage (%)",
    "fieldname": "to_",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -30,6 +32,7 @@
   },
   {
    "default": "0",
+   "description": "Enter Value in Percentage (%)",
    "fieldname": "commission",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -41,7 +44,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-09-20 09:06:43.675011",
+ "modified": "2022-09-26 11:57:42.256208",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Commissions range",

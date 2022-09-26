@@ -10,6 +10,7 @@
   "naming_series",
   "visited_by",
   "full_name",
+  "sales_person_territory",
   "column_break_3",
   "company",
   "company_currency",
@@ -52,7 +53,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "visited_by.first_name",
+   "fetch_from": "visited_by.employee_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -270,6 +271,13 @@
   {
    "fieldname": "column_break_8",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "visited_by.territory",
+   "fieldname": "sales_person_territory",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Sales Person Territory"
   }
  ],
  "has_web_view": 1,
@@ -286,7 +294,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-09-25 16:37:42.223042",
+ "modified": "2022-09-26 12:05:46.929416",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",

@@ -89,6 +89,7 @@
    "label": "Target"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "customer_collects_goal",
    "fieldtype": "Table",
    "in_standard_filter": 1,
@@ -163,7 +164,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-22 21:40:48.281028",
+ "modified": "2022-09-26 11:55:58.285146",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",

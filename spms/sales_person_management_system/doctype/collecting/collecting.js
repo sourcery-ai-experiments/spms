@@ -1,6 +1,20 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+
+frappe.ui.form.on('Collecting', {
+	setup:function(frm){
+	    frm.set_query("customer", function(){
+	        return{
+	            filters: [
+	                ["Customer", "territory", "in", frm.doc.sales_person_territory]     
+	           ]
+	        };
+	    });
+	}
+});
+
+
 // Get Location From The User
 frappe.ui.form.on('Collecting', {
 	onload(frm) {
