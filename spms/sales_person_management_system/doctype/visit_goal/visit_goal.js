@@ -38,3 +38,25 @@ frappe.ui.form.on('Visit Goal', {
         });
 	}
 });
+
+// claculating the number of visit depending on the class value(A,B,C,D)
+frappe.ui.form.on("Doctor Visit Goal",{
+	class : function(frm, cdt, cdn) {
+		let child = locals[cdt][cdn];
+		switch(child.class){
+			case "A":
+				child.number_of_visit = 3
+				break
+			case "B":
+				child.number_of_visit = 2
+				break
+			case "C":
+				child.number_of_visit = 1
+				break
+			case "D":
+				child.number_of_visit = 1
+				break
+		}
+		frm.refresh()
+	}
+});
