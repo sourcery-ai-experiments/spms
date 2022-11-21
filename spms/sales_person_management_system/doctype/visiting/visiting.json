@@ -143,11 +143,10 @@
   },
   {
    "fieldname": "item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
+   "fieldtype": "Table",
    "in_standard_filter": 1,
    "label": "Item",
-   "options": "Item",
+   "options": "item table",
    "reqd": 1
   },
   {
@@ -202,10 +201,11 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-26 11:54:02.837239",
+ "modified": "2022-11-17 15:02:44.950968",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visiting",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -223,6 +223,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1

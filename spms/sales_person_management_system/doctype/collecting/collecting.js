@@ -123,7 +123,7 @@ frappe.ui.form.on('Collecting', {
 			return {
 				filters: [
 					['Sales Invoice', 'customer', 'in', frm.doc.customer],
-					['Sales Invoice', 'status', '!=', 'Paid'],
+					['Sales Invoice', 'status', '!=', 'Paid']
 				]
 			};
 		});
@@ -158,7 +158,7 @@ frappe.ui.form.on('Collecting', {
 					primary_action(values) {
 						frappe.db.get_list('Sales Invoice', {
 							filters: {
-								'status': ['!=', 'Paid'],
+								'status': ['!=', 'Draft'],
 								'customer': values.customer_name
 							},
 							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status'],
