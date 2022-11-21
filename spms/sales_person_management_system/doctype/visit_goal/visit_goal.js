@@ -58,19 +58,6 @@ frappe.ui.form.on("Doctor Visit Goal",{
 				break
 		}
 		frm.refresh()
-		// setTimeout(()=>{
-		// 	frm.call({
-		// 		doc : frm.doc,
-		// 		method : "get_verified_visits",
-		// 		args : {
-		// 			index : child.idx - 1
-		// 		},
-		// 		callback : function(r){
-		// 			child.verified_visits = r.message
-		// 			frm.refresh()
-		// 		}
-		// 	})
-		// },100)
 	}
 });
 

@@ -5,10 +5,6 @@ import frappe
 from frappe.model.document import Document
 
 class VisitGoal(Document):
-	# @frappe.whitelist()
-	# def get_verified_visits(self,index):
-	# 	return str(len(frappe.get_list("Visiting",filters = {"doctor_name" : str(self.get("doctor_visit_goal")[index].doctor)})))
-
 	def before_save(self) -> None:
 		"""
 		if doc.number_of_days == 0:
