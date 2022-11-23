@@ -71,4 +71,3 @@ frappe.ui.form.on('Visiting', {
 		}
 	}
 });
-
