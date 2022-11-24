@@ -159,6 +159,7 @@ frappe.ui.form.on('Collecting', {
 						frappe.db.get_list('Sales Invoice', {
 							filters: {
 								'status': ['!=', 'Draft'],
+								'outstanding_amount': ['>', 0],
 								'customer': values.customer_name
 							},
 							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status'],
