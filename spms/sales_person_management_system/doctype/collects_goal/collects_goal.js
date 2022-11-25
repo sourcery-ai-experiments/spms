@@ -1,6 +1,8 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+// traking changes in the child table 'Customer Collects Goal' which is
+let total = 0
 
 frappe.ui.form.on('Collects Goal', {
 	"to": function (frm) {
@@ -11,17 +13,28 @@ frappe.ui.form.on('Collects Goal', {
 		// find diff between in and out date
 		let diff_days = frappe.datetime.get_day_diff(frm.doc.to, frm.doc.from);
 		frm.set_value("number_of_days", diff_days);
+	},
+	fixed_target : function(frm){
+		frm.set_value("total_targets", frm.doc.fixed_target);
+		frm.refresh();
+	},
+	additional_target_int : function(frm){
+		frm.set_value("total_targets", total + frm.doc.additional_target_int);
+		frm.refresh();
 	}
 })
 
 // Trigger When Add New Row To Table
 frappe.ui.form.on('Customer Collects Goal', {
 	customer_collects_goal_add: function (frm, cdt, cdn) {
-		var total = 0;
+		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		frm.set_value("total_targets", total);
+		if(frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		else
+			frm.set_value("total_targets", total);
 		frm.refresh();
 	}
 });
@@ -29,11 +42,14 @@ frappe.ui.form.on('Customer Collects Goal', {
 // Trigger When Remove Row Table
 frappe.ui.form.on('Customer Collects Goal', {
 	customer_collects_goal_remove: function (frm, cdt, cdn) {
-		var total = 0;
+		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		frm.set_value("total_targets", total);
+		if(frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		else
+			frm.set_value("total_targets", total);
 		frm.refresh();
 	}
 });
@@ -41,11 +57,14 @@ frappe.ui.form.on('Customer Collects Goal', {
 // Trigger On Every Event On [amount_of_money] Field
 frappe.ui.form.on('Customer Collects Goal', {
 	amount_of_money: function (frm, cdt, cdn) {
-		var total = 0;
+		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		frm.set_value("total_targets", total);
+		if(frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		else
+			frm.set_value("total_targets", total);
 		frm.refresh();
 	}
 });
