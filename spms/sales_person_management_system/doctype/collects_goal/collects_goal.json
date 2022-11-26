@@ -199,8 +199,9 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-25 18:08:02.825281",
+ "modified": "2022-11-26 11:11:53.734807",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
