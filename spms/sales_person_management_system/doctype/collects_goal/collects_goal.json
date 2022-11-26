@@ -203,7 +203,7 @@
    "fieldname": "achievement",
    "fieldtype": "HTML",
    "label": "Achievement",
-   "options": "<div class=\"progress\">\n  <div class=\"progress-bar\" role=\"progressbar\" style=\"\">{{doc.percentage}}%</div>\n</div>"
+   "options": "<div class=\"progress\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\" style=\"\"></div>\n</div>"
   },
   {
    "fieldname": "section_break_2",
@@ -213,7 +213,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-26 14:59:10.000804",
+ "modified": "2022-11-26 15:57:28.018697",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",

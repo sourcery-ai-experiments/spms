@@ -60,3 +60,24 @@ frappe.ui.form.on("Doctor Visit Goal",{
 		frm.refresh()
 	}
 });
+
+// making the progress bar for the Visit Goal doctype 
+frappe.ui.form.on('Visit Goal', {
+	refresh : function(frm){
+		set_css(frm);
+	}
+})
+
+function set_css(frm){
+	let total_number_of_visits = 0
+	let total_verified_visits = 0
+
+	for(let row of frm.doc.doctor_visit_goal){
+		total_number_of_visits += row.number_of_visit
+		total_verified_visits += row.verified_visits
+	}
+	let percentage = (total_verified_visits / total_number_of_visits) * 100
+	document.getElementById("percentage").style.width = `${percentage}%`
+	document.getElementById("percentage").style.backgroundColor = `#FF5858`
+	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
+}

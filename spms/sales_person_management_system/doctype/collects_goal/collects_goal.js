@@ -85,3 +85,17 @@ frappe.ui.form.on('Commissions range', {
 		});
 	}
 });
+
+// making the progress bar for the Collects Goal doctype 
+frappe.ui.form.on('Collects Goal', {
+	refresh : function(frm){
+		set_css(frm);
+	}
+})
+
+function set_css(frm){
+	let percentage = (frm.doc.total_collected / frm.doc.total_targets)*100
+	document.getElementById("percentage").style.width = `${percentage}%`
+	document.getElementById("percentage").style.backgroundColor = `#FF5858`
+	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
+}
