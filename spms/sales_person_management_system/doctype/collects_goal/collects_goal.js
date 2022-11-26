@@ -14,11 +14,11 @@ frappe.ui.form.on('Collects Goal', {
 		let diff_days = frappe.datetime.get_day_diff(frm.doc.to, frm.doc.from);
 		frm.set_value("number_of_days", diff_days);
 	},
-	fixed_target : function(frm){
+	fixed_target: function (frm) {
 		frm.set_value("total_targets", frm.doc.fixed_target);
 		frm.refresh();
 	},
-	additional_target_int : function(frm){
+	additional_target_int: function (frm) {
 		frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		frm.refresh();
 	}
@@ -31,8 +31,8 @@ frappe.ui.form.on('Customer Collects Goal', {
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		if(frm.doc.target_type == "Debt + Additional Target")
-			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		if (frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		else
 			frm.set_value("total_targets", total);
 		frm.refresh();
@@ -46,8 +46,8 @@ frappe.ui.form.on('Customer Collects Goal', {
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		if(frm.doc.target_type == "Debt + Additional Target")
-			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		if (frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		else
 			frm.set_value("total_targets", total);
 		frm.refresh();
@@ -61,8 +61,8 @@ frappe.ui.form.on('Customer Collects Goal', {
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
 			total += flt(d.amount_of_money);
 		});
-		if(frm.doc.target_type == "Debt + Additional Target")
-			frm.set_value("total_targets", total + frm.doc.additional_target_int );
+		if (frm.doc.target_type == "Debt + Additional Target")
+			frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		else
 			frm.set_value("total_targets", total);
 		frm.refresh();
@@ -88,13 +88,13 @@ frappe.ui.form.on('Commissions range', {
 
 // making the progress bar for the Collects Goal doctype 
 frappe.ui.form.on('Collects Goal', {
-	refresh : function(frm){
+	refresh: function (frm) {
 		set_css(frm);
 	}
 })
 
-function set_css(frm){
-	let percentage = (frm.doc.total_collected / frm.doc.total_targets)*100
+function set_css(frm) {
+	let percentage = (frm.doc.total_collected / frm.doc.total_targets) * 100
 	document.getElementById("percentage").style.width = `${percentage}%`
 	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
 }
