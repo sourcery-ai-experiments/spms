@@ -94,6 +94,15 @@ frappe.ui.form.on('Commissions range', {
 // making the progress bar for the Collects Goal doctype 
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
+		/* A query that filters the customers based on the territory of the current form. */
+		frm.set_query('customer', 'customer_collects_goal', function (doc, cdt, cdn) {
+			var d = locals[cdt][cdn];
+			return {
+				filters: [
+					['Customer', 'territory', 'in', frm.doc.territory]
+				]
+			};
+		});
 		set_css(frm);
 	}
 })

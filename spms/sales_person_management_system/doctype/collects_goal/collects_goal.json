@@ -14,6 +14,7 @@
   "fullname",
   "column_break_3",
   "company",
+  "territory",
   "period_section",
   "from",
   "column_break_7",
@@ -215,12 +216,19 @@
    "fieldname": "achievement_section",
    "fieldtype": "Section Break",
    "label": "Achievement"
+  },
+  {
+   "fetch_from": "sales_person.territory",
+   "fieldname": "territory",
+   "fieldtype": "Data",
+   "label": "Territory",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-27 00:15:12.866462",
+ "modified": "2022-11-27 00:35:06.544811",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
