@@ -2,14 +2,14 @@
  "charts": [
   {
    "chart_name": "Collecting Analysis",
-   "label": "Collection Overview"
+   "label": "Count"
   },
   {
    "chart_name": "Weekly Collecting",
-   "label": "Weekly Collecting"
+   "label": "Amount"
   }
  ],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\">spms workspace</span>\",\"col\":12}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Collection Overview\",\"col\":12}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Weekly Collecting\",\"col\":12}},{\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Sales Person Target Tracking</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Goal\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visiting\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Visit\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collects Goal\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collecting\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Collect\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Person Tree\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Shortcuts</span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Doctor\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Visiting Target\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Collecting Target\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Sales Person reports\",\"col\":4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\">SPMS Workspace</span>\",\"col\":12}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Count\",\"col\":6}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Amount\",\"col\":6}},{\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Sales Person Target Tracking</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Goal\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visiting\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Visit\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collects Goal\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collecting\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Collect\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Person Tree\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Shortcuts</span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Doctor\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Visiting Target\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Collecting Target\",\"col\":4}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Key Reports</span>\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Sales Person reports\",\"col\":4}}]",
  "creation": "2022-11-22 19:45:02.004676",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -162,7 +162,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-11-25 20:10:12.447432",
+ "modified": "2022-11-26 11:04:09.756646",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "spms workspace",
