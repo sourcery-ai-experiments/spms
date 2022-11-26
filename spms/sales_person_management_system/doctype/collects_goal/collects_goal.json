@@ -211,6 +211,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "depends_on": "eval:doc.name != \"new-collects-goal-1\"",
    "fieldname": "achievement_section",
    "fieldtype": "Section Break",
    "label": "Achievement"
@@ -219,7 +220,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-26 23:25:58.115950",
+ "modified": "2022-11-27 00:15:12.866462",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
