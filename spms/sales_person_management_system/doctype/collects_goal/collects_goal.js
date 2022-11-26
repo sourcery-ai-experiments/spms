@@ -96,6 +96,5 @@ frappe.ui.form.on('Collects Goal', {
 function set_css(frm){
 	let percentage = (frm.doc.total_collected / frm.doc.total_targets)*100
 	document.getElementById("percentage").style.width = `${percentage}%`
-	document.getElementById("percentage").style.backgroundColor = `#FF5858`
 	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
 }

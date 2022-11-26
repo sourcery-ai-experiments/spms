@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "achievement_section",
   "achievement",
   "section_break_2",
   "naming_series",
@@ -203,17 +204,22 @@
    "fieldname": "achievement",
    "fieldtype": "HTML",
    "label": "Achievement",
-   "options": "<div class=\"progress\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\" style=\"\"></div>\n</div>"
+   "options": "<div class=\"progress\" style=\"height: 20px;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\" style=\"\"></div>\n</div>"
   },
   {
    "fieldname": "section_break_2",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "achievement_section",
+   "fieldtype": "Section Break",
+   "label": "Achievement"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-26 15:57:28.018697",
+ "modified": "2022-11-26 23:25:58.115950",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
