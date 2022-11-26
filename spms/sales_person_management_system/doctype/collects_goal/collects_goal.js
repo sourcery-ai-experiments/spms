@@ -27,7 +27,7 @@ frappe.ui.form.on('Collects Goal', {
 		reset_target_values(frm)
 	}
 
-})
+});
 
 // Trigger When Add New Row To Table
 frappe.ui.form.on('Customer Collects Goal', {
@@ -99,7 +99,7 @@ frappe.ui.form.on('Collects Goal', {
 			var d = locals[cdt][cdn];
 			return {
 				filters: [
-					['Customer', 'territory', 'in', frm.doc.territory]
+					['Customer', 'territory', 'in', frm.doc.territory],
 				]
 			};
 		});
