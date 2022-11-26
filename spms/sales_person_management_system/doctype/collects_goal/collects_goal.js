@@ -1,7 +1,7 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
-// traking changes in the child table 'Customer Collects Goal' which is
+// tracking changes in the child table 'Customer Collects Goal' which is
 let total = 0
 
 frappe.ui.form.on('Collects Goal', {
@@ -22,6 +22,11 @@ frappe.ui.form.on('Collects Goal', {
 		frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		frm.refresh();
 	}
+	,
+	target_type: function (frm) {
+		reset_target_values(frm)
+	}
+
 })
 
 // Trigger When Add New Row To Table
@@ -93,8 +98,26 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
+/**
+ * It takes the percentage of the total collected amount and sets the width of the progress bar to that
+ * percentage
+ * @param frm - The current form object.
+ */
 function set_css(frm) {
 	let percentage = (frm.doc.total_collected / frm.doc.total_targets) * 100
 	document.getElementById("percentage").style.width = `${percentage}%`
 	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
+}
+
+
+/**
+ * It clears the table and sets the values of the fields to 0
+ * @param frm - The current form object.
+ */
+function reset_target_values(frm) {
+	frm.clear_table("customer_collects_goal");
+	frm.set_value("additional_target_int", 0);
+	frm.set_value("fixed_target", 0);
+	frm.set_value("total_targets", 0);
+	frm.refresh();
 }
