@@ -21,19 +21,31 @@ class Collecting(WebsiteGenerator):
 		# Get objects for Specific Collects Goal
 		collect_goal_doc = frappe.get_doc('Collects Goal', collect_goal_name)
 
-		# find if Doctor and Item is Match with Goal
-		for i in collect_goal_doc.customer_collects_goal:
-			if(i.customer == self.customer):
-				i.verified_collects = i.verified_collects + self.amount_other_currency
-				break
+		# if taget type is 'Fixed Type'
+		if collect_goal_doc.target_type == "Fixed Target":
+			collect_goal_doc.total_collected += frappe.utils.flt(self.amount_other_currency)
 
-		# Calculate total amount for Verified Collects
-		total = 0
-		for i in collect_goal_doc.customer_collects_goal:
-			total = total + i.verified_collects
-
-		# set total value for Total Collected in Collected Goal
-		collect_goal_doc.total_collected = frappe.utils.flt(total)
+		# if taget type is 'According to Customer indebtedness' OR 'Debt + Additional Target'
+		else:
+			# trigger whether the customer in the table 'customer_collects_goal' or not
+			customer_not_found = True
+			# find if Doctor and Item is Match with Goal
+			for i in collect_goal_doc.customer_collects_goal:
+				if (i.customer == self.customer):
+					i.verified_collects = i.verified_collects + self.amount_other_currency
+					customer_not_found = False
+					break
+			# if cutomer not found so we add the amount to the  'additional_collected'
+			if customer_not_found:
+				collect_goal_doc.additional_collected = collect_goal_doc.additional_collected + self.amount_other_currency
+			# Calculate total amount for Verified Collects
+			total = 0
+			for i in collect_goal_doc.customer_collects_goal:
+				total = total + i.verified_collects
+			if(collect_goal_doc.target_type == "Debt + Additional Target"):
+				total += collect_goal_doc.additional_collected 
+			# set total value for Total Collected in Collected Goal
+			collect_goal_doc.total_collected = frappe.utils.flt(total)
 
 		total_incentives = 0
 		# calculate the incentives

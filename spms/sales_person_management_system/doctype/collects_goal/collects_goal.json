@@ -23,9 +23,10 @@
   "additional_target_int",
   "section_break_13",
   "total_targets",
-  "column_break_15",
-  "total_collected",
   "incentives",
+  "column_break_15",
+  "additional_collected",
+  "total_collected",
   "commissions_section",
   "commissions_range",
   "amended_from"
@@ -118,6 +119,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "0",
    "fieldname": "total_targets",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -187,15 +189,21 @@
    "fieldtype": "Currency",
    "label": "Additional Target",
    "mandatory_depends_on": "eval:doc.target_type == 'Debt + Additional Target'"
+  },
+  {
+   "depends_on": "eval:doc.target_type == 'Debt + Additional Target'",
+   "fieldname": "additional_collected",
+   "fieldtype": "Currency",
+   "label": "Additional collected",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-24 11:16:14.917875",
+ "modified": "2022-11-25 18:08:02.825281",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
- "name_case": "UPPER CASE",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [

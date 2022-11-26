@@ -18,6 +18,7 @@
   "column_break_8",
   "qrcode_html",
   "customer_details_section",
+  "target_type",
   "qr_code",
   "customer",
   "currency",
@@ -207,8 +208,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Customer",
-   "options": "Customer",
-   "reqd": 1
+   "options": "Customer"
   },
   {
    "fieldname": "qr_code",
@@ -279,6 +279,13 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Sales Person Territory"
+  },
+  {
+   "fieldname": "target_type",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Target Type",
+   "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
   }
  ],
  "has_web_view": 1,
@@ -295,11 +302,11 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-09-26 16:15:17.400988",
+ "modified": "2022-11-25 19:15:01.387362",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
- "name_case": "UPPER CASE",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -318,6 +325,7 @@
  "route": "collecting",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1
