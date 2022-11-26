@@ -6,6 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "achievement",
+  "section_break_2",
   "naming_series",
   "sales_person",
   "fullname",
@@ -196,12 +198,22 @@
    "fieldtype": "Currency",
    "label": "Additional collected",
    "read_only": 1
+  },
+  {
+   "fieldname": "achievement",
+   "fieldtype": "HTML",
+   "label": "Achievement",
+   "options": "<div class=\"progress\">\n  <div class=\"progress-bar\" role=\"progressbar\" style=\"\">{{doc.percentage}}%</div>\n</div>"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-26 11:11:53.734807",
+ "modified": "2022-11-26 14:59:10.000804",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
