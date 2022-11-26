@@ -264,6 +264,7 @@
    "label": "Published"
   },
   {
+   "depends_on": "eval: doc.__unsaved != 1",
    "fieldname": "qrcode_html",
    "fieldtype": "HTML",
    "label": "QRCode HTML",
@@ -302,7 +303,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-11-25 19:15:01.387362",
+ "modified": "2022-11-27 01:17:05.330334",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
