@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2022-09-12 16:57:57.498445",
  "doctype": "DocType",
@@ -101,11 +102,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-26 11:50:21.582752",
+ "modified": "2022-11-27 13:44:38.758133",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Doctor",
- "name_case": "UPPER CASE",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -125,6 +126,7 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "full_name",
  "track_changes": 1
 }

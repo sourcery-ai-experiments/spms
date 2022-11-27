@@ -107,6 +107,13 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
+// making target type (read only) so its value won't change by mistake
+frappe.ui.form.on('Collects Goal', {
+	after_save: function (frm) {
+		frm.set_df_property("target_type","read_only",1)
+	}
+})
+
 /**
  * It takes the percentage of the total collected amount and sets the width of the progress bar to that
  * percentage
