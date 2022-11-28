@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2022-09-17 11:06:08.439025",
  "doctype": "DocType",
@@ -228,7 +229,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2022-11-27 01:18:48.496814",
+ "modified": "2022-11-27 13:42:18.466178",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
