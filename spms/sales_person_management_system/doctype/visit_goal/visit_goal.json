@@ -23,9 +23,15 @@
   "column_break_7",
   "to",
   "number_of_days",
-  "target_section",
-  "doctor_visit_goal",
-  "amended_from"
+  "section_break_19",
+  "amended_from",
+  "target_breakdown",
+  "column_break_21",
+  "achievment_table",
+  "section_break_24",
+  "productivity",
+  "column_break_26",
+  "data_26"
  ],
  "fields": [
   {
@@ -86,18 +92,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "target_section",
-   "fieldtype": "Section Break",
-   "label": "Target"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "doctor_visit_goal",
-   "fieldtype": "Table",
-   "label": "Doctor Visit Goal",
-   "options": "Doctor Visit Goal"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -125,7 +119,7 @@
    "fieldname": "achievement",
    "fieldtype": "HTML",
    "label": "Achievement",
-   "options": "<div class=\"progress\" style=\"height: 18px; font-size: 15px; font-weight: 500;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\"></div>\n</div>"
+   "options": "<div class=\"progress\" style=\"height: 20px; font-size: 15px; font-weight: 500;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\"></div>\n</div>"
   },
   {
    "fieldname": "section_break_2",
@@ -141,19 +135,59 @@
    "default": "0",
    "fieldname": "number_of_visits",
    "fieldtype": "Int",
-   "label": "Number of visits"
+   "label": "Total Number of visits"
   },
   {
    "default": "0",
    "fieldname": "verified_visits",
    "fieldtype": "Int",
-   "label": "Verified Visites",
+   "label": "Total Verified Visites",
    "read_only": 1
+  },
+  {
+   "fieldname": "target_breakdown",
+   "fieldtype": "Table",
+   "label": "Target Breakdown",
+   "options": "Target Breakdown"
+  },
+  {
+   "fieldname": "achievment_table",
+   "fieldtype": "HTML",
+   "label": "Achievment Table",
+   "options": "<div class=\"form-grid-container\" style=\"margin-top: 23px;\">\n    <div class=\"form-grid\">\n        <div class=\"grid-heading-row\">\n            <div class=\"grid-row\">\n                <div class=\"data-row row\">\n                    <div class=\"col grid-static-col col-xs-8\">\n                        <div class=\"static-area ellipsis\">Achievment</div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"grid-row\">\n                <div class=\"data-row row\"></div>\n            </div>\n        </div>\n        <div class=\"grid-body\">\n            <div class=\"rows\" id=\"rows-1\">\n                \n            </div>\n        </div>\n    </div>\n</div>"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "productivity",
+   "fieldtype": "Table",
+   "label": "Productivity",
+   "options": "Productivity"
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "data_26",
+   "fieldtype": "HTML",
+   "label": "Achievment Table2",
+   "options": "<div class=\"form-grid-container\" style=\"margin-top: 23px;\">\n    <div class=\"form-grid\">\n        <div class=\"grid-heading-row\">\n            <div class=\"grid-row\">\n                <div class=\"data-row row\">\n                    <div class=\"col grid-static-col col-xs-8\">\n                        <div class=\"static-area ellipsis\">Achievment</div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"grid-row\">\n                <div class=\"data-row row\"></div>\n            </div>\n        </div>\n        <div class=\"grid-body\">\n            <div class=\"rows\" id=\"rows-2\">\n                \n            </div>\n        </div>\n    </div>\n</div>"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-12-12 19:42:54.338632",
+ "modified": "2023-01-05 02:32:09.681632",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",
