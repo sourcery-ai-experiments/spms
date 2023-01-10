@@ -1,10 +1,10 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
-let doctor_list = []
-let name_of_row_in_doctor_visit_goal = {}
+// let doctor_list = [] // not used anymore
+// let name_of_row_in_doctor_visit_goal = {} // not used anymore
 
-
+// adding new row to progress bar tables
 function append_to_table(table_id,width){
 	let color = ""
 	let completed_text = ""
@@ -47,73 +47,59 @@ frappe.ui.form.on('Visit Goal', {
 	}
 })
 
-// frappe.ui.form.on('Visit Goal', {
-// 	refresh: function (frm) {
-// 		frm.set_query('doctor', 'doctor_visit_goal', function (doc, cdt, cdn) {
-// 			var d = locals[cdt][cdn];
-// 			return {
-// 				filters: [
-// 					['Doctor', 'territory', 'in', frm.doc.territory]
-// 				]
-// 			};
-// 		});
-// 	}
-// });
+frappe.ui.form.on('Visit Goal', {
+	refresh: function (frm) {
+		frm.set_query('doctor', 'productivity', function (doc, cdt, cdn) {
+			var d = locals[cdt][cdn];
+			return {
+				filters: [
+					['Doctor', 'territory', 'in', frm.doc.territory]
+				]
+			};
+		});
+	}
+});
 
-// frappe.ui.form.on('Visit Goal', {
-// 	refresh: function (frm) {
-// 		frm.set_query('reference', 'doctor_visit_goal', function (doc, cdt, cdn) {
-// 			var d = locals[cdt][cdn];
-// 			return {
-// 				filters: [
-// 					['Customer', 'territory', 'in', frm.doc.territory]
-// 				]
-// 			};
-// 		});
-// 	}
-// });
+
 
 frappe.ui.form.on('Visit Goal', {
 	refresh: function (frm) {
+		// check if there are any row in target breakdown table
 		if(frm.doc.target_breakdown){
+			// loop throw every row and append new progress bar for that row
 			for (let row of frm.doc.target_breakdown){
+				row.achievement = Math.round(row.sold / row.quantity * 100)
 				append_to_table("rows-1",row.achievement || 0)
 			}
 		}
+		// check if there are any row in productivity table
 		if(frm.doc.productivity){
+			// loop throw every row and append new progress bar for that row
 			for (let row of frm.doc.productivity){
-				console.log(row.achievement)
+				row.achievement = Math.round(row.verified_visits / row.number_of_visits * 100)
 				append_to_table("rows-2",row.achievement || 0)
 			}
 		}
 	}
 });
 frappe.ui.form.on('Target Breakdown', {
+	// add new progress bar on adding new row 
 	target_breakdown_add : function(frm){
 		append_to_table("rows-1",0)
 	},
-	sold : function(frm,cdt,cdn){
-		let row = locals[cdt][cdn]
-		row.achievement = Math.round(row.sold / row.quantity * 100)
-		frm.refresh()
-		append_to_table("rows-1",row.achievement)
-	},
+	// refresh the page after removing a row to remove the progress bar for that row
 	target_breakdown_remove : function(frm){
 		frm.refresh()
 	}
 })
 frappe.ui.form.on('Productivity', {
+	// add new progress bar on adding new row 
 	productivity_add : function(frm){
 		append_to_table("rows-2",0)
 	},
+	// refresh the page after removing a row to remove the progress bar for that row
 	productivity_remove : function(frm){
 		frm.refresh()
-	},
-	verified_visits : function(frm,cdt,cdn){
-		let row = locals[cdt][cdn]
-		row.achievement = Math.round(row.verified_visits / row.number_of_visits * 100)
-		frm.refresh()
-		append_to_table("rows-2",row.achievement)
 	},
 	class : function(frm,cdt,cdn){
 		let row = locals[cdt][cdn]
@@ -235,15 +221,26 @@ function set_css(frm) {
 		total_number_of_visits += row.number_of_visits 
 		total_verified_visits += row.verified_visits 
 	}
-	console.log(total_number_of_visits)
-	console.log(total_verified_visits)
-	let percentage = (total_verified_visits / total_number_of_visits) * 100
-	document.getElementById("percentage").style.width = `${percentage}%`
-	document.getElementById("percentage").style.backgroundColor = `#ef476f`
-	document.getElementById("percentage").innerText = `${Math.round(percentage)}%`
-	if (percentage >= 100){
-		document.getElementById("percentage").style.backgroundColor = `#57cc99`
-		document.getElementById("percentage").innerText = `Completed 100%`
+
+	let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
+	let percentage = (frm.doc.achieved / frm.doc.target) * 100
+
+	let avg_percentage = (productivity_percentage + percentage) / 2
+
+	document.getElementById("percentage").style.width = `${avg_percentage}%`
+	document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
+	document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+	if (avg_percentage >= 50 && avg_percentage < 90){
+		document.getElementById("percentage").style.backgroundColor = `#edae49` // yellow 
+		document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+	}
+	else if (avg_percentage >= 90 && avg_percentage < 100){
+		document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+		document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+	}
+	else if (avg_percentage >= 100){
+		document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+		document.getElementById("percentage").innerText = `Completed ${Math.round(avg_percentage)}%`
 	}
 }
 

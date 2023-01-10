@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "doctor",
+  "name1",
   "class",
   "number_of_visits",
   "verified_visits",
@@ -34,18 +35,25 @@
    "default": "0",
    "fieldname": "verified_visits",
    "fieldtype": "Int",
-   "label": "Verified Visits"
+   "label": "Verified Visits",
+   "read_only": 1
   },
   {
    "fieldname": "achievement",
    "fieldtype": "Data",
    "label": "Achievement"
+  },
+  {
+   "fetch_from": "doctor.full_name",
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-01-04 20:00:55.315714",
+ "modified": "2023-01-10 11:42:26.720677",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Productivity",
