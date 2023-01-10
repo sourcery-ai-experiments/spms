@@ -18,8 +18,8 @@
   "territory",
   "period_section",
   "from",
-  "number_of_visits",
-  "verified_visits",
+  "target",
+  "achieved",
   "column_break_7",
   "to",
   "number_of_days",
@@ -132,19 +132,6 @@
    "label": "Achievement"
   },
   {
-   "default": "0",
-   "fieldname": "number_of_visits",
-   "fieldtype": "Int",
-   "label": "Total Number of visits"
-  },
-  {
-   "default": "0",
-   "fieldname": "verified_visits",
-   "fieldtype": "Int",
-   "label": "Total Verified Visites",
-   "read_only": 1
-  },
-  {
    "fieldname": "target_breakdown",
    "fieldtype": "Table",
    "label": "Target Breakdown",
@@ -183,11 +170,24 @@
   {
    "fieldname": "column_break_26",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "target",
+   "fieldtype": "Currency",
+   "label": "Target"
+  },
+  {
+   "default": "0",
+   "fieldname": "achieved",
+   "fieldtype": "Currency",
+   "label": "Achieved",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-05 02:32:09.681632",
+ "modified": "2023-01-10 11:01:53.574527",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",

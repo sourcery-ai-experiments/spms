@@ -154,8 +154,7 @@
    "fieldname": "reference",
    "fieldtype": "Link",
    "label": "Reference",
-   "options": "Customer",
-   "reqd": 1
+   "options": "Customer"
   },
   {
    "fieldname": "location_section",
@@ -202,7 +201,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-29 15:57:20.158493",
+ "modified": "2023-01-10 02:30:09.819597",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visiting",
