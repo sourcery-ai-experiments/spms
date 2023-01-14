@@ -24,7 +24,6 @@
   "to",
   "number_of_days",
   "section_break_19",
-  "amended_from",
   "target_breakdown",
   "column_break_21",
   "achievment_table",
@@ -89,15 +88,6 @@
    "fieldname": "number_of_days",
    "fieldtype": "Int",
    "label": "Number of Days",
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Visit Goal",
-   "print_hide": 1,
    "read_only": 1
   },
   {
@@ -187,7 +177,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-10 11:01:53.574527",
+ "modified": "2023-01-14 10:12:59.599559",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",
