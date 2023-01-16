@@ -1,5 +1,5 @@
 from . import __version__ as app_version
-
+from .methods.update_target_on_sales_invoice_submit import update_target_on_sales_invoice_submit
 app_name = "spms"
 app_title = "Sales Person Management System"
 app_publisher = "aoai"
@@ -99,8 +99,12 @@ doctype_js = {
 # Hook on document methods and events
 
 doc_events = {
+    # "Sales Invoice": {
+    #     "on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
+    # },
     "Sales Invoice": {
-        "on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
+        # will run before a ToDo record is inserted into database
+        "on_submit": "spms.methods.update_target_on_sales_invoice_submit.update_target_on_sales_invoice_submit",
     }
 }
 
@@ -183,10 +187,8 @@ user_data_fields = [
 # Translation
 # --------------------------------
 fixtures = [
-
     "Translation",
     "Territory",
-
 ]
 
 # Make link fields search translated document names for these DocTypes

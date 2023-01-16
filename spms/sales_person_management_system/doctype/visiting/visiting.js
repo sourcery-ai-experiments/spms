@@ -71,3 +71,11 @@ frappe.ui.form.on('Visiting', {
 		}
 	}
 });
+
+
+
+frappe.ui.form.on('Visiting', {
+	on_submit: function (frm) {
+		
+	}
+});

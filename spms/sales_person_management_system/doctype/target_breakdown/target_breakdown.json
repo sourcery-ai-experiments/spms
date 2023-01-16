@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-01-03 20:22:38.090455",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "quantity",
+  "sold",
+  "achievement"
+ ],
+ "fields": [
+  {
+   "columns": 7,
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "columns": 3,
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "sold",
+   "fieldtype": "Int",
+   "label": "Sold",
+   "read_only": 1
+  },
+  {
+   "fieldname": "achievement",
+   "fieldtype": "Data",
+   "label": "Achievement",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-01-14 09:52:42.078937",
+ "modified_by": "Administrator",
+ "module": "Sales Person Management System",
+ "name": "Target Breakdown",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
