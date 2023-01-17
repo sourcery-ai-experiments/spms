@@ -25,12 +25,8 @@
   "number_of_days",
   "section_break_19",
   "target_breakdown",
-  "column_break_21",
-  "achievment_table",
   "section_break_24",
-  "productivity",
-  "column_break_26",
-  "data_26"
+  "productivity"
  ],
  "fields": [
   {
@@ -128,16 +124,6 @@
    "options": "Target Breakdown"
   },
   {
-   "fieldname": "achievment_table",
-   "fieldtype": "HTML",
-   "label": "Achievment Table",
-   "options": "<div class=\"form-grid-container\" style=\"margin-top: 23px;\">\n    <div class=\"form-grid\">\n        <div class=\"grid-heading-row\">\n            <div class=\"grid-row\">\n                <div class=\"data-row row\">\n                    <div class=\"col grid-static-col col-xs-8\">\n                        <div class=\"static-area ellipsis\">Achievment</div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"grid-row\">\n                <div class=\"data-row row\"></div>\n            </div>\n        </div>\n        <div class=\"grid-body\">\n            <div class=\"rows\" id=\"rows-1\">\n                \n            </div>\n        </div>\n    </div>\n</div>"
-  },
-  {
-   "fieldname": "column_break_21",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_19",
    "fieldtype": "Section Break"
   },
@@ -150,16 +136,6 @@
   {
    "fieldname": "section_break_24",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "data_26",
-   "fieldtype": "HTML",
-   "label": "Achievment Table2",
-   "options": "<div class=\"form-grid-container\" style=\"margin-top: 23px;\">\n    <div class=\"form-grid\">\n        <div class=\"grid-heading-row\">\n            <div class=\"grid-row\">\n                <div class=\"data-row row\">\n                    <div class=\"col grid-static-col col-xs-8\">\n                        <div class=\"static-area ellipsis\">Achievment</div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"grid-row\">\n                <div class=\"data-row row\"></div>\n            </div>\n        </div>\n        <div class=\"grid-body\">\n            <div class=\"rows\" id=\"rows-2\">\n                \n            </div>\n        </div>\n    </div>\n</div>"
-  },
-  {
-   "fieldname": "column_break_26",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -177,7 +153,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-14 10:12:59.599559",
+ "modified": "2023-01-17 14:41:25.817105",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",
