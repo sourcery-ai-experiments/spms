@@ -35,11 +35,11 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Sales Person",
-   "options": "Employee",
+   "options": "Sales Person",
    "reqd": 1
   },
   {
-   "fetch_from": "sales_person.employee_name",
+   "fetch_from": "sales_person.sales_person_name",
    "fieldname": "fullname",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -153,7 +153,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-17 14:41:25.817105",
+ "modified": "2023-01-18 10:49:40.516641",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",
