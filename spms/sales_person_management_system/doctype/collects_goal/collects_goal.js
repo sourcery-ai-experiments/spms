@@ -4,7 +4,11 @@
 // tracking changes in the child table 'Customer Collects Goal' which is
 let total = 0
 
+/* A trigger that is called when the user changes the value of the field "to" in the Collects Goal
+doctype. */
 frappe.ui.form.on('Collects Goal', {
+	/* A trigger that is called when the user changes the value of the field "to" in the Collects Goal
+	doctype. */
 	"to": function (frm) {
 		if (frm.doc.to < frm.doc.from) {
 			frappe.msgprint("Please, Select Valid Period for Target)")
@@ -14,22 +18,29 @@ frappe.ui.form.on('Collects Goal', {
 		let diff_days = frappe.datetime.get_day_diff(frm.doc.to, frm.doc.from);
 		frm.set_value("number_of_days", diff_days);
 	},
+
+	/* A trigger that is called when the user changes the value of the field "fixed_target" in the
+	Collects Goal doctype. */
 	fixed_target: function (frm) {
 		frm.set_value("total_targets", frm.doc.fixed_target);
 		frm.refresh();
 	},
+
+	/* A trigger that is called when the user changes the value of the field "additional_target_int" in
+	the Collects Goal doctype. */
 	additional_target_int: function (frm) {
 		frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		frm.refresh();
-	}
-	,
+	},
+
+	/* It clears the table and sets the values of the fields to 0 */
 	target_type: function (frm) {
 		reset_target_values(frm)
 	}
 
 });
 
-// Trigger When Add New Row To Table
+/* A trigger that is called when the user adds a new row to the table. */
 frappe.ui.form.on('Customer Collects Goal', {
 	customer_collects_goal_add: function (frm, cdt, cdn) {
 		total = 0;
@@ -44,7 +55,7 @@ frappe.ui.form.on('Customer Collects Goal', {
 	}
 });
 
-// Trigger When Remove Row Table
+/* A trigger that is called when the user removes a row from the table. */
 frappe.ui.form.on('Customer Collects Goal', {
 	customer_collects_goal_remove: function (frm, cdt, cdn) {
 		total = 0;
@@ -59,7 +70,8 @@ frappe.ui.form.on('Customer Collects Goal', {
 	}
 });
 
-// Trigger On Every Event On [amount_of_money] Field
+/* A trigger that is called when the user changes the value of the field "amount_of_money" in the
+Customer Collects Goal doctype. */
 frappe.ui.form.on('Customer Collects Goal', {
 	amount_of_money: function (frm, cdt, cdn) {
 		total = 0;
@@ -74,6 +86,7 @@ frappe.ui.form.on('Customer Collects Goal', {
 	}
 });
 
+/* A trigger that is called when the user adds a new row to the table. */
 frappe.ui.form.on('Commissions range', {
 	form_render: function (frm, cdt, cdn) {
 		$.each(frm.doc.commissions_range || [], function (i, d) {
@@ -91,12 +104,12 @@ frappe.ui.form.on('Commissions range', {
 	}
 });
 
-// making the progress bar for the Collects Goal doctype 
+/* A trigger that is called when the user changes the value of the field "territory" in the
+Collects Goal doctype. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
 		/* A query that filters the customers based on the territory of the current form. */
 		frm.set_query('customer', 'customer_collects_goal', function (doc, cdt, cdn) {
-			var d = locals[cdt][cdn];
 			return {
 				filters: [
 					['Customer', 'territory', 'in', frm.doc.territory],
@@ -107,10 +120,10 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
-// making target type (read only) so its value won't change by mistake
+/* It makes the target type field read only after saving the form. */
 frappe.ui.form.on('Collects Goal', {
 	after_save: function (frm) {
-		frm.set_df_property("target_type","read_only",1)
+		frm.set_df_property("target_type", "read_only", 1)
 	}
 })
 
