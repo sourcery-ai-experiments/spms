@@ -1,6 +1,7 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+/* A filter for the customer field. */
 frappe.ui.form.on('Collecting', {
 	setup: function (frm) {
 		frm.set_query("customer", function () {
@@ -13,18 +14,18 @@ frappe.ui.form.on('Collecting', {
 	}
 });
 
-// Get Location From The User
+/* This code is used to get the location of the user and show it on the map. */
 frappe.ui.form.on('Collecting', {
 	onload(frm) {
-		function onPositionRecieved(position) {
-			var longitude = position.coords.longitude;
-			var latitude = position.coords.latitude;
+		function onPositionReceived(position) {
+			let longitude = position.coords.longitude;
+			let latitude = position.coords.latitude;
 			frm.set_value('longitude', longitude);
 			frm.set_value('latitude', latitude);
 			fetch('https://api.opencagedata.com/geocode/v1/json?q=' + latitude + '+' + longitude + '&key=de1bf3be66b546b89645e500ec3a3a28')
 				.then(response => response.json())
 				.then(data => {
-					var address = data['results'][0].formatted;
+					let address = data['results'][0].formatted;
 					frm.set_value('current_address', address);
 				})
 				.catch(err => console.log(err));
@@ -32,7 +33,7 @@ frappe.ui.form.on('Collecting', {
 			frm.refresh_field('my_location');
 		}
 
-		function locationNotRecieved(positionError) {
+		function locationNotReceived(positionError) {
 			console.log(positionError);
 		}
 
@@ -41,7 +42,7 @@ frappe.ui.form.on('Collecting', {
 			frm.refresh_field('my_location');
 		} else {
 			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(onPositionRecieved, locationNotRecieved, { enableHighAccuracy: true });
+				navigator.geolocation.getCurrentPosition(onPositionReceived, locationNotReceived, { enableHighAccuracy: true });
 			} else {
 				frappe.msgprint('Pleas Enable the Location Service');
 			}
@@ -50,7 +51,7 @@ frappe.ui.form.on('Collecting', {
 });
 
 
-// Validate If Location Service Is Off
+/* A validation to check if the location service is off. */
 frappe.ui.form.on('Collecting', {
 	before_save: function (frm) {
 		if (!frm.doc.longitude && !frm.doc.latitude) {
@@ -59,7 +60,8 @@ frappe.ui.form.on('Collecting', {
 	}
 });
 
-// Calculate Amount On Change Of Amount Field
+/* A validation to check if the amount currency is not equal to the company currency then calculate the
+amount. */
 frappe.ui.form.on('Collecting', {
 	amount: function (frm) {
 		if (frm.doc.amount_currency != frm.doc.company_currency) {
@@ -71,7 +73,8 @@ frappe.ui.form.on('Collecting', {
 	}
 });
 
-// Calculate Amount On Change Of Amount Currency Field
+/* A validation to check if the amount currency is not equal to the company currency then calculate the
+amount. */
 frappe.ui.form.on('Collecting', {
 	amount_currency: function (frm) {
 		if (frm.doc.amount_currency != frm.doc.company_currency) {
@@ -90,36 +93,45 @@ frappe.ui.form.on('Collecting', {
 	}
 });
 
-// Add Helper Description For Changing The Currency
+/* A validation to check if the amount currency is not equal to the company currency then calculate the
+amount. */
 frappe.ui.form.on('Collecting', {
 	amount_currency: function (cur_frm) {
 		if (cur_frm.doc.amount_currency && cur_frm.doc.company_currency) {
-			var default_label = __(frappe.meta.docfield_map[cur_frm.doctype]["exchange_rate"].label);
+			let default_label = __(frappe.meta.docfield_map[cur_frm.doctype]["exchange_rate"].label);
 			cur_frm.fields_dict.exchange_rate.set_label(default_label +
 				repl(" (1 %(amount_currency)s = [?] %(company_currency)s)", cur_frm.doc));
 		}
 	}
 });
 
-// Calculate Amount With Exchange Rate On Exchange Rate Changes
+/* A validation to check if the amount currency is not equal to the company currency then calculate the
+amount. */
 frappe.ui.form.on('Collecting', {
 	exchange_rate: function (frm) {
 		calculateTheAmount(frm);
 	}
 });
 
-// Calculate Amount Function
+/**
+ * "When the user changes the amount or exchange rate, calculate the amount in the other currency."
+ * 
+ * The function is called when the user changes the amount or exchange rate
+ * @param frm - The current form object.
+ */
 function calculateTheAmount(frm) {
-	var result = 0;
+	let result = 0;
 	result = frm.doc.amount * frm.doc.exchange_rate;
 	frm.set_value("amount_other_currency", result);
 	frm.refresh();
 }
 
+/* A validation to check if the amount currency is not equal to the company currency then calculate the
+amount. */
 frappe.ui.form.on('Collecting', {
 	refresh: function (frm) {
+		/* A query to get the invoices that are not paid and belong to the customer. */
 		frm.set_query('invoice_no', 'invoices', function (doc, cdt, cdn) {
-			var d = locals[cdt][cdn];
 			return {
 				filters: [
 					['Sales Invoice', 'customer', 'in', frm.doc.customer],
@@ -128,6 +140,7 @@ frappe.ui.form.on('Collecting', {
 			};
 		});
 
+		/* A filter for the amount currency field. */
 		frm.set_query("amount_currency", function () {
 			return {
 				filters: [
@@ -138,12 +151,13 @@ frappe.ui.form.on('Collecting', {
 	}
 });
 
+/* A validation to check if the document status is not equal to 1 then add a button to get all the
+unpaid sales invoices. */
 frappe.ui.form.on('Collecting', {
 	refresh: function (frm) {
-		//add this condition
 		if (frm.doc.docstatus != 1) {
 			frm.add_custom_button("Get All Unpaid Sales Invoice", function () {
-				let d = new frappe.ui.Dialog({
+				let dialog = new frappe.ui.Dialog({
 					title: 'Enter Customer details',
 					fields: [
 						{
@@ -165,47 +179,21 @@ frappe.ui.form.on('Collecting', {
 							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status'],
 							limit: 500
 						}).then(res => {
-							for (var i = 0; i < res.length; i++) {
-								var row = frappe.model.add_child(frm.doc, "Collects", "invoices");
-								row.invoice_no = res[i].name;
-								row.total = res[i].net_total;
-								row.posting_date = res[i].date;
-								row.out_standing_amount = res[i].outstanding_amount;
-								row.status = res[i].status;
+							for (const element of res) {
+								let row = frappe.model.add_child(frm.doc, "Collects", "invoices");
+								row.invoice_no = element.name;
+								row.total = element.net_total;
+								row.posting_date = element.date;
+								row.out_standing_amount = element.outstanding_amount;
+								row.status = element.status;
 								frm.refresh_fields("invoices");
 							}
 						});
-						d.hide();
+						dialog.hide();
 					}
 				});
-
-				d.show();
+				dialog.show();
 			}).addClass("btn-primary").css({});
 		}
-
-		// show two button when submit it
-		if (frm.doc.docstatus == 1) {
-			// add Payment Entry button
-			var customer_n = frm.doc.customer
-			frm.add_custom_button("Create Payment Entry", function () {
-				frappe.new_doc("Payment Entry",
-					{
-						party_type: "Customer",
-						party: customer_n,
-					},
-				);
-				// frappe.route_options = {
-				// 	"party_type": frm.doc.customer,
-				// 	"party": "Customer",
-				// };
-				// frappe.set_route("payment-entry", "new-payment-entry");
-			}).addClass("btn-primary").css({});
-
-			// add Journal Entry button
-			frm.add_custom_button("Create Journal Entry", function () {
-				frappe.set_route("journal-entry", "new-journal-entry");
-			}).addClass("btn-primary").css({});
-		}
-
 	}
 });
