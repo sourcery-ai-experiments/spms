@@ -1,43 +1,45 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+/* A query that will filter the doctor name based on the territory. */
 frappe.ui.form.on('Visiting', {
-	setup:function(frm){
-	    frm.set_query("doctor_name", function(){
-	        return{
-	            filters: [
-	                ["Doctor", "territory", "in", frm.doc.territory]     
-	           ]
-	        };
-	    });
+	setup: function (frm) {
+		frm.set_query("doctor_name", function () {
+			return {
+				filters: [
+					["Doctor", "territory", "in", frm.doc.territory]
+				]
+			};
+		});
 	}
 });
 
 
+/* A query that will filter the doctor name based on the territory. */
 frappe.ui.form.on('Visiting', {
-	setup:function(frm){
-	    frm.set_query("reference", function(){
-	        return{
-	            filters: [
-	                ["Customer", "territory", "in", frm.doc.territory]     
-	           ]
-	        };
-	    });
+	setup: function (frm) {
+		frm.set_query("reference", function () {
+			return {
+				filters: [
+					["Customer", "territory", "in", frm.doc.territory]
+				]
+			};
+		});
 	}
 });
 
 // Get Location From The User
 frappe.ui.form.on('Visiting', {
 	onload(frm) {
-		function onPositionRecieved(position) {
-			var longitude = position.coords.longitude;
-			var latitude = position.coords.latitude;
+		function onPositionReceived(position) {
+			let longitude = position.coords.longitude;
+			let latitude = position.coords.latitude;
 			frm.set_value('longitude', longitude);
 			frm.set_value('latitude', latitude);
 			fetch('https://api.opencagedata.com/geocode/v1/json?q=' + latitude + '+' + longitude + '&key=de1bf3be66b546b89645e500ec3a3a28')
 				.then(response => response.json())
 				.then(data => {
-					var address = data['results'][0].formatted;
+					let address = data['results'][0].formatted;
 					frm.set_value('current_address', address);
 				})
 				.catch(err => console.log(err));
@@ -45,7 +47,7 @@ frappe.ui.form.on('Visiting', {
 			frm.refresh_field('my_location');
 		}
 
-		function locationNotRecieved(positionError) {
+		function locationNotReceived(positionError) {
 			console.log(positionError);
 		}
 
@@ -54,7 +56,7 @@ frappe.ui.form.on('Visiting', {
 			frm.refresh_field('my_location');
 		} else {
 			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(onPositionRecieved, locationNotRecieved, { enableHighAccuracy: true });
+				navigator.geolocation.getCurrentPosition(onPositionReceived, locationNotReceived, { enableHighAccuracy: true });
 			} else {
 				frappe.msgprint('Pleas Enable the Location Service');
 			}
@@ -63,19 +65,11 @@ frappe.ui.form.on('Visiting', {
 });
 
 
-// Validate If Location Service Is Off
+/* Validating if the location service is off. */
 frappe.ui.form.on('Visiting', {
 	before_save: function (frm) {
 		if (!frm.doc.longitude && !frm.doc.latitude) {
 			frappe.msgprint('Pleas Enable the Location Service');
 		}
-	}
-});
-
-
-
-frappe.ui.form.on('Visiting', {
-	on_submit: function (frm) {
-		
 	}
 });
