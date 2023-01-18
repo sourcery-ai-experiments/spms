@@ -51,11 +51,11 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Visited By",
-   "options": "Employee",
+   "options": "Sales Person",
    "reqd": 1
   },
   {
-   "fetch_from": "visited_by.employee_name",
+   "fetch_from": "visited_by.sales_person_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -304,7 +304,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2022-11-29 15:56:01.704038",
+ "modified": "2023-01-18 10:51:54.952399",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
