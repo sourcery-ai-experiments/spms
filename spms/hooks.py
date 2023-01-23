@@ -104,7 +104,7 @@ doc_events = {
     # },
     "Sales Invoice": {
         # will run before a ToDo record is inserted into database
-        "on_submit": "spms.methods.update_target_on_sales_invoice_submit.update_target_on_sales_invoice_submit",
+        "validate": "spms.methods.update_target_on_sales_invoice_submit.update_target_on_sales_invoice_submit",
     }
 }
 
