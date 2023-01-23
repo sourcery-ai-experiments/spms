@@ -18,7 +18,7 @@ def update_target_on_sales_invoice_submit(doc, method) -> None:
                     row.sold = row.sold + item.qty
                     break
                 
-        visit_goal_doc.achieved = visit_goal_doc.achieved + doc.total
+        visit_goal_doc.achieved = visit_goal_doc.achieved + doc.base_net_total
 
         visit_goal_doc.save()
         frappe.msgprint("Its works")
@@ -34,7 +34,7 @@ def update_target_on_sales_invoice_submit(doc, method) -> None:
                                             'to':['>=', doc.posting_date]
                                         },['name'], as_dict=1)
             parent_visit_goal = frappe.get_doc('Visit Goal', parent_visit_goal_name)
-            parent_visit_goal.achieved = parent_visit_goal.achieved + doc.total
+            parent_visit_goal.achieved = parent_visit_goal.achieved + doc.base_net_total
             for row in parent_visit_goal.target_breakdown:
                 for item in doc.items:
                     if item.item_code == row.item:
