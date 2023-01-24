@@ -29,7 +29,7 @@ def generate_qrcode(site_name, route_name):
 
     # Saving the QR code image in the private/files folder of the site.
     current_site_name = cstr(frappe.local.site)
-    img.save(f"{current_site_name}/private/files/{file_name}.png")
+    img.save(f"{current_site_name}/public/files/{file_name}.png")
 
     # Returning the file path of the QR code image.
-    return (f"/private/files/{file_name}.png")
+    return (f"/files/{file_name}.png")
