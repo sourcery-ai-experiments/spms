@@ -129,7 +129,7 @@ function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
         const width = row_info[field_name]
         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
         .innerHTML = 
-            `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;border-radius:300px">
+            `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
                 <div style="width:${width}%;background:${options.color&&options.color};" class="progress-bar" role="progressbar">${options.text&&options.text}${width}%</div>
             </div>`
     }

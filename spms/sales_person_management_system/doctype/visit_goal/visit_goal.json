@@ -110,7 +110,7 @@
    "fieldname": "achievement",
    "fieldtype": "HTML",
    "label": "Achievement",
-   "options": "<div class=\"progress\" style=\"height: 20px; font-size: 15px; font-weight: 500; border-radius: 300px;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\"></div>\n</div>"
+   "options": "<div class=\"progress\" style=\"height: 20px; font-size: 15px; font-weight: 500;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\"></div>\n</div>"
   },
   {
    "fieldname": "section_break_2",
@@ -194,7 +194,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-01-26 04:36:55.371789",
+ "modified": "2023-01-26 09:56:11.600520",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Visit Goal",
