@@ -33,7 +33,9 @@ class Collecting(WebsiteGenerator):
             # find if Doctor and Item is Match with Goal
             for i in collect_goal_doc.customer_collects_goal:
                 if (i.customer == self.customer):
-                    i.verified_collects = i.verified_collects + self.amount_other_currency
+                    # i.verified_collects = i.verified_collects + self.amount_other_currency
+                    i.verified_collects = i.verified_collects + 1
+                    i.verified_collects = (i.verified_collects / 1)*100
                     customer_not_found = False
                     break
             # if customer not found so we add the amount to the  'additional_collected'
@@ -79,7 +81,9 @@ class Collecting(WebsiteGenerator):
         # Used to find if Doctor and Item is Match with Goal
         for i in collect_goal_doc.customer_collects_goal:
             if (i.customer == self.customer):
-                i.verified_collects = i.verified_collects - self.amount_other_currency
+                # i.verified_collects = i.verified_collects - self.amount_other_currency
+                i.verified_collects = i.verified_collects - 1
+                i.verified_collects = i.verified_collects-100
                 break
 
         # Calculate total amount for Verified Collects
