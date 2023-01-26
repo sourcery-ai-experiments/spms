@@ -23,7 +23,7 @@ def generate_qrcode(site_name, route_name):
     qr.make(fit=True)
     # Generating a random number between 1 and 100000 and then appending the current date to it.
     file_name = randint(1, 100000)
-    file_name = f'{file_name}.{date.today()}'
+    file_name = f'{file_name}-{date.today()}'
 
     img = qr.make_image(fill_color="black", back_color="white")
 
