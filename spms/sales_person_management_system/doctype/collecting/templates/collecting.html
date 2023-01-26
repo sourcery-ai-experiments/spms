@@ -115,10 +115,10 @@
             <div class="row">
                 <div class="receipt-header">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <div class="receipt-left">
+                        <!-- <div class="receipt-left">
                             <img class="img-responsive" alt="iamgurdeeposahan" src="{{doc.image}}"
                                 style="width: 150px;">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 text-right mt-4">
                         <div class="receipt-right">
@@ -139,7 +139,7 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="receipt-left">
-                            <h6>INVOICE # {{title}}</h6>
+                            <h6 style="width: max-content;">INVOICE # {{title}}</h6>
                         </div>
                     </div>
                 </div>
@@ -171,13 +171,14 @@
                 <div class="receipt-header receipt-header-mid receipt-footer">
                     <div class="col-xs-8 col-sm-8 col-md-8 text-left">
                         <div class="receipt-right">
-                            <p><b>Date :</b> {{doc.date}}</p>
+                            <p><b>Date :<br><br></b> {{doc.date}}</p>
                             <h5 style="color: rgb(140, 140, 140);">AOAI Tecnologies</h5>
                         </div>
                     </div>
+                    
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div>
-                            <h1 class="font-weight-bold">Encrypt: {{doc.route}}</h1>
+                            <h1 class="font-weight-bold">Encrypt: <br><br>{{doc.route}}</h1>
                         </div>
                     </div>
                 </div>
