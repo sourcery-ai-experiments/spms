@@ -26,6 +26,7 @@
   },
   {
    "allow_on_submit": 1,
+   "default": "0",
    "fieldname": "verified_collects",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -36,7 +37,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-11-27 00:32:47.287414",
+ "modified": "2023-01-25 10:05:20.601838",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Customer Collects Goal",

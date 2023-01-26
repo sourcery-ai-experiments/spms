@@ -108,6 +108,7 @@ frappe.ui.form.on('Commissions range', {
 Collects Goal doctype. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
+		// progress_bar("customer_collects_goal","verified_collects",100,0,{text:"Done "})
 		/* A query that filters the customers based on the territory of the current form. */
 		frm.set_query('customer', 'customer_collects_goal', function (doc, cdt, cdn) {
 			return {
@@ -117,6 +118,12 @@ frappe.ui.form.on('Collects Goal', {
 			};
 		});
 		set_css(frm);
+	}
+})
+frappe.ui.form.on('Collects Goal', {
+	refresh: function (frm) {
+		refresh_when_click_btn(frm)
+		progress_bar(frm,"customer_collects_goal","verified_collects")
 	}
 })
 
@@ -149,4 +156,39 @@ function reset_target_values(frm) {
 	frm.set_value("fixed_target", 0);
 	frm.set_value("total_targets", 0);
 	frm.refresh();
+}
+
+function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
+	for(let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
+		let idx = $(row).data("idx") - 1
+		let row_info = frm.doc[table_name][idx]
+		const width = row_info[field_name]
+		row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
+		.innerHTML = 
+			`<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
+				<div style="width:${width}%;background:${options.color&&options.color};" class="progress-bar" role="progressbar">${options.text&&options.text}${width}%</div>
+			</div>`
+	}
+}
+
+
+let first_try = true
+function refresh_when_click_btn(frm) {
+    /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
+    page. */
+    if (first_try) {
+        $(".next-page").click(function () {
+            frm.refresh()
+        })
+        $(".first-page").click(function () {
+            frm.refresh()
+        })
+        $(".prev-page").click(function () {
+            frm.refresh()
+        })
+        $(".last-page").click(function () {
+            frm.refresh()
+        })
+        first_try = false
+    }
 }
