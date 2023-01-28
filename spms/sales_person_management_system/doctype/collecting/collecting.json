@@ -209,7 +209,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "reqd": 1
   },
   {
    "fieldname": "qr_code",
@@ -304,7 +305,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-01-18 10:51:54.952399",
+ "modified": "2023-01-28 19:32:49.889945",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",

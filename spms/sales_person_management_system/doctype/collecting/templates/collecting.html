@@ -3,192 +3,163 @@
 {% block page_content %}
 
 <style>
-    .text-danger strong {
-        color: #9f181c;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-    .receipt-main {
-        background: #ffffff none repeat scroll 0 0;
-        border-bottom: 12px solid #333333;
-        border-top: 12px solid #9f181c;
-        margin-top: 50px;
-        margin-bottom: 50px;
-        padding: 40px 30px !important;
+    *{
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+    .center-paper{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .paper{
+        width: 700px;
+        padding: 50px 30px;
         position: relative;
-        box-shadow: 0 1px 21px #acacac;
-        color: #333333;
-        font-family: open sans;
     }
-
-    .receipt-main p {
-        color: #333333;
-        font-family: open sans;
-        line-height: 1.42857;
-    }
-
-    .receipt-footer h1 {
-        font-size: 15px;
-        font-weight: 400 !important;
-        margin: 0 !important;
-    }
-
-    .receipt-main::after {
-        background: #414143 none repeat scroll 0 0;
-        content: "";
-        height: 5px;
-        left: 0;
+    .paper-top{
+        width: 100%;
+        height: 10px;
+        background-color: #4C5A67;
         position: absolute;
-        right: 0;
-        top: -13px;
+        top: 0;
+        left: 0;
     }
-
-    .receipt-main thead {
-        background: #414143 none repeat scroll 0 0;
+    .title{
+        font-size: 35px;
+        margin: 0!important;
     }
-
-    .receipt-main thead th {
-        color: #fff;
-    }
-
-    .receipt-right h5 {
-        font-size: 16px;
-        font-weight: bold;
-        margin: 0 0 7px 0;
-    }
-
-    .receipt-right p {
-        font-size: 12px;
-        margin: 0px;
-    }
-
-    .receipt-right p i {
-        text-align: center;
-        width: 18px;
-    }
-
-    .receipt-main td {
-        padding: 9px 20px !important;
-    }
-
-    .receipt-main th {
-        padding: 13px 20px !important;
-    }
-
-    .receipt-main td {
-        font-size: 13px;
-        font-weight: initial !important;
-    }
-
-    .receipt-main td p:last-child {
-        margin: 0;
-        padding: 0;
-    }
-
-    .receipt-main td h2 {
+    .customer{
+        margin-top: 10px!important;
+        font-weight: 300;
         font-size: 20px;
-        font-weight: 900;
-        margin: 0;
-        text-transform: uppercase;
     }
-
-    .receipt-header-mid .receipt-left h1 {
-        font-weight: 100;
-        margin: 34px 0 0;
-        text-align: right;
-        text-transform: uppercase;
+    .subtitle{
+        font-size: 15px;
     }
-
-    .receipt-header-mid {
-        margin: 24px 0;
-        overflow: hidden;
+    p{
+        margin: 0!important;
     }
-
-    #container {
-        background-color: #dcdcdc;
-        margin: 0 auto !important;
+    b{
+        margin-right: 15px;
+        font-weight: 500;
     }
+    .details{
+        margin-top: 20px;
+    }
+    img{
+        width: 100px;
+    }
+    @media screen and (max-width: 600px) {
+        .paper{
+            width: 100%;
+            box-shadow: none!important;
+        }
+        main{
+            margin: 0!important;
+            padding: 0!important;
+        }
+        .title{
+            font-size: 27px;
+            margin: 0!important;
+        }
+        .subtitle{
+            font-size: 13px;
+        }
+        p span{
+            font-size: 13px;
+        }
+        .customer{
+            font-size: 15px;
+        }
+        table thead{
+            font-size: 14px;
+        }
+        table tbody{
+            font-size: 12px;
+        }
+        img{
+            width: 150px;
+        }
+    } 
 </style>
-<div class="col-md-12 mx-auto">
-    <div class="row">
 
-        <div class="receipt-main col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
-            <div class="row">
-                <div class="receipt-header">
-                    <div class="col-xs-6 col-sm-6 col-md-6">
-                        <!-- <div class="receipt-left">
-                            <img class="img-responsive" alt="iamgurdeeposahan" src="{{doc.image}}"
-                                style="width: 150px;">
-                        </div> -->
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 text-right mt-4">
-                        <div class="receipt-right">
-                            <h3>{{doc.company}}</h3>
-                        </div>
-                    </div>
-                </div>
+<div class="center-paper">
+    <div class="paper shadow text-dark">
+        <div class="paper-top"></div>
+        <h1 class="title">{{doc.company}}</h1>
+        <hr>
+        <h5 class=" customer">{{doc.customer}}</h5>
+        <div class="row align-items-center">
+            <div class="col-md-9 col-sm-12 w-100">
+                <p class="border rounded p-2 mb-1"><b class="subtitle">Mobile :</b> <span class="text-muted">{{doc.phone}}</span></p>
+                <p class="border rounded p-2 mb-1"><b class="subtitle">Address :</b> <span class="text-muted">{{doc.current_address}}</span> </p>
+                <p class="border rounded p-2 mb-1"><b class="subtitle">NO :</b> <span class="text-muted">{{title}}</span> </p>
+                <p class="border rounded p-2 mb-1"><b class="subtitle">Sales Person :</b> <span class="text-muted">{{full_name}}</span> </p>
             </div>
-
-            <div class="row">
-                <div class="receipt-header receipt-header-mid">
-                    <div class="col-xs-8 col-sm-8 col-md-8 text-left">
-                        <div class="receipt-right">
-                            <h5>{{doc.customer}}</h5>
-                            <p><b>Mobile :</b> {{doc.phone}}</p>
-                            <p><b>Address :</b> {{doc.current_address}}</p>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6">
-                        <div class="receipt-left">
-                            <h6 style="width: max-content;">INVOICE # {{title}}</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-md-7">Amount</td>
-                            <td class="col-md-5"><i class="fa fa-inr"></i> {{doc.amount}} / {{doc.amount_currency}}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-7">Amount Company Currency</td>
-                            <td class="col-md-5"><i class="fa fa-inr"></i> {{doc.amount_other_currency}} /
-                                {{doc.company_currency}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="row">
-                <div class="receipt-header receipt-header-mid receipt-footer">
-                    <div class="col-xs-8 col-sm-8 col-md-8 text-left">
-                        <div class="receipt-right">
-                            <p><b>Date :<br><br></b> {{doc.date}}</p>
-                            <h5 style="color: rgb(140, 140, 140);">AOAI Tecnologies</h5>
-                        </div>
-                    </div>
-                    
-                    <div class="col-xs-6 col-sm-6 col-md-6">
-                        <div>
-                            <h1 class="font-weight-bold">Encrypt: <br><br>{{doc.route}}</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <img class="col hidden-xs" src="{{doc.image}}" alt="">
         </div>
+        <table class="table mt-4">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Amount</td>
+                <td>{{doc.amount}} / {{doc.amount_currency}}</td>
+              </tr>
+              <tr>
+                <td>Amount Company Currency</td>
+                <td>{{doc.amount_other_currency}} / {{doc.company_currency}}</td>
+              </tr>
+              {% if amount_currency != company_currency %}
+              <tr>
+                <td>Exchange Rate</td>
+                <td>{{ "%0.3f" | format(1/doc.amount_other_currency | float) }}</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+       
+          {% if doc.invoices %}
+            <table class="table mt-4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Invoice No</th>
+                        <th scope="col">Outstanding</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in doc.invoices %}
+                        <tr>
+                            <td>{{row.invoice_no}}</td>
+                            <td>{{row.out_standing_amount}} / {{row.currency}}</td>
+                            <td>{{row.date}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+          {% endif %}
+          <hr>
+          
+        <div class="paper-footer">
+            <p class="px-2"><b class="subtitle">Date :</b> <span class="text-muted">{{doc.date}}</span></p>
+            <p class="px-2"><b class="subtitle">Encrypt :</b> <span class="text-muted">{{doc.route}}</span></p>
+        </div>
+        <hr>
+        <h5 class="text-center"><a href="https://aoai.io" target="_blank">AOAI Technology</a></h5>
     </div>
 </div>
-
-
+<script>
+    document.addEventListener("resize",(e)=>{
+        console.log("resizing")
+    })
+</script>
 {% endblock %}
 
-<!-- this is a sample default web page template -->
