@@ -97,6 +97,7 @@
                 <p class="border rounded p-2 mb-1"><b class="subtitle">Mobile :</b> <span class="text-muted">{{doc.phone}}</span></p>
                 <p class="border rounded p-2 mb-1"><b class="subtitle">Address :</b> <span class="text-muted">{{doc.current_address}}</span> </p>
                 <p class="border rounded p-2 mb-1"><b class="subtitle">NO :</b> <span class="text-muted">{{title}}</span> </p>
+                <p class="border rounded p-2 mb-1"><b class="subtitle">Sales Person :</b> <span class="text-muted">{{full_name}}</span> </p>
             </div>
             <img class="col hidden-xs" src="{{doc.image}}" alt="">
         </div>
@@ -116,6 +117,12 @@
                 <td>Amount Company Currency</td>
                 <td>{{doc.amount_other_currency}} / {{doc.company_currency}}</td>
               </tr>
+              {% if amount_currency != company_currency %}
+              <tr>
+                <td>Exchange Rate</td>
+                <td>{{ "%0.3f" | format(1/doc.amount_other_currency | float) }}</td>
+              </tr>
+              {% endif %}
             </tbody>
           </table>
        
@@ -124,7 +131,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Invoice No</th>
-                        <th scope="col">O.A</th>
+                        <th scope="col">Outstanding</th>
                         <th scope="col">Date</th>
                     </tr>
                 </thead>
@@ -132,7 +139,7 @@
                     {% for row in doc.invoices %}
                         <tr>
                             <td>{{row.invoice_no}}</td>
-                            <td>{{row.out_standing_amount}}</td>
+                            <td>{{row.out_standing_amount}} / {{row.currency}}</td>
                             <td>{{row.date}}</td>
                         </tr>
                     {% endfor %}
@@ -140,10 +147,13 @@
                 </table>
           {% endif %}
           <hr>
+          
         <div class="paper-footer">
             <p class="px-2"><b class="subtitle">Date :</b> <span class="text-muted">{{doc.date}}</span></p>
             <p class="px-2"><b class="subtitle">Encrypt :</b> <span class="text-muted">{{doc.route}}</span></p>
         </div>
+        <hr>
+        <h5 class="text-center"><a href="https://aoai.io" target="_blank">AOAI Technology</a></h5>
     </div>
 </div>
 <script>

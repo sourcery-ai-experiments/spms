@@ -176,7 +176,7 @@ frappe.ui.form.on('Collecting', {
 								'outstanding_amount': ['>', 0],
 								'customer': values.customer_name
 							},
-							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status'],
+							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
 							limit: 500
 						}).then(res => {
 							for (const element of res) {
@@ -186,6 +186,7 @@ frappe.ui.form.on('Collecting', {
 								row.posting_date = element.date;
 								row.out_standing_amount = element.outstanding_amount;
 								row.status = element.status;
+								row.currency = element.currency;
 								frm.refresh_fields("invoices");
 							}
 						});
