@@ -115,7 +115,7 @@
               </tr>
               <tr>
                 <td>Amount Company Currency</td>
-                <td>{{amount_other_currency}} / {{company_currency}}</td>
+                <td>{{"{:,}".format(amount_other_currency)}} / {{company_currency}}</td>
               </tr>
               {% if amount_currency != company_currency %}
               <tr>
