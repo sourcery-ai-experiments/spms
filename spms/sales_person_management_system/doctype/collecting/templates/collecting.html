@@ -120,7 +120,7 @@
               {% if amount_currency != company_currency %}
               <tr>
                 <td>Exchange Rate</td>
-                <td>{{ "%0.3f" | format(1/amount_other_currency | float) }}</td>
+                <td>{{ "%0.3f" | format(1/exchange_rate | float) }}</td>
               </tr>
               {% endif %}
             </tbody>
