@@ -111,22 +111,22 @@
             <tbody>
               <tr>
                 <td>Amount</td>
-                <td>{{doc.amount}} / {{doc.amount_currency}}</td>
+                <td>{{"{:,}".format(amount)}} / {{amount_currency}}</td>
               </tr>
               <tr>
                 <td>Amount Company Currency</td>
-                <td>{{doc.amount_other_currency}} / {{doc.company_currency}}</td>
+                <td>{{"{:,}".format(amount_other_currency)}} / {{company_currency}}</td>
               </tr>
               {% if amount_currency != company_currency %}
               <tr>
                 <td>Exchange Rate</td>
-                <td>{{ "%0.3f" | format(1/doc.amount_other_currency | float) }}</td>
+                <td>{{ "%0.3f" | format(1/amount_other_currency | float) }}</td>
               </tr>
               {% endif %}
             </tbody>
           </table>
        
-          {% if doc.invoices %}
+          {% if invoices %}
             <table class="table mt-4">
                 <thead class="thead-dark">
                     <tr>
@@ -139,7 +139,7 @@
                     {% for row in doc.invoices %}
                         <tr>
                             <td>{{row.invoice_no}}</td>
-                            <td>{{row.out_standing_amount}} / {{row.currency}}</td>
+                            <td>{{"{:,}".format(row.out_standing_amount)}} / {{row.currency}}</td>
                             <td>{{row.date}}</td>
                         </tr>
                     {% endfor %}
