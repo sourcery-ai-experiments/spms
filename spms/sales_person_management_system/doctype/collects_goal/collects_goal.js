@@ -120,10 +120,25 @@ frappe.ui.form.on('Collects Goal', {
 		set_css(frm);
 	}
 })
+
+frappe.ui.form.on('Collects Goal', {
+	refresh: function (frm) {
+		if(frm.doc.customer_collects_goal){
+			for(let row of frm.doc.customer_collects_goal){
+				row.achieved_collects = (row.verified_collects / row.amount_of_money)*100 || 0
+				row.achieved_collects = Math.round(row.achieved_collects)
+				row.achieved_visits = (row.verified_visits / row.number_of_visits)*100
+				row.achieved_visits = Math.round(row.achieved_visits)
+			}
+		}
+	}
+})
+
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
 		refresh_when_click_btn(frm)
-		progress_bar(frm,"customer_collects_goal","verified_collects")
+		progress_bar(frm,"customer_collects_goal","achieved_collects")
+		progress_bar(frm,"customer_collects_goal","achieved_visits")
 	}
 })
 

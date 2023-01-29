@@ -34,8 +34,8 @@ class Collecting(WebsiteGenerator):
             for i in collect_goal_doc.customer_collects_goal:
                 if (i.customer == self.customer):
                     # i.verified_collects = i.verified_collects + self.amount_other_currency
-                    i.verified_collects = i.verified_collects + 1
-                    i.verified_collects = (i.verified_collects / 1)*100
+                    i.verified_collects = i.verified_collects + self.amount
+                    i.verified_visits += 1
                     customer_not_found = False
                     break
             # if customer not found so we add the amount to the  'additional_collected'
@@ -67,6 +67,7 @@ class Collecting(WebsiteGenerator):
         collect_goal_doc.save()
 
     def on_cancel(self) -> None:
+        return
         # Get name of Collects Goal Document Depend on Sales Person and Date
         collect_goal_name = frappe.db.get_value('Collects Goal', {
             'sales_person': self.visited_by,
