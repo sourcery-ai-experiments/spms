@@ -44,3 +44,7 @@ def update_target_on_sales_invoice_submit(doc, method) -> None:
             # updating the sales person doc to the parent sales person doc.
             sales_person_doc = frappe.get_doc(
                 "Sales Person", parent_visit_goal.sales_person)
+
+
+
+

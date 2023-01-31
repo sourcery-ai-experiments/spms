@@ -51,7 +51,7 @@ def update_visit_goal(self, operation):
         visit_goal_doc, self.doctor_name, operation)
 
     # Traverse the tree upwards and update the verified visits for the parent sales person
-    while sales_person_doc.parent_sales_person != "Sales Team":
+    while True:
         parent_visit_goal = self.get_visit_goal_doc(
             sales_person_doc.parent_sales_person)
         sales_person_doc = update_visit_goal_for_doctor(
