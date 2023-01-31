@@ -33,3 +33,25 @@ def generate_qrcode(site_name, route_name):
 
     # Returning the file path of the QR code image.
     return (f"/files/{file_name}.png")
+
+
+
+def update_visit_goal(self, operation):
+    def update_visit_goal_for_doctor(visit_goal_doc, doctor_name, operation):
+        for row in visit_goal_doc.productivity:
+            if row.doctor == doctor_name:
+                row.verified_visits += operation
+                row.achievement = round(row.verified_visits / row.number_of_visits * 100)
+
+        visit_goal_doc.save()
+
+        return frappe.get_doc("Sales Person", visit_goal_doc.sales_person)
+
+    visit_goal_doc = self.get_visit_goal_doc(self.visited_by)
+    sales_person_doc = update_visit_goal_for_doctor(visit_goal_doc, self.doctor_name, operation)
+
+    # Traverse the tree upwards and update the verified visits for the parent sales person
+    while sales_person_doc.parent_sales_person != "Sales Team":
+        parent_visit_goal = self.get_visit_goal_doc(sales_person_doc.parent_sales_person)
+        frappe.msgprint("its works")
+        sales_person_doc = update_visit_goal_for_doctor(parent_visit_goal, self.doctor_name, operation)

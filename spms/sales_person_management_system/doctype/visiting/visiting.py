@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
+from spms.methods.utils import update_visit_goal
 
 
 class Visiting(WebsiteGenerator):
@@ -22,30 +23,12 @@ class Visiting(WebsiteGenerator):
 
 	def on_submit(self):
 		"""
-		It increments the number of verified visits for the doctor in the visit goal document
+		This function updates the visit goal for the current user by 1
 		"""
-		visit_goal_doc = self.get_visit_goal_doc(self.visited_by)
+		update_visit_goal(self, 1)
 
-		for row in visit_goal_doc.productivity:
-			if row.doctor == self.doctor_name:
-				row.verified_visits += 1
-				row.achievement = round(
-					row.verified_visits / row.number_of_visits * 100)
-
-		visit_goal_doc.save()
-
-		# Getting the sales person doc from the sales person in visit goal doc.
-		sales_person_doc = frappe.get_doc("Sales Person",visit_goal_doc.sales_person)
-
-		# Traversing the tree upwards , to the parents and Updating the verified visits for the parent sales person.
-		# we check if the parent_sales_person is not equal to 'Sales Team' which is the root of the sales person tree
-		while sales_person_doc.parent_sales_person != "Sales Team":
-			parent_visit_goal = self.get_visit_goal_doc(sales_person_doc.parent_sales_person)
-			for row in parent_visit_goal.productivity:
-				if row.doctor == self.doctor_name:
-					row.verified_visits += 1
-					row.achievement = round(
-						row.verified_visits / row.number_of_visits * 100)
-			parent_visit_goal.save()
-			# updating the sales person doc to the parent sales person doc.
-			sales_person_doc = frappe.get_doc("Sales Person",parent_visit_goal.sales_person)
+	def on_cancel(self):
+		"""
+		It updates the visit goal by subtracting 1 from the current visit goal
+		"""
+		update_visit_goal(self, -1)
