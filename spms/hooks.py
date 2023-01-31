@@ -1,5 +1,5 @@
 from . import __version__ as app_version
-from .methods.update_target_on_sales_invoice_submit import update_target_on_sales_invoice_submit
+from .methods.update_target_on_sales_invoice_events import update_target_on_sales_invoice_submit
 app_name = "spms"
 app_title = "Sales Person Management System"
 app_publisher = "aoai"
@@ -104,7 +104,8 @@ doc_events = {
     # },
     "Sales Invoice": {
         # will run before a ToDo record is inserted into database
-        "on_submit": "spms.methods.update_target_on_sales_invoice_submit.update_target_on_sales_invoice_submit",
+        "on_submit": "spms.methods.update_target_on_sales_invoice_events.update_target_on_sales_invoice_submit",
+        "on_cancel": "spms.methods.update_target_on_sales_invoice_events.update_target_on_sales_invoice_cancel",
     }
 }
 

@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from spms.methods.utils import update_visit_goal
+from spms.methods.utils import update_visit_goal, get_visit_goal
 
 
 class Visiting(WebsiteGenerator):

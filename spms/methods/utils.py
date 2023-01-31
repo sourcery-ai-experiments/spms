@@ -51,8 +51,24 @@ def update_visit_goal(self, operation):
         visit_goal_doc, self.doctor_name, operation)
 
     # Traverse the tree upwards and update the verified visits for the parent sales person
-    while True:
-        parent_visit_goal = self.get_visit_goal_doc(
-            sales_person_doc.parent_sales_person)
-        sales_person_doc = update_visit_goal_for_doctor(
-            parent_visit_goal, self.doctor_name, operation)
+    parent_visit_goal = self.get_visit_goal_doc(
+        sales_person_doc.parent_sales_person)
+    sales_person_doc = update_visit_goal_for_doctor(
+        parent_visit_goal, self.doctor_name, operation)
+
+
+def get_visit_goal(doc):
+    """
+    Get the visit goal for the given sales person and company for the given date
+
+    :param doc: The current document that is being saved
+    :return: A dictionary with the name of the visit goal
+    """
+    visit_goal_name = frappe.db.get_value("Visit Goal", {
+        "sales_person": doc.sales_person,
+        "company": doc.company,
+        "from": ["<=", doc.posting_date],
+        "to": [">=", doc.posting_date]
+    }, ["name"], as_dict=1)
+
+    return frappe.get_doc("Visit Goal", visit_goal_name)
