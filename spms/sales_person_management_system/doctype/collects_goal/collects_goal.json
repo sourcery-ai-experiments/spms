@@ -34,7 +34,12 @@
   "total_collected",
   "commissions_section",
   "commissions_range",
-  "amended_from"
+  "amended_from",
+  "lft",
+  "rgt",
+  "is_group",
+  "old_parent",
+  "parent_collects_goal"
  ],
  "fields": [
   {
@@ -101,12 +106,12 @@
   },
   {
    "allow_bulk_edit": 1,
-   "depends_on": "eval:doc.target_type == 'According to Customer indebtedness' || doc.target_type == 'Debt + Additional Target'",
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
    "fieldname": "customer_collects_goal",
    "fieldtype": "Table",
    "in_standard_filter": 1,
    "label": "Customer Collects Goal",
-   "mandatory_depends_on": "eval:doc.target_type == 'According to Customer indebtedness' || doc.target_type == 'Debt + Additional Target'",
+   "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
    "options": "Customer Collects Goal"
   },
   {
@@ -179,7 +184,7 @@
    "fieldname": "target_type",
    "fieldtype": "Select",
    "label": "Target Type",
-   "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
+   "options": "Customer Debt-based Target\nFixed Target"
   },
   {
    "depends_on": "eval:doc.target_type == 'Fixed Target'",
@@ -189,14 +194,14 @@
    "mandatory_depends_on": "eval:doc.target_type == 'Fixed Target'"
   },
   {
-   "depends_on": "eval:doc.target_type == 'Debt + Additional Target'",
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
    "fieldname": "additional_target_int",
    "fieldtype": "Currency",
    "label": "Additional Target",
-   "mandatory_depends_on": "eval:doc.target_type == 'Debt + Additional Target'"
+   "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'"
   },
   {
-   "depends_on": "eval:doc.target_type == 'Debt + Additional Target'",
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
    "fieldname": "additional_collected",
    "fieldtype": "Currency",
    "label": "Additional collected",
@@ -224,16 +229,52 @@
    "fieldtype": "Data",
    "label": "Territory",
    "read_only": 1
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "Collects Goal"
+  },
+  {
+   "fieldname": "parent_collects_goal",
+   "fieldtype": "Link",
+   "label": "Parent Collects Goal",
+   "options": "Collects Goal"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
+ "is_tree": 1,
  "links": [],
- "modified": "2023-01-26 09:56:33.061537",
+ "modified": "2023-01-31 21:12:50.341235",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collects Goal",
  "naming_rule": "By \"Naming Series\" field",
+ "nsm_parent_field": "parent_collects_goal",
  "owner": "Administrator",
  "permissions": [
   {

@@ -135,3 +135,125 @@ def update_parent_targets(doc, sales_person_doc, operator) -> None:
     parent_visit_goal.achieved += operator * doc.base_net_total
     update_target_breakdown(doc, parent_visit_goal, operator)
     parent_visit_goal.save()
+
+
+def calculate_fixed_target(doc, collects_goal_doc, operation):
+    """
+    It takes the amount of the payment and adds it to the total collected amount of the collects goal
+
+    :param doc: The document that is being saved
+    :param collects_goal_doc: The document that is being updated
+    :param operation: 1 for addition, -1 for subtraction
+    """
+    collects_goal_doc.total_collected += (frappe.utils.flt(
+        doc.amount_other_currency)*operation)
+    calculate_incentives(collects_goal_doc)
+    collects_goal_doc.save()
+
+
+def update_customer_table(doc, collects_goal_doc, operation):
+    """
+    It updates the customer collects goal table in the collects goal document
+
+    :param doc: The document that is being saved
+    :param collects_goal_doc: The collects goal document that will be updated
+    :param operation: 1 for insert, -1 for delete
+    """
+    # Checking if the customer is in the table. If it is, then it will update the table. If it is not,
+    # then it will add the amount to the additional collected.
+    customer_not_found = True
+    for row in collects_goal_doc.customer_collects_goal:
+        if (row.customer == doc.customer):
+            row.verified_collects += (doc.amount_other_currency * operation)
+            row.verified_visits += operation
+            customer_not_found = False
+            break
+
+    # If the customer is not found in the table, then it will add the amount to the additional collected.
+    if customer_not_found:
+        collects_goal_doc.additional_collected += (
+            doc.amount_other_currency * operation)
+
+    # Adding the verified collects of each customer in the customer collects goal table and adding it to
+    # the additional collected.
+    total = sum(
+        i.verified_collects for i in collects_goal_doc.customer_collects_goal)
+    total += collects_goal_doc.additional_collected
+
+    # Updating the total collected and calculating the incentives.
+    collects_goal_doc.total_collected = frappe.utils.flt(total)
+    calculate_incentives(collects_goal_doc)
+    collects_goal_doc.save()
+
+
+def update_collects_goal(doc, operation):
+    """
+    It updates the target of the collects goal and the parent collects goal if the parent exists
+
+    :param doc: The document that is being saved
+    :param operation: 1 for add, -1 for subtract
+    """
+    collects_goal_doc = get_collects_goal_doc(doc)
+    if (
+        collects_goal_doc.parent_collects_goal
+        and collects_goal_doc.parent_collects_goal != ""
+    ):
+        parent_collects_goal_doc = frappe.get_doc(
+            'Collects Goal', collects_goal_doc.parent_collects_goal
+        )
+    else:
+        parent_collects_goal_doc = None
+
+    # Checking if the target type is fixed target, then it will calculate the fixed target.
+    if collects_goal_doc.target_type == "Fixed Target":
+        calculate_fixed_target(doc, collects_goal_doc, operation)
+        if parent_collects_goal_doc:
+            if parent_collects_goal_doc.target_type != "Fixed Target":
+                frappe.throw(
+                    "Parent and Child must have the same target type.")
+            calculate_fixed_target(doc, parent_collects_goal_doc, 1)
+
+    # Updating the customer collects goal table in the collects goal document
+    elif collects_goal_doc.target_type == "Customer Debt-based Target":
+        update_customer_table(doc, collects_goal_doc, operation)
+        if parent_collects_goal_doc:
+            if parent_collects_goal_doc.target_type != "Customer Debt-based Target":
+                frappe.throw(
+                    "Parent and Child must have the same target type.")
+            update_customer_table(doc, parent_collects_goal_doc, operation)
+
+
+def get_collects_goal_doc(doc):
+    """
+    It gets the name of the Collects Goal that is active for the Sales Person on the date of the Visit
+    :return: The name of the Collects Goal
+    """
+    collect_goal_name = frappe.db.get_value('Collects Goal', {
+        'sales_person': doc.visited_by,
+        'company': doc.company,
+        'from': ['<=', doc.date],
+        'to': ['>=', doc.date]
+    }, ['name'], as_dict=1)
+
+    # Get objects for Specific Collects Goal
+    return frappe.get_doc('Collects Goal', collect_goal_name)
+
+
+def calculate_incentives(collects_goal_doc):
+    """
+    If the total collected is greater than or equal to the total targets, then the total incentives is
+    equal to the commission percentage of the total collected
+
+    :param collects_goal_doc: The document object of the Collect Goal
+    """
+    total_incentives = 0
+    if len(collects_goal_doc.commissions_range) != 0:
+        target_percentage = (collects_goal_doc.total_collected /
+                             collects_goal_doc.total_targets) * 100
+        for i in collects_goal_doc.commissions_range:
+            if target_percentage >= i.from_ and target_percentage <= i.to_:
+                total_incentives = (i.commission / 100) * \
+                    collects_goal_doc.total_collected
+                break
+    collects_goal_doc.incentives = frappe.utils.flt(total_incentives)
+    collects_goal_doc.save()
