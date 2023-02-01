@@ -26,7 +26,9 @@ Sales Person Management System
 
 - Generals refactors
 - Cleaning the code & formatting
+- Rename general functions
 
 #### License
 
 MIT
+
