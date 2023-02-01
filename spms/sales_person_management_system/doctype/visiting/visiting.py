@@ -3,32 +3,18 @@
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from spms.methods.utils import update_visit_goal, get_visit_goal
+from spms.methods.utils import update_visit_goal, get_visit_goal, update_doctor_productivity
 
 
 class Visiting(WebsiteGenerator):
-	def get_visit_goal_doc(self,sales_person):
-		"""
-		It returns the visit goal document for the given sales person and company for the given date
-		:return: The name of the visit goal
-		"""
-		visit_goal_name = frappe.db.get_value('Visit Goal', {
-			'sales_person': sales_person,
-			'company': self.company,
+    def on_submit(self):
+        """
+        It updates the doctor's productivity by 1
+        """
+        update_doctor_productivity(self, 1)
 
-			'from': ['<=', self.date],
-			'to': ['>=', self.date]
-		}, ['name'], as_dict=1)
-		return frappe.get_doc('Visit Goal', visit_goal_name)
-
-	def on_submit(self):
-		"""
-		This function updates the visit goal for the current user by 1
-		"""
-		update_visit_goal(self, 1)
-
-	def on_cancel(self):
-		"""
-		It updates the visit goal by subtracting 1 from the current visit goal
-		"""
-		update_visit_goal(self, -1)
+    def on_cancel(self):
+        """
+        It updates the doctor's productivity by subtracting 1 from the doctor's productivity
+        """
+        update_doctor_productivity(self, -1)

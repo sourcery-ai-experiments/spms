@@ -1,6 +1,6 @@
 import frappe
 
-from spms.methods.utils import update_target
+from spms.methods.utils import update_sales_person_target
 
 
 
@@ -11,7 +11,7 @@ def on_submit(doc, method) -> None:
     :param doc: The document object
     :param method: The method that is being called
     """
-    update_target(doc, method, 1)
+    update_sales_person_target(doc, method, 1)
 
 
 def on_cancel(doc, method) -> None:
@@ -21,4 +21,4 @@ def on_cancel(doc, method) -> None:
     :param doc: The document that is being saved
     :param method: The method that is being called
     """
-    update_target(doc, method, -1)
+    update_sales_person_target(doc, method, -1)
