@@ -1,5 +1,5 @@
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 from erpnext.controllers.selling_controller import SellingController
 from spms.methods.override_calculate_contribution_function import calculate_contribution
