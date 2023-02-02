@@ -305,11 +305,12 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-01-28 19:32:49.889945",
+ "modified": "2023-01-31 19:04:07.428426",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
  "naming_rule": "By \"Naming Series\" field",
+ "nsm_parent_field": "parent_collecting",
  "owner": "Administrator",
  "permissions": [
   {

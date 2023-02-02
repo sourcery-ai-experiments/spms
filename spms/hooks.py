@@ -1,5 +1,4 @@
 from . import __version__ as app_version
-from .methods.update_target_on_sales_invoice_submit import update_target_on_sales_invoice_submit
 app_name = "spms"
 app_title = "Sales Person Management System"
 app_publisher = "aoai"
@@ -47,7 +46,7 @@ doctype_js = {
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# "Role": "home_page"
 # }
 
 # Generators
@@ -99,12 +98,11 @@ doctype_js = {
 # Hook on document methods and events
 
 doc_events = {
-    # "Sales Invoice": {
-    #     "on_update_after_submit": "method.calculate_contribution.calculate_contribution_on_submit",
-    # },
+
+    # A hook to the sales invoice doctype.
     "Sales Invoice": {
-        # will run before a ToDo record is inserted into database
-        "on_submit": "spms.methods.update_target_on_sales_invoice_submit.update_target_on_sales_invoice_submit",
+        "on_submit": "spms.methods.events.sales_invoice.on_submit",
+        "on_cancel": "spms.methods.events.sales_invoice.on_cancel",
     }
 }
 
