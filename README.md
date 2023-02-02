@@ -27,6 +27,7 @@ Sales Person Management System
 - Generals refactors
 - Cleaning the code & formatting
 - Rename general functions
+- Remove unnecessary **functions** and **imports**
 
 #### License
 
