@@ -32,4 +32,3 @@ Sales Person Management System
 #### License
 
 MIT
-
