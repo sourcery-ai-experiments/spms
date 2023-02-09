@@ -1,372 +1,372 @@
 {
- "actions": [],
- "allow_guest_to_view": 1,
- "allow_import": 1,
- "autoname": "naming_series:",
- "creation": "2022-09-17 11:06:48.820623",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "naming_series",
-  "visited_by",
-  "full_name",
-  "sales_person_territory",
-  "column_break_3",
-  "company",
-  "company_currency",
-  "date",
-  "column_break_8",
-  "qrcode_html",
-  "customer_details_section",
-  "target_type",
-  "qr_code",
-  "customer",
-  "currency",
-  "column_break_11",
-  "customer_group",
-  "territory",
-  "phone",
-  "amount_section",
-  "amount",
-  "amount_other_currency",
-  "column_break_18",
-  "amount_currency",
-  "exchange_rate",
-  "invoice_section_section",
-  "invoices",
-  "location_section",
-  "longitude",
-  "latitude",
-  "my_location",
-  "current_address",
-  "image",
-  "route",
-  "published",
-  "amended_from"
- ],
- "fields": [
-  {
-   "fieldname": "visited_by",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Visited By",
-   "options": "Sales Person",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "visited_by.sales_person_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Full Name",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
-   "read_only": 1
-  },
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_standard_filter": 1,
-   "label": "Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Collecting",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Collecting",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fetch_from": "company.default_currency",
-   "fieldname": "company_currency",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Company Currency"
-  },
-  {
-   "fieldname": "customer_details_section",
-   "fieldtype": "Section Break",
-   "label": "Customer Details"
-  },
-  {
-   "fieldname": "currency",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Currency",
-   "options": "Currency"
-  },
-  {
-   "fieldname": "column_break_11",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "customer.customer_group",
-   "fieldname": "customer_group",
-   "fieldtype": "Data",
-   "label": "Customer Group",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "customer.mobile_no",
-   "fieldname": "phone",
-   "fieldtype": "Data",
-   "label": "Phone",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "customer.territory",
-   "fieldname": "territory",
-   "fieldtype": "Data",
-   "label": "Territory",
-   "read_only": 1
-  },
-  {
-   "fieldname": "amount_section",
-   "fieldtype": "Section Break",
-   "label": "Amount"
-  },
-  {
-   "fieldname": "amount",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Amount",
-   "reqd": 1
-  },
-  {
-   "depends_on": "eval:doc.amount_currency != doc.company_currency",
-   "fieldname": "amount_other_currency",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Amount Company Currency",
-   "mandatory_depends_on": "eval:doc.amount_currency != doc.company_currency",
-   "read_only_depends_on": "eval:doc.amount_currency != doc.company_currency"
-  },
-  {
-   "fieldname": "column_break_18",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "amount_currency",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Amount Currency",
-   "options": "Currency",
-   "reqd": 1
-  },
-  {
-   "depends_on": "eval:doc.amount_currency != doc.company_currency",
-   "fieldname": "exchange_rate",
-   "fieldtype": "Float",
-   "label": "Exchange Rate",
-   "mandatory_depends_on": "eval:doc.amount_currency != doc.company_currency",
-   "non_negative": 1,
-   "precision": "9"
-  },
-  {
-   "fieldname": "invoice_section_section",
-   "fieldtype": "Section Break",
-   "label": "Invoice Section"
-  },
-  {
-   "fieldname": "invoices",
-   "fieldtype": "Table",
-   "label": "Invoices",
-   "options": "Reference Invoice Collects"
-  },
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "SPM-COL-.YYYY.-",
-   "reqd": 1
-  },
-  {
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Customer",
-   "options": "Customer",
-   "reqd": 1
-  },
-  {
-   "fieldname": "qr_code",
-   "fieldtype": "Image",
-   "hidden": 1,
-   "label": "QR Code",
-   "options": "image"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "location_section",
-   "fieldtype": "Section Break",
-   "label": "Location"
-  },
-  {
-   "fieldname": "longitude",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Longitude"
-  },
-  {
-   "fieldname": "latitude",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Latitude"
-  },
-  {
-   "fieldname": "my_location",
-   "fieldtype": "HTML",
-   "label": "Position"
-  },
-  {
-   "fieldname": "current_address",
-   "fieldtype": "Read Only",
-   "label": "Address"
-  },
-  {
-   "fieldname": "image",
-   "fieldtype": "Attach Image",
-   "hidden": 1,
-   "label": "image"
-  },
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route",
-   "read_only": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "published",
-   "fieldtype": "Check",
-   "label": "Published"
-  },
-  {
-   "depends_on": "eval: doc.__unsaved != 1",
-   "fieldname": "qrcode_html",
-   "fieldtype": "HTML",
-   "label": "QRCode HTML",
-   "options": "<img alt=\"QRCode Will Show Here\" class=\"rounded\" height=\"150\" src=\"{{ doc.image }}\" width=\"150\">"
-  },
-  {
-   "fieldname": "column_break_8",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "visited_by.territory",
-   "fieldname": "sales_person_territory",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Sales Person Territory"
-  },
-  {
-   "fieldname": "target_type",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Target Type",
-   "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
-  }
- ],
- "has_web_view": 1,
- "index_web_pages_for_search": 1,
- "is_published_field": "published",
- "is_submittable": 1,
- "links": [
-  {
-   "link_doctype": "Payment Entry",
-   "link_fieldname": "company"
-  },
-  {
-   "link_doctype": "Journal Entry",
-   "link_fieldname": "company"
-  }
- ],
- "modified": "2023-01-31 19:04:07.428426",
- "modified_by": "Administrator",
- "module": "Sales Person Management System",
- "name": "Collecting",
- "naming_rule": "By \"Naming Series\" field",
- "nsm_parent_field": "parent_collecting",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "select": 1,
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Sales Manager",
-   "select": 1,
-   "share": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Sales User",
-   "select": 1,
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Accounts User",
-   "select": 1,
-   "share": 1
-  }
- ],
- "route": "collecting",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1,
- "track_seen": 1,
- "track_views": 1
+    "actions": [],
+    "allow_guest_to_view": 1,
+    "allow_import": 1,
+    "autoname": "naming_series:",
+    "creation": "2022-09-17 11:06:48.820623",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "naming_series",
+        "visited_by",
+        "full_name",
+        "sales_person_territory",
+        "column_break_3",
+        "company",
+        "company_currency",
+        "date",
+        "column_break_8",
+        "qrcode_html",
+        "customer_details_section",
+        "target_type",
+        "qr_code",
+        "customer",
+        "currency",
+        "column_break_11",
+        "customer_group",
+        "territory",
+        "phone",
+        "amount_section",
+        "amount",
+        "amount_other_currency",
+        "column_break_18",
+        "amount_currency",
+        "exchange_rate",
+        "invoice_section_section",
+        "invoices",
+        "location_section",
+        "longitude",
+        "latitude",
+        "my_location",
+        "current_address",
+        "image",
+        "route",
+        "published",
+        "amended_from"
+    ],
+    "fields": [
+        {
+            "fieldname": "visited_by",
+            "fieldtype": "Link",
+            "in_standard_filter": 1,
+            "label": "Visited By",
+            "options": "Sales Person",
+            "reqd": 1
+        },
+        {
+            "fetch_from": "visited_by.sales_person_name",
+            "fieldname": "full_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Full Name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_3",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "company",
+            "fieldtype": "Link",
+            "label": "Company",
+            "options": "Company",
+            "read_only": 1
+        },
+        {
+            "default": "Today",
+            "fieldname": "date",
+            "fieldtype": "Date",
+            "in_standard_filter": 1,
+            "label": "Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "amended_from",
+            "fieldtype": "Link",
+            "label": "Amended From",
+            "no_copy": 1,
+            "options": "Collecting",
+            "print_hide": 1,
+            "read_only": 1
+        },
+        {
+            "fieldname": "amended_from",
+            "fieldtype": "Link",
+            "label": "Amended From",
+            "no_copy": 1,
+            "options": "Collecting",
+            "print_hide": 1,
+            "read_only": 1
+        },
+        {
+            "fetch_from": "company.default_currency",
+            "fieldname": "company_currency",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Company Currency"
+        },
+        {
+            "fieldname": "customer_details_section",
+            "fieldtype": "Section Break",
+            "label": "Customer Details"
+        },
+        {
+            "fieldname": "currency",
+            "fieldtype": "Link",
+            "hidden": 1,
+            "label": "Currency",
+            "options": "Currency"
+        },
+        {
+            "fieldname": "column_break_11",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fetch_from": "customer.customer_group",
+            "fieldname": "customer_group",
+            "fieldtype": "Data",
+            "label": "Customer Group",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "customer.mobile_no",
+            "fieldname": "phone",
+            "fieldtype": "Data",
+            "label": "Phone",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "customer.territory",
+            "fieldname": "territory",
+            "fieldtype": "Data",
+            "label": "Territory",
+            "read_only": 1
+        },
+        {
+            "fieldname": "amount_section",
+            "fieldtype": "Section Break",
+            "label": "Amount"
+        },
+        {
+            "fieldname": "amount",
+            "fieldtype": "Float",
+            "in_list_view": 1,
+            "label": "Amount",
+            "reqd": 1
+        },
+        {
+            "depends_on": "eval:doc.amount_currency != doc.company_currency",
+            "fieldname": "amount_other_currency",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Amount Company Currency",
+            "mandatory_depends_on": "eval:doc.amount_currency != doc.company_currency",
+            "read_only_depends_on": "eval:doc.amount_currency != doc.company_currency"
+        },
+        {
+            "fieldname": "column_break_18",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "amount_currency",
+            "fieldtype": "Link",
+            "in_standard_filter": 1,
+            "label": "Amount Currency",
+            "options": "Currency",
+            "reqd": 1
+        },
+        {
+            "depends_on": "eval:doc.amount_currency != doc.company_currency",
+            "fieldname": "exchange_rate",
+            "fieldtype": "Float",
+            "label": "Exchange Rate",
+            "mandatory_depends_on": "eval:doc.amount_currency != doc.company_currency",
+            "non_negative": 1,
+            "precision": "9"
+        },
+        {
+            "fieldname": "invoice_section_section",
+            "fieldtype": "Section Break",
+            "label": "Invoice Section"
+        },
+        {
+            "fieldname": "invoices",
+            "fieldtype": "Table",
+            "label": "Invoices",
+            "options": "Reference Invoice Collects"
+        },
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "label": "Series",
+            "options": "SPM-COL-.YYYY.-",
+            "reqd": 1
+        },
+        {
+            "fieldname": "customer",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Customer",
+            "options": "Customer",
+            "reqd": 1
+        },
+        {
+            "fieldname": "qr_code",
+            "fieldtype": "Image",
+            "hidden": 1,
+            "label": "QR Code",
+            "options": "image"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "location_section",
+            "fieldtype": "Section Break",
+            "label": "Location"
+        },
+        {
+            "fieldname": "longitude",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Longitude"
+        },
+        {
+            "fieldname": "latitude",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Latitude"
+        },
+        {
+            "fieldname": "my_location",
+            "fieldtype": "HTML",
+            "label": "Position"
+        },
+        {
+            "fieldname": "current_address",
+            "fieldtype": "Read Only",
+            "label": "Address"
+        },
+        {
+            "fieldname": "image",
+            "fieldtype": "Attach Image",
+            "hidden": 1,
+            "label": "image"
+        },
+        {
+            "fieldname": "route",
+            "fieldtype": "Data",
+            "label": "Route",
+            "read_only": 1
+        },
+        {
+            "default": "1",
+            "fieldname": "published",
+            "fieldtype": "Check",
+            "label": "Published"
+        },
+        {
+            "depends_on": "eval: doc.__unsaved != 1",
+            "fieldname": "qrcode_html",
+            "fieldtype": "HTML",
+            "label": "QRCode HTML",
+            "options": "<img alt=\"QRCode Will Show Here\" class=\"rounded\" height=\"150\" src=\"{{ doc.image }}\" width=\"150\">"
+        },
+        {
+            "fieldname": "column_break_8",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fetch_from": "visited_by.territory",
+            "fieldname": "sales_person_territory",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Sales Person Territory"
+        },
+        {
+            "fieldname": "target_type",
+            "fieldtype": "Select",
+            "hidden": 1,
+            "label": "Target Type",
+            "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
+        }
+    ],
+    "has_web_view": 1,
+    "index_web_pages_for_search": 1,
+    "is_published_field": "published",
+    "is_submittable": 1,
+    "links": [
+        {
+            "link_doctype": "Payment Entry",
+            "link_fieldname": "company"
+        },
+        {
+            "link_doctype": "Journal Entry",
+            "link_fieldname": "company"
+        }
+    ],
+    "modified": "2023-01-31 19:04:07.428426",
+    "modified_by": "Administrator",
+    "module": "Sales Person Management System",
+    "name": "Collecting",
+    "naming_rule": "By \"Naming Series\" field",
+    "nsm_parent_field": "parent_collecting",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        },
+        {
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Sales Manager",
+            "select": 1,
+            "share": 1
+        },
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Sales User",
+            "select": 1,
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        },
+        {
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Accounts User",
+            "select": 1,
+            "share": 1
+        }
+    ],
+    "route": "collecting",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1,
+    "track_seen": 1,
+    "track_views": 1
 }

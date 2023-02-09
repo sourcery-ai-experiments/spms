@@ -121,6 +121,27 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
+/* Used to filter the parent field in the Collects Goal doctype. */
+cur_frm.fields_dict['parent_collects_goal'].get_query = function(doc, cdt, cdn) {
+	return{
+		filters: [
+			['Collects Goal', 'is_group', '=', 1],
+			['Collects Goal', 'name', '!=', doc.name]
+		]
+	}
+}
+
+/* Used to filter the old parent field in the Collects Goal doctype. */
+cur_frm.fields_dict['old_parent'].get_query = function(doc, cdt, cdn) {
+	return{
+		filters: [
+			['Collects Goal', 'is_group', '=', 1],
+			['Collects Goal', 'name', '!=', doc.name]
+		]
+	}
+}
+
+/* Calculating the achieved collects and achieved visits for each row in the table. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
 		if(frm.doc.customer_collects_goal){
@@ -134,6 +155,7 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
+/* A trigger that is called when the user refreshes the form. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
 		refresh_when_click_btn(frm)
@@ -173,6 +195,14 @@ function reset_target_values(frm) {
 	frm.refresh();
 }
 
+/**
+ * It takes a table field, a field name, and an optional color and text, and then it replaces the field
+ * with a progress bar
+ * @param frm - The current form object
+ * @param table_name - The name of the table you want to add the progress bar to.
+ * @param field_name - The name of the field that you want to display as a progress bar.
+ * @param [options] - 
+ */
 function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
 	for(let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
 		let idx = $(row).data("idx") - 1
