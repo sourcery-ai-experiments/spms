@@ -38,7 +38,7 @@ Sales Person Management System
 
 - Change doctype layout to tab view(**collects goal, visit goal**)
 - split layout into smaller columns to fit viewport
-- add reset button ``Reset Fields`` to reset all fields in visit goal and achievements records
+- add reset button ``Reset Fields`` to reset all fields in visit goal and achievements records (#30)
 
 ### Bug Fixes
 
