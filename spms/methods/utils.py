@@ -152,8 +152,8 @@ def calculate_fixed_target(doc, collects_goal_doc, operation):
 	:param collects_goal_doc: The document that is being updated
 	:param operation: 1 for addition, -1 for subtraction
 	"""
-	collects_goal_doc.total_collected += (frappe.utils.flt(
-		doc.amount_other_currency)*operation)
+	collects_goal_doc.total_collected += frappe.utils.flt(
+		doc.amount_other_currency * operation)
 	calculate_incentives(collects_goal_doc)
 	collects_goal_doc.save()
 
@@ -218,7 +218,7 @@ def update_collects_goal(doc, operation):
 			if parent_collects_goal_doc.target_type != "Fixed Target":
 				frappe.throw(
 					"Parent and Child must have the same target type.")
-			calculate_fixed_target(doc, parent_collects_goal_doc, 1)
+			calculate_fixed_target(doc, parent_collects_goal_doc, operation)
 
 	# Updating the customer collects goal table in the collects goal document
 	elif collects_goal_doc.target_type == "Customer Debt-based Target":

@@ -29,6 +29,24 @@ Sales Person Management System
 - Rename general functions
 - Remove unnecessary **functions** and **imports**
 
+<hr>
+## 0.1.4 - 2023-02-11
+
+## Features and Changes in 0.1.4
+
+### New Features
+
+- Change doctype layout to tab view(**collects goal, visit goal**)
+- split layout into smaller columns to fit viewport
+
+### Bug Fixes
+
+- Refactor code on visiting doctype
+- fix ```on_cancel``` subtraction for collecting in type ``fixed_target``
+
+### Miscellaneous
+
+- 
 #### License
 
 MIT
