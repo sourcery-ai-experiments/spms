@@ -1,6 +1,17 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+
+/* Adding a button to the form. */
+frappe.ui.form.on('Visit Goal', {
+	refresh: function (frm) {
+		frm.add_custom_button(__('Reset Fields'), function () {
+			resetFields(frm)
+		}).addClass("btn-danger");
+	}
+});
+
+
 let first_try = true
 
 /**
@@ -221,4 +232,45 @@ function set_css(frm) {
 	}
 }
 
+/**
+ * It resets the fields of the form
+ * @param frm - The form object
+ */
+function resetFields(frm) {
+	frm.doc.achieved = 0
+	frm.doc.from = null
+	frm.doc.to = null
+	frm.doc.target = 0
+	frm.doc.number_of_days = 0
+	frm.doc.parent_visit_goal = null
+	resetProductivityTable(frm)
+	resetTargetBreakdownTable(frm)
+	frm.refresh()
+}
 
+
+/**
+ * "Reset the verified visits and achievement fields in the productivity table."
+ * 
+ * The function is called from the "Reset" button in the productivity table
+ * @param frm - The current form object
+ */
+function resetProductivityTable(frm) {
+	for (let row of frm.doc.productivity) {
+		row.verified_visits = 0;
+		row.achievement = 0
+	}
+}
+
+/**
+ * "Reset the achievement and sold columns of the target breakdown table."
+ * 
+ * The function takes a single argument, which is the form object
+ * @param frm - The current form object
+ */
+function resetTargetBreakdownTable(frm) {
+	for (let row of frm.doc.target_breakdown) {
+		row.achievement = 0;
+		row.sold = 0;
+	}
+}
