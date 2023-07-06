@@ -1,62 +1,62 @@
 {
- "cards": [
-  {
-   "card": "Active Customers"
-  },
-  {
-   "card": "Sales Orders to Bill"
-  },
-  {
-   "card": "Sales Orders to Deliver"
-  },
-  {
-   "card": "Total Outgoing Bills"
-  }
- ],
- "charts": [
-  {
-   "chart": "Collecting Analysis",
-   "width": "Full"
-  },
-  {
-   "chart": "Visitings By Item",
-   "width": "Half"
-  },
-  {
-   "chart": "Sales Order Trends",
-   "width": "Half"
-  },
-  {
-   "chart": "Sales Order Analysis",
-   "width": "Half"
-  },
-  {
-   "chart": "Profit and Loss",
-   "width": "Half"
-  },
-  {
-   "chart": "Item-wise Annual Sales",
-   "width": "Full"
-  },
-  {
-   "chart": "Top Customers",
-   "width": "Half"
-  },
-  {
-   "chart": "Top Suppliers",
-   "width": "Half"
-  }
- ],
- "creation": "2022-09-17 14:06:37.128526",
- "dashboard_name": "SPMS",
- "docstatus": 0,
- "doctype": "Dashboard",
- "idx": 0,
- "is_default": 1,
- "is_standard": 1,
- "modified": "2022-09-26 13:04:25.521797",
- "modified_by": "Administrator",
- "module": "Sales Person Management System",
- "name": "SPMS",
- "owner": "Administrator"
+    "cards": [
+        {
+            "card": "Active Customers"
+        },
+        {
+            "card": "Sales Orders to Bill"
+        },
+        {
+            "card": "Sales Orders to Deliver"
+        },
+        {
+            "card": "Total Outgoing Bills"
+        }
+    ],
+    "charts": [
+        {
+            "chart": "Collecting Analysis",
+            "width": "Full"
+        },
+        {
+            "chart": "Visitings By Item",
+            "width": "Half"
+        },
+        {
+            "chart": "Sales Order Trends",
+            "width": "Half"
+        },
+        {
+            "chart": "Sales Order Analysis",
+            "width": "Half"
+        },
+        {
+            "chart": "Profit and Loss",
+            "width": "Half"
+        },
+        {
+            "chart": "Item-wise Annual Sales",
+            "width": "Full"
+        },
+        {
+            "chart": "Top Customers",
+            "width": "Half"
+        },
+        {
+            "chart": "Top Suppliers",
+            "width": "Half"
+        }
+    ],
+    "creation": "2022-09-17 14:06:37.128526",
+    "dashboard_name": "SPMS",
+    "docstatus": 0,
+    "doctype": "Dashboard",
+    "idx": 0,
+    "is_default": 1,
+    "is_standard": 1,
+    "modified": "2022-09-26 13:04:25.521797",
+    "modified_by": "Administrator",
+    "module": "Sales Person Management System",
+    "name": "SPMS",
+    "owner": "Administrator"
 }

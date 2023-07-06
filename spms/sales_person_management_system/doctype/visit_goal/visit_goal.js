@@ -1,6 +1,17 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+
+/* Adding a button to the form. */
+frappe.ui.form.on('Visit Goal', {
+	refresh: function (frm) {
+		frm.add_custom_button(__('Reset Fields'), function () {
+			resetFields(frm)
+		}).addClass("btn-danger");
+	}
+});
+
+
 let first_try = true
 
 /**
@@ -57,54 +68,39 @@ frappe.ui.form.on('Visit Goal', {
 		});
 	}
 });
+
+/* Used to calculate the achievement percentage for the productivity table and the target breakdown
+table. */
 frappe.ui.form.on('Visit Goal', {
 	refresh: function (frm) {
-		if(frm.doc.productivity){
-			for(let row of frm.doc.productivity){
+		if (frm.doc.productivity) {
+			for (let row of frm.doc.productivity) {
 				row.achievement = Math.round(row.verified_visits / row.number_of_visits * 100)
 			}
 		}
-		if(frm.doc.target_breakdown){
-			for(let row of frm.doc.target_breakdown){
+		if (frm.doc.target_breakdown) {
+			for (let row of frm.doc.target_breakdown) {
 				row.achievement = Math.round(row.sold / row.quantity * 100)
 			}
 		}
 	}
 })
+
+/* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
+page. */
 frappe.ui.form.on('Visit Goal', {
 	refresh: function (frm) {
-
-		/* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
-		page Buttons */
 		refresh_when_click_btn(frm)
-		progress_bar(frm,"productivity","achievement")
-		progress_bar(frm,"target_breakdown","achievement")
-		// /* Used to make the progress bar for the achievement field in the productivity table. */
-		// for (let row of $("[data-fieldname = 'productivity'] .grid-body .rows").children()) {
-		// 	let idx = $(row).data("idx") - 1
-		// 	const productivity_row = frm.doc["productivity"][idx]
-		// 	productivity_row.achievement = Math.round(productivity_row.verified_visits / productivity_row.number_of_visits * 100)
-		// 	const { color, completed_text } = get_progress_data(productivity_row.achievement)
-		// 	row.firstChild.querySelector("[data-fieldname='achievement']").innerHTML = `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500">
-		// 		<div style="width:${productivity_row.achievement}%;background:${color}" class="progress-bar" role="progressbar">${completed_text}${productivity_row.achievement}%</div>
-		// 	</div>`
-		// }
-		// /* Used to make the progress bar for the achievement field in the target breakdown table. */
-		// for (let row of $("[data-fieldname = 'target_breakdown'] .grid-body .rows").children()) {
-		// 	let idx = $(row).data("idx") - 1
-		// 	const target_breakdown_row = frm.doc["target_breakdown"][idx]
-		// 	target_breakdown_row.achievement = target_breakdown_row.achievement = Math.round(target_breakdown_row.sold / target_breakdown_row.quantity * 100)
-		// 	const { color, completed_text } = get_progress_data(target_breakdown_row.achievement)
-		// 	row.firstChild.querySelector("[data-fieldname='achievement']").innerHTML = `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500">
-		// 		<div style="width:${target_breakdown_row.achievement}%;background:${color}" class="progress-bar" role="progressbar">${completed_text}${target_breakdown_row.achievement}%</div>
-		// 	</div>`
-		// }
+		progress_bar(frm, "productivity", "achievement")
+		progress_bar(frm, "target_breakdown", "achievement")
 	}
 })
 
+/**
+ * > When the user clicks on the pagination buttons, the page will refresh
+ * @param frm - The form object
+ */
 function refresh_when_click_btn(frm) {
-	/* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
-	page. */
 	if (first_try) {
 		$(".next-page").click(function () {
 			frm.refresh()
@@ -122,20 +118,30 @@ function refresh_when_click_btn(frm) {
 	}
 }
 
-function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
-    for(let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
-        let idx = $(row).data("idx") - 1
-        let row_info = frm.doc[table_name][idx]
-        const width = row_info[field_name]
-        row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-        .innerHTML = 
-            `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-                <div style="width:${width}%;background:${options.color&&options.color};" class="progress-bar" role="progressbar">${options.text&&options.text}${width}%</div>
+/**
+ * It takes a frappe form, a table name, a field name, and an options object, and then it replaces the
+ * field with a progress bar
+ * @param frm - The current form object
+ * @param table_name - The name of the table you want to add the progress bar to.
+ * @param field_name - The field name of the field you want to display the progress bar for.
+ * @param [options] - 
+ */
+function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
+	for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
+		let idx = $(row).data("idx") - 1
+		let row_info = frm.doc[table_name][idx]
+		const width = row_info[field_name]
+		row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
+			.innerHTML =
+			`<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
+                <div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
             </div>`
-    }
+	}
 }
 
 
+/* A function that is called when the class field is changed. It is used to set the number of visits
+based on the class of the doctor. */
 frappe.ui.form.on('Productivity', {
 	/* A function that is called when the class field is changed. */
 	class: function (frm, cdt, cdn) {
@@ -157,8 +163,27 @@ frappe.ui.form.on('Productivity', {
 		}
 		frm.refresh()
 	}
-
 })
+
+/* Used to filter the parent field in the visit goal doctype. */
+cur_frm.fields_dict['parent_visit_goal'].get_query = function (doc, cdt, cdn) {
+	return {
+		filters: [
+			['Visit Goal', 'is_group', '=', 1],
+			['Visit Goal', 'name', '!=', doc.name]
+		]
+	}
+}
+
+/* Used to filter the old parent field in the visit goal doctype. */
+cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
+	return {
+		filters: [
+			['Visit Goal', 'is_group', '=', 1],
+			['Visit Goal', 'name', '!=', doc.name]
+		]
+	}
+}
 
 /* Used to make the progress bar for the Visit Goal doctype. */
 frappe.ui.form.on('Visit Goal', {
@@ -176,35 +201,76 @@ frappe.ui.form.on('Visit Goal', {
  */
 function set_css(frm) {
 	if (frm.doc.productivity) {
-		
+
 		let total_number_of_visits = 0
 		let total_verified_visits = 0
+		for (let row of frm.doc.productivity) {
+			total_number_of_visits += row.number_of_visits
+			total_verified_visits += row.verified_visits
+		}
+
+		let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
+		let percentage = (frm.doc.achieved / frm.doc.target) * 100
+
+		let avg_percentage = (productivity_percentage + percentage) / 2 || 0
+
+		document.getElementById("percentage").style.width = `${avg_percentage}%`
+		document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
+		document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+		if (avg_percentage >= 50 && avg_percentage < 90) {
+			document.getElementById("percentage").style.backgroundColor = `#edae49` // yellow 
+			document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+		}
+		else if (avg_percentage >= 90 && avg_percentage < 100) {
+			document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+			document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+		}
+		else if (avg_percentage >= 100) {
+			document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+			document.getElementById("percentage").innerText = `Completed ${Math.round(avg_percentage)}%`
+		}
+	}
+}
+
+/**
+ * It resets the fields of the form
+ * @param frm - The form object
+ */
+function resetFields(frm) {
+	frm.doc.achieved = 0
+	frm.doc.from = null
+	frm.doc.to = null
+	frm.doc.target = 0
+	frm.doc.number_of_days = 0
+	frm.doc.parent_visit_goal = null
+	resetProductivityTable(frm)
+	resetTargetBreakdownTable(frm)
+	frm.refresh()
+}
+
+
+/**
+ * "Reset the verified visits and achievement fields in the productivity table."
+ * 
+ * The function is called from the "Reset" button in the productivity table
+ * @param frm - The current form object
+ */
+function resetProductivityTable(frm) {
 	for (let row of frm.doc.productivity) {
-		total_number_of_visits += row.number_of_visits
-		total_verified_visits += row.verified_visits
-	}
-	
-	let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
-	let percentage = (frm.doc.achieved / frm.doc.target) * 100
-
-	let avg_percentage = (productivity_percentage + percentage) / 2 || 0
-
-	document.getElementById("percentage").style.width = `${avg_percentage}%`
-	document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
-	document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-	if (avg_percentage >= 50 && avg_percentage < 90) {
-		document.getElementById("percentage").style.backgroundColor = `#edae49` // yellow 
-		document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-	}
-	else if (avg_percentage >= 90 && avg_percentage < 100) {
-		document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
-		document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-	}
-	else if (avg_percentage >= 100) {
-		document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
-		document.getElementById("percentage").innerText = `Completed ${Math.round(avg_percentage)}%`
+		row.verified_visits = 0;
+		row.achievement = 0
 	}
 }
+
+/**
+ * "Reset the achievement and sold columns of the target breakdown table."
+ * 
+ * The function takes a single argument, which is the form object
+ * @param frm - The current form object
+ */
+function resetTargetBreakdownTable(frm) {
+	for (let row of frm.doc.target_breakdown) {
+		row.achievement = 0;
+		row.sold = 0;
+	}
 }
-
-

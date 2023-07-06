@@ -1,6 +1,19 @@
 // Copyright (c) 2022, aoai and contributors
 // For license information, please see license.txt
 
+/* Adding two buttons to the form. */
+frappe.ui.form.on('Collects Goal', {
+	refresh: function (frm) {
+		frm.add_custom_button(__('Reset Progress'), function () {
+			frappe.msgprint("this button will Reset Progress");
+		}, __("Utilities"));
+
+		frm.add_custom_button(__('Reset Fields'), function () {
+			frappe.msgprint("this button will Reset all fields");
+		}, __("Utilities"));
+	}
+});
+
 // tracking changes in the child table 'Customer Collects Goal' which is
 let total = 0
 
@@ -121,24 +134,46 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
+/* Used to filter the parent field in the Collects Goal doctype. */
+cur_frm.fields_dict['parent_collects_goal'].get_query = function (doc, cdt, cdn) {
+	return {
+		filters: [
+			['Collects Goal', 'is_group', '=', 1],
+			['Collects Goal', 'name', '!=', doc.name]
+		]
+	}
+}
+
+/* Used to filter the old parent field in the Collects Goal doctype. */
+cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
+	return {
+		filters: [
+			['Collects Goal', 'is_group', '=', 1],
+			['Collects Goal', 'name', '!=', doc.name]
+		]
+	}
+}
+
+/* Calculating the achieved collects and achieved visits for each row in the table. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
-		if(frm.doc.customer_collects_goal){
-			for(let row of frm.doc.customer_collects_goal){
-				row.achieved_collects = (row.verified_collects / row.amount_of_money)*100 || 0
+		if (frm.doc.customer_collects_goal) {
+			for (let row of frm.doc.customer_collects_goal) {
+				row.achieved_collects = (row.verified_collects / row.amount_of_money) * 100 || 0
 				row.achieved_collects = Math.round(row.achieved_collects)
-				row.achieved_visits = (row.verified_visits / row.number_of_visits)*100
+				row.achieved_visits = (row.verified_visits / row.number_of_visits) * 100
 				row.achieved_visits = Math.round(row.achieved_visits)
 			}
 		}
 	}
 })
 
+/* A trigger that is called when the user refreshes the form. */
 frappe.ui.form.on('Collects Goal', {
 	refresh: function (frm) {
 		refresh_when_click_btn(frm)
-		progress_bar(frm,"customer_collects_goal","achieved_collects")
-		progress_bar(frm,"customer_collects_goal","achieved_visits")
+		progress_bar(frm, "customer_collects_goal", "achieved_collects")
+		progress_bar(frm, "customer_collects_goal", "achieved_visits")
 	}
 })
 
@@ -173,15 +208,23 @@ function reset_target_values(frm) {
 	frm.refresh();
 }
 
-function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
-	for(let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
+/**
+ * It takes a table field, a field name, and an optional color and text, and then it replaces the field
+ * with a progress bar
+ * @param frm - The current form object
+ * @param table_name - The name of the table you want to add the progress bar to.
+ * @param field_name - The name of the field that you want to display as a progress bar.
+ * @param [options] - 
+ */
+function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
+	for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
 		let idx = $(row).data("idx") - 1
 		let row_info = frm.doc[table_name][idx]
 		const width = row_info[field_name]
 		row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-		.innerHTML = 
+			.innerHTML =
 			`<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-				<div style="width:${width}%;background:${options.color&&options.color};" class="progress-bar" role="progressbar">${options.text&&options.text}${width}%</div>
+				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
 			</div>`
 	}
 }
@@ -189,21 +232,21 @@ function progress_bar(frm,table_name,field_name,options = {color:"",text:""}){
 
 let first_try = true
 function refresh_when_click_btn(frm) {
-    /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
-    page. */
-    if (first_try) {
-        $(".next-page").click(function () {
-            frm.refresh()
-        })
-        $(".first-page").click(function () {
-            frm.refresh()
-        })
-        $(".prev-page").click(function () {
-            frm.refresh()
-        })
-        $(".last-page").click(function () {
-            frm.refresh()
-        })
-        first_try = false
-    }
+	/* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
+	page. */
+	if (first_try) {
+		$(".next-page").click(function () {
+			frm.refresh()
+		})
+		$(".first-page").click(function () {
+			frm.refresh()
+		})
+		$(".prev-page").click(function () {
+			frm.refresh()
+		})
+		$(".last-page").click(function () {
+			frm.refresh()
+		})
+		first_try = false
+	}
 }
