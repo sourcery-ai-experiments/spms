@@ -70,7 +70,7 @@ def update_doctors_table(visiting, operation, visit_goal_doc):
             row.achievement = round(
                 row.verified_visits / row.number_of_visits * 100)
 
-    visit_goal_doc.save()
+    visit_goal_doc.save(ignore_permissions=True)
 
 
 def get_visit_goal(sales_person, date, company):
@@ -89,41 +89,6 @@ def get_visit_goal(sales_person, date, company):
 
     return frappe.get_doc("Visit Goal", visit_goal_name)
 
-
-# def update_sales_person_target(sales_invoice, method, operator) -> None:
-# 	"""
-# 	It updates the target breakdown of the sales person and the parent sales person
-
-# 	:param sales_invoice: The Sales Invoice document
-# 	:param method: The method name of the hook
-# 	:param operator: +1 or -1
-# 	:return: None
-# 	"""
-# 	if not sales_invoice.sales_person or sales_invoice.sales_person == "":
-# 		return
-
-# 	visit_goal_doc = get_visit_goal(
-# 		sales_invoice.sales_person,
-# 		sales_invoice.posting_date,
-# 		sales_invoice.company
-# 	)
-
-# 	if (
-# 			visit_goal_doc.parent_visit_goal
-# 			and visit_goal_doc.parent_visit_goal != ""
-# 	):
-# 		parent_visit_goal_doc = frappe.get_doc(
-# 			'Visit Goal', visit_goal_doc.parent_visit_goal
-# 		)
-# 	else:
-# 		parent_visit_goal_doc = None
-
-# 	# Updating the target breakdown of the sales person and the parent sales person
-# 	update_target_breakdown(sales_invoice, visit_goal_doc, operator)
-# 	if parent_visit_goal_doc != None:
-# 		update_target_breakdown(
-# 			sales_invoice, parent_visit_goal_doc, operator
-# 		)
 
 def update_sales_person_target(sales_invoice, method, operator) -> None:
     """
@@ -186,7 +151,7 @@ def update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_perso
 
     contribution = sales_person_row.allocated_amount
     visit_goal_doc.achieved += operator * contribution
-    visit_goal_doc.save()
+    visit_goal_doc.save(ignore_permissions=True)
 
 
 
@@ -204,7 +169,7 @@ def calculate_fixed_target(doc, collects_goal_doc, operation):
     collects_goal_doc.total_collected += frappe.utils.flt(
         doc.amount_other_currency * operation)
     calculate_incentives(collects_goal_doc)
-    collects_goal_doc.save()
+    collects_goal_doc.save(ignore_permissions=True)
 
 
 def update_customer_table(doc, collects_goal_doc, operation):
@@ -239,7 +204,7 @@ def update_customer_table(doc, collects_goal_doc, operation):
     # Updating the total collected and calculating the incentives.
     collects_goal_doc.total_collected = frappe.utils.flt(total)
     calculate_incentives(collects_goal_doc)
-    collects_goal_doc.save()
+    collects_goal_doc.save(ignore_permissions=True)
 
 
 def update_collects_goal(doc, operation):
@@ -312,4 +277,4 @@ def calculate_incentives(collects_goal_doc):
                     collects_goal_doc.total_collected
                 break
     collects_goal_doc.incentives = frappe.utils.flt(total_incentives)
-    collects_goal_doc.save()
+    collects_goal_doc.save(ignore_permissions=True)
