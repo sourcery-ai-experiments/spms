@@ -119,6 +119,7 @@ frappe.ui.form.on('Collecting', {
 			let max_discount = res;
 			if (frm.doc.discount < max_discount) {
 				frm.set_value("amount", frm.doc.total_paid - (frm.doc.total_paid * (frm.doc.discount / 100)));
+				frm.set_value("discount_amount", frm.doc.total_paid * (frm.doc.discount / 100));
 				frm.refresh();
 			} else {
 				frappe.msgprint('The discount must be less than ' + max_discount + '%');

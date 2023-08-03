@@ -35,6 +35,7 @@
   "column_break_18",
   "amount_currency",
   "exchange_rate",
+  "discount_amount",
   "invoice_section_section",
   "invoices",
   "location_section",
@@ -152,9 +153,10 @@
   },
   {
    "fieldname": "amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount",
+   "options": "amount_currency",
    "reqd": 1
   },
   {
@@ -300,8 +302,16 @@
   },
   {
    "fieldname": "total_paid",
-   "fieldtype": "Float",
-   "label": "Total Paid"
+   "fieldtype": "Currency",
+   "label": "Total Paid",
+   "options": "amount_currency"
+  },
+  {
+   "fieldname": "discount_amount",
+   "fieldtype": "Currency",
+   "label": "Discount Amount",
+   "options": "amount_currency",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
@@ -318,7 +328,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-08-01 13:27:02.803457",
+ "modified": "2023-08-03 10:33:54.298107",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
