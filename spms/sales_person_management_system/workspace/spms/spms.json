@@ -9,7 +9,7 @@
             "label": "Amount"
         }
     ],
-    "content": "[{\"id\":\"RVEXp9ATzT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\">SPMS Workspace</span>\",\"col\":12}},{\"id\":\"bNZSKgO2qH\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Count\",\"col\":6}},{\"id\":\"l0a6fKDfCv\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Amount\",\"col\":6}},{\"id\":\"MwhbekTQBh\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Sales Person Target Tracking</span>\",\"col\":12}},{\"id\":\"BVFpESgQ0N\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"D6-S5DcxVt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Goal\",\"col\":3}},{\"id\":\"Ibsmd-wkif\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visiting\",\"col\":3}},{\"id\":\"reeL2Ntino\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Visit\",\"col\":3}},{\"id\":\"a1ettBeskp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collects Goal\",\"col\":3}},{\"id\":\"mOSM9g7jUd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collecting\",\"col\":3}},{\"id\":\"2M3-2PF_IH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Collect\",\"col\":3}},{\"id\":\"V04JlDL3Sf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Person Tree\",\"col\":3}},{\"id\":\"59P4LtPM9G\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"hgKbf8UUva\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"LMWfrusWlv\",\"type\":\"card\",\"data\":{\"card_name\":\"Doctor\",\"col\":4}},{\"id\":\"9CR7ickEkP\",\"type\":\"card\",\"data\":{\"card_name\":\"Visiting Target\",\"col\":4}},{\"id\":\"VjpIrbOlCo\",\"type\":\"card\",\"data\":{\"card_name\":\"Collecting Target\",\"col\":4}},{\"id\":\"2B6pZh7CPX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Key Reports</span>\",\"col\":12}},{\"id\":\"rMMvh4_toB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"K6sNiJwdzh\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Person reports\",\"col\":4}}]",
+    "content": "[{\"id\":\"RVEXp9ATzT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\">SPMS Workspace</span>\",\"col\":12}},{\"id\":\"bNZSKgO2qH\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Count\",\"col\":6}},{\"id\":\"l0a6fKDfCv\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Amount\",\"col\":6}},{\"id\":\"MwhbekTQBh\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Sales Person Target Tracking</span>\",\"col\":12}},{\"id\":\"BVFpESgQ0N\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"D6-S5DcxVt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Goal\",\"col\":3}},{\"id\":\"Ibsmd-wkif\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visiting\",\"col\":3}},{\"id\":\"reeL2Ntino\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Visit\",\"col\":3}},{\"id\":\"a1ettBeskp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collects Goal\",\"col\":3}},{\"id\":\"mOSM9g7jUd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Collecting\",\"col\":3}},{\"id\":\"2M3-2PF_IH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Collect\",\"col\":3}},{\"id\":\"V04JlDL3Sf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Person Tree\",\"col\":3}},{\"id\":\"59P4LtPM9G\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"hgKbf8UUva\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"LMWfrusWlv\",\"type\":\"card\",\"data\":{\"card_name\":\"Client\",\"col\":4}},{\"id\":\"9CR7ickEkP\",\"type\":\"card\",\"data\":{\"card_name\":\"Visiting Target\",\"col\":4}},{\"id\":\"VjpIrbOlCo\",\"type\":\"card\",\"data\":{\"card_name\":\"Collecting Target\",\"col\":4}},{\"id\":\"2B6pZh7CPX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Key Reports</span>\",\"col\":12}},{\"id\":\"rMMvh4_toB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"K6sNiJwdzh\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Person reports\",\"col\":4}}]",
     "creation": "2023-02-09 03:09:30.416780",
     "docstatus": 0,
     "doctype": "Workspace",
@@ -35,7 +35,7 @@
             "is_query_report": 0,
             "label": "Doctor",
             "link_count": 0,
-            "link_to": "Doctor",
+            "link_to": "Client",
             "link_type": "DocType",
             "onboard": 0,
             "only_for": "Iraq",
@@ -47,7 +47,7 @@
             "label": "Doctor Department",
             "link_count": 0,
             "link_to": "Doctor Department",
-            "link_type": "DocType",
+            "link_type": "Client",
             "onboard": 0,
             "only_for": "Iraq",
             "type": "Link"

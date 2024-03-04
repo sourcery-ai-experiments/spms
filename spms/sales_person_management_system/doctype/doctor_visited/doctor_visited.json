@@ -18,7 +18,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Doctor",
-   "options": "Doctor"
+   "options": "Client"
   },
   {
    "fetch_from": "doctor.department",
@@ -53,12 +53,13 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-09-12 16:59:27.784239",
+ "modified": "2024-03-04 13:45:26.160029",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Doctor Visited",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

@@ -20,7 +20,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Doctor",
-   "options": "Doctor"
+   "options": "Client"
   },
   {
    "columns": 1,
@@ -61,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-02-04 15:30:36.827779",
+ "modified": "2024-03-04 13:45:25.478458",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Productivity",

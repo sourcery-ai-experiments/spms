@@ -65,7 +65,7 @@ def update_doctors_table(visiting, operation, visit_goal_doc):
     :param visit_goal_doc: The document that contains the table of doctors and their productivity
     """
     for row in visit_goal_doc.productivity:
-        if row.doctor == visiting.doctor_name:
+        if row.client == visiting.doctor_name:
             row.verified_visits += operation
             row.achievement = round(
                 row.verified_visits / row.number_of_visits * 100)

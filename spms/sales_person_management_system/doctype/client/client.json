@@ -105,7 +105,7 @@
  "modified": "2022-11-29 15:58:36.601988",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
- "name": "Doctor",
+ "name": "Client",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
