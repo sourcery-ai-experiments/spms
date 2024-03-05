@@ -72,7 +72,7 @@
   {
    "description": "example: 07701234567",
    "fieldname": "phone",
-   "fieldtype": "Data",
+   "fieldtype": "Phone",
    "label": "Phone",
    "options": "Phone",
    "reqd": 1
@@ -121,7 +121,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-05 12:40:54.210195",
+ "modified": "2024-03-05 13:27:10.536893",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Client",

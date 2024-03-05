@@ -13,5 +13,15 @@ frappe.ui.form.on('Client', {
 				]
 			};
 		});
-	}
+	},
+	// validate : function (frm){
+	// 	// Add validation logic here
+    //     const phone_number = frm.doc.phone
+    //     const phoneRegex = /^(?:0)(?:\d\s?){10}$/;
+
+    //     if (!phoneRegex.test(phone_number)) {
+    //         frappe.msgprint("Phone number must be correct please");
+    //         frappe.validated = false; // Prevent saving if validation fails
+    //     }
+	// }
 });
