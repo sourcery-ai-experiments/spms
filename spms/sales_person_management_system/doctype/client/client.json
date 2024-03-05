@@ -36,7 +36,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Class",
-   "options": "A\nB\nC\nD",
+   "options": "A\nA+\nB\nB+\nC\nD",
    "reqd": 1
   },
   {
@@ -102,7 +102,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-29 15:58:36.601988",
+ "modified": "2024-03-05 09:52:07.661807",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Client",
