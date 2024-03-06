@@ -37,26 +37,27 @@ def update_doctor_productivity(visiting, operation):
     :param visiting: The visiting object
     :param operation: This is the operation that is being performed on the visiting
     """
-    visit_goal_doc = get_visit_goal(
-        visiting.visited_by, visiting.date, visiting.company)
-    if (
-        visit_goal_doc.parent_visit_goal
-        and visit_goal_doc.parent_visit_goal != ""
-    ):
-        parent_visit_goal_doc = frappe.get_doc(
-            'Visit Goal', visit_goal_doc.parent_visit_goal
-        )
-    else:
-        parent_visit_goal_doc = None
-
-    update_doctors_table(visiting, operation, visit_goal_doc)
-
+    sales_person_doc = get_sales_person(
+        visiting.visited_by, visiting.date)
+    # if (
+    #     visit_goal_doc.parent_visit_goal
+    #     and visit_goal_doc.parent_visit_goal != ""
+    # ):
+    #     parent_visit_goal_doc = frappe.get_doc(
+    #         'Visit Goal', visit_goal_doc.parent_visit_goal
+    #     )
+    # else:
+    #     parent_visit_goal_doc = None
+    frappe.msgprint(sales_person_doc.sales_person_name)
+    frappe.msgprint("before update the sales person")
+    update_doctors_table(visiting, operation, sales_person_doc)
+    frappe.msgprint("update the sales person")
     # Updating the achievement of the parent sales person in the visit goal document
-    if parent_visit_goal_doc != None:
-        update_doctors_table(visiting, operation, parent_visit_goal_doc)
+    # if parent_visit_goal_doc != None:
+    #     update_doctors_table(visiting, operation, parent_visit_goal_doc)
 
 
-def update_doctors_table(visiting, operation, visit_goal_doc):
+def update_doctors_table(visiting, operation, sales_person_doc):
     """
     It updates the achievement of a doctor in the visit goal document
 
@@ -64,15 +65,28 @@ def update_doctors_table(visiting, operation, visit_goal_doc):
     :param operation: This is the operation to be performed on the table
     :param visit_goal_doc: The document that contains the table of doctors and their productivity
     """
-    for row in visit_goal_doc.productivity:
+    for row in sales_person_doc.custom_productivity:
         if row.client == visiting.doctor_name:
             row.verified_visits += operation
             row.achievement = round(
                 row.verified_visits / row.number_of_visits * 100)
 
-    visit_goal_doc.save(ignore_permissions=True)
+    sales_person_doc.save(ignore_permissions=True)
 
+def get_sales_person(sales_person_name, date):
+    """
+    Get the visit goal for the given sales person and company for the given date
 
+    :param doc: The current document that is being saved
+    :return: A dictionary with the name of the visit goal
+    """
+    visit_goal_name = frappe.db.get_value("Sales Person", {
+        "sales_person_name": sales_person_name,
+        "custom_from": ["<=", date],
+        "custom_to": [">=", date]
+    }, ["name"], as_dict=1)
+
+    return frappe.get_doc("Sales Person", visit_goal_name)
 def get_visit_goal(sales_person, date, company):
     """
     Get the visit goal for the given sales person and company for the given date
