@@ -4,10 +4,10 @@
 /* A query that will filter the doctor name based on the territory. */
 frappe.ui.form.on('Visiting', {
 	setup: function (frm) {
-		frm.set_query("doctor_name", function () {
+		frm.set_query("client_name", function () {
 			return {
 				filters: [
-					["Doctor", "territory", "in", frm.doc.territory]
+					["Client", "territory", "in", frm.doc.territory]
 				]
 			};
 		});

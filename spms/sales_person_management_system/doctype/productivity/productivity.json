@@ -6,7 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "doctor",
+  "client",
   "name1",
   "class",
   "number_of_visits",
@@ -15,16 +15,8 @@
  ],
  "fields": [
   {
-   "columns": 2,
-   "fieldname": "doctor",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Doctor",
-   "options": "Doctor"
-  },
-  {
    "columns": 1,
-   "fetch_from": "doctor.class",
+   "fetch_from": "client.class",
    "fieldname": "class",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -51,17 +43,25 @@
   },
   {
    "columns": 3,
-   "fetch_from": "doctor.full_name",
+   "fetch_from": "client.full_name",
    "fieldname": "name1",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Name"
+  },
+  {
+   "columns": 2,
+   "fieldname": "client",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Client",
+   "options": "Client"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-02-04 15:30:36.827779",
+ "modified": "2024-03-04 18:45:20.298944",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Productivity",
