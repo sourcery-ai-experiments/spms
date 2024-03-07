@@ -48,10 +48,7 @@ def update_doctor_productivity(visiting, operation):
     #     )
     # else:
     #     parent_visit_goal_doc = None
-    frappe.msgprint(sales_person_doc.sales_person_name)
-    frappe.msgprint("before update the sales person")
     update_doctors_table(visiting, operation, sales_person_doc)
-    frappe.msgprint("update the sales person")
     # Updating the achievement of the parent sales person in the visit goal document
     # if parent_visit_goal_doc != None:
     #     update_doctors_table(visiting, operation, parent_visit_goal_doc)
@@ -119,44 +116,45 @@ def update_sales_person_target(sales_invoice, method, operator) -> None:
     for sales_person in sales_invoice.sales_team:
         if not sales_person.sales_person or sales_person.sales_person == "":
             continue
+        sales_person_doc = get_sales_person(sales_person.sales_person,sales_invoice.posting_date)
+        # visit_goal_doc = get_visit_goal(
+        #     sales_person.sales_person,
+        #     sales_invoice.posting_date,
+        #     sales_invoice.company
+        # )
+        
+        # if (
+        #         visit_goal_doc.parent_visit_goal
+        #         and visit_goal_doc.parent_visit_goal != ""
+        # ):
+        #     parent_visit_goal_doc = frappe.get_doc(
+        #         'Visit Goal', visit_goal_doc.parent_visit_goal
+        #     )
+        # else:
+        #     parent_visit_goal_doc = None
 
-        visit_goal_doc = get_visit_goal(
-            sales_person.sales_person,
-            sales_invoice.posting_date,
-            sales_invoice.company
-        )
-
-        if (
-                visit_goal_doc.parent_visit_goal
-                and visit_goal_doc.parent_visit_goal != ""
-        ):
-            parent_visit_goal_doc = frappe.get_doc(
-                'Visit Goal', visit_goal_doc.parent_visit_goal
-            )
-        else:
-            parent_visit_goal_doc = None
-
-        # تحديث تفاصيل الهدف للبائع وبائع الأم
-        update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_person_row=sales_person)
-        if parent_visit_goal_doc:
-            update_target_breakdown(
-                sales_invoice, parent_visit_goal_doc, operator, sales_person_row=sales_person
-            )
+        # # تحديث تفاصيل الهدف للبائع وبائع الأم
+        update_target_breakdown(sales_invoice, sales_person_doc, operator, sales_person_row=sales_person)
+        # update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_person_row=sales_person)
+        # if parent_visit_goal_doc:
+        #     update_target_breakdown(
+        #         sales_invoice, parent_visit_goal_doc, operator, sales_person_row=sales_person
+        #     )
 
 
-def update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_person_row):
+def update_target_breakdown(sales_invoice, sales_person_doc, operator, sales_person_row):
     """
     For each item in the sales invoice, if the item code matches the item code in the target breakdown,
     then update the sold quantity based on contribution percentage
 
     :param sales_invoice: The sales invoice document that is being saved
-    :param visit_goal_doc: The visit goal document that you want to update
+    :param sales_person_doc: The visit goal document that you want to update
     :param operator: 1 for adding, -1 for subtracting
     :param sales_person_row: The row of the salesperson in the Sales Team table
     """
     total_contribution_percentage = sum(row.allocated_percentage for row in sales_invoice.sales_team)
     
-    for row in visit_goal_doc.target_breakdown:
+    for row in sales_person_doc.custom_target_breakdown:
         for item in sales_invoice.items:
             if item.item_code == row.item:
                 contribution_percentage = sales_person_row.allocated_percentage / total_contribution_percentage
@@ -164,8 +162,8 @@ def update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_perso
                 break
 
     contribution = sales_person_row.allocated_amount
-    visit_goal_doc.achieved += operator * contribution
-    visit_goal_doc.save(ignore_permissions=True)
+    sales_person_doc.custom_achieved += operator * contribution
+    sales_person_doc.save(ignore_permissions=True)
 
 
 
