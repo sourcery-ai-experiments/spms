@@ -43,7 +43,7 @@ def update_doctor_productivity(visiting, operation):
     parent_sales_person_doc = None
     if (
         sales_person_doc.parent_sales_person
-        and sales_person_doc.parent_sales_person != ""
+        and sales_person_doc.parent_sales_person != "" and sales_person_doc.parent_sales_person != "Sales Team"
     ):
         parent_sales_person_doc = frappe.get_doc(
             'Sales Person', sales_person_doc.parent_sales_person
@@ -128,7 +128,7 @@ def update_sales_person_target(sales_invoice, method, operator) -> None:
         
         if (
                 sales_person_doc.parent_sales_person
-                and sales_person_doc.parent_visit_goal != ""
+                and sales_person_doc.parent_sales_person != "" and sales_person_doc.parent_sales_person != "Sales Team"
         ):
             parent_sales_person_doc = frappe.get_doc(
                 'Sales Person', sales_person_doc.parent_sales_person
@@ -138,7 +138,7 @@ def update_sales_person_target(sales_invoice, method, operator) -> None:
         # # تحديث تفاصيل الهدف للبائع وبائع الأم
         update_target_breakdown(sales_invoice, sales_person_doc, operator, sales_person_row=sales_person)
         # update_target_breakdown(sales_invoice, visit_goal_doc, operator, sales_person_row=sales_person)
-        if parent_visit_goal_doc:
+        if parent_sales_person_doc:
             update_target_breakdown(sales_invoice, parent_sales_person_doc, operator, sales_person_row=sales_person)
 
 
@@ -232,7 +232,7 @@ def update_sales_person(doc, operation):
     parent_sales_person_doc = None
     if (
         sales_person_doc.parent_sales_person
-        and sales_person_doc.parent_sales_person != ""
+        and sales_person_doc.parent_sales_person != "" and sales_person_doc.parent_sales_person != "Sales Team"
     ):
         parent_sales_person_doc = frappe.get_doc(
             'Sales Person', sales_person_doc.parent_sales_person
