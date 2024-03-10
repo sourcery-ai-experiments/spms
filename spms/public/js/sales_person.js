@@ -64,7 +64,7 @@ frappe.ui.form.on('Sales Person', {
 		progress_bar(frm, "custom_productivity", "achievement")
 		progress_bar(frm, "custom_target_breakdown", "achievement")
 	},
-    custom_to: function (frm) {
+    "custom_to": function (frm) {
 		if (frm.doc.custom_to < frm.doc.custom_from) {
 			frappe.msgprint("Please, Select Valid Period for Target)")
 		}

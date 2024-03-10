@@ -46,7 +46,7 @@ def update_doctor_productivity(visiting, operation):
         and sales_person_doc.parent_sales_person != ""
     ):
         parent_sales_person_doc = frappe.get_doc(
-            'Visit Goal', sales_person_doc.parent_sales_person
+            'Sales Person', sales_person_doc.parent_sales_person
         )
 
     update_doctors_table(visiting, operation, sales_person_doc)
@@ -235,7 +235,7 @@ def update_sales_person(doc, operation):
         and sales_person_doc.parent_sales_person != ""
     ):
         parent_sales_person_doc = frappe.get_doc(
-            'Collects Goal', sales_person_doc.parent_sales_person
+            'Sales Person', sales_person_doc.parent_sales_person
         )
 
 
