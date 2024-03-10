@@ -70,7 +70,7 @@ frappe.ui.form.on('Sales Person', {
 		}
 
 		// find diff between in and out date
-		let diff_days = frappe.datetime.get_day_diff(frm.doc.to, frm.doc.from);
+		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
 		frm.set_value("custom_number_of_days", diff_days);
 	}
 });
