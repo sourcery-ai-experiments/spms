@@ -5,7 +5,7 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 from spms.methods.utils import generate_qrcode
 from frappe.utils import cstr
-from spms.methods.utils import update_collects_goal
+from spms.methods.utils import update_sales_person
 import hashlib
 
 
@@ -18,7 +18,7 @@ class Collecting(WebsiteGenerator):
 		This function is called when the user clicks the submit button. It updates the goal for the
 		number of collects
 		"""
-		update_collects_goal(self, 1)
+		update_sales_person(self, 1)
 
 	def on_cancel(self) -> None:
 		"""
@@ -26,7 +26,7 @@ class Collecting(WebsiteGenerator):
 		
 		This function is called when the user clicks the "Cancel" button
 		"""
-		update_collects_goal(self, -1)
+		update_sales_person(self, -1)
 
 	def before_submit(self):
 		"""
