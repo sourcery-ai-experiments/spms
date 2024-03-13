@@ -164,6 +164,102 @@ frappe.ui.form.on('Sales Person', {
             "color": "white",
         });
 
+        frm.add_custom_button(__('Set Target'), () => {
+
+            let targets = frm.doc.custom_target_breakdown;
+            console.log(targets);
+
+            // Prepare the table HTML
+            let tableHtml = '<table class="table table-bordered">';
+            tableHtml += '<thead><tr><th>Item</th><th>Quantity</th></tr></thead><tbody>';
+
+            // Add rows to the table
+            for (let target of targets) {
+                tableHtml += `<tr><td>${target.item}</td><td contenteditable="true">${target.quantity}</td></tr>`;
+            }
+
+            tableHtml += '</tbody></table>';
+
+            // Create the dialog
+            let dialog = new frappe.ui.Dialog({
+                title: 'Set Target',
+                fields: [
+                    {
+                        'fieldname': 'from',
+                        'label': 'From',
+                        'fieldtype': 'Date',
+                        'reqd': 1
+                    },
+                    //add column break
+                    {
+                        'fieldname': 'column_break',
+                        'fieldtype': 'Column Break',
+                    },
+                    {
+                        'fieldname': 'to',
+                        'label': 'To',
+                        'fieldtype': 'Date',
+                        'reqd': 1
+                    },
+                    {
+                        'fieldname': 'section_break',
+                        'fieldtype': 'Section Break',
+                    },
+                    {
+                        'fieldname': 'target',
+                        'label': 'Target',
+                        'fieldtype': 'Float',
+                        'reqd': 1
+                    },
+                    {
+                        'fieldname': 'section_break',
+                        'fieldtype': 'Section Break',
+                    },
+                    {
+                        'fieldname': 'targets_table',
+                        'fieldtype': 'HTML',
+                        'options': tableHtml
+                    }
+
+                ],
+                primary_action_label: 'Set Target',
+                primary_action() {
+
+                    frappe.call({
+                        method: 'spms.utils.utils.set_target',
+                        args: {
+                            'values': dialog.get_values(),
+                            'doc': frm.doc
+                        },
+                        callback: function (response) {
+                            var res = response.message;
+                            if (res) {
+                                frappe.msgprint(__('Set Target Successfully'));
+                                dialog.hide();
+                                frm.reload_doc();
+                            } else {
+                                frappe.msgprint(__('Error Setting Target'));
+                            }
+                        }
+                    });
+
+                }
+            });
+
+            dialog.show();
+
+            // // Add the HTML field to the dialog
+            // dialog.fields.push({
+            //     'fieldname': 'targets_table',
+            //     'fieldtype': 'HTML',
+            //     'options': tableHtml
+            // });
+
+
+        }).addClass('bg-info').css({
+            "color": "white",
+        });
+
     }
 
 });

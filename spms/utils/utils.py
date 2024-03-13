@@ -59,3 +59,27 @@ def remove_client_from_sales_person(values, doc):
         frappe.log_error(e, 'Error removing client from sales person')
         frappe.throw("An error occurred while removing client from sales person.")
         return False
+    
+    
+@frappe.whitelist()
+def set_target(values, doc):
+    try:
+        values = json.loads(values)
+        print("\n\n\n\n\n\n\n\n\nvalues")
+        print(values)
+
+        doc_dict = json.loads(doc)
+        docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
+        docc.from_ = values['from']
+        docc.to = values['to']
+        docc.target = values['target']
+        print(docc.target)
+        print(docc.from_)
+        print(docc.to)
+
+        docc.save()
+
+        return True
+    except Exception as e:
+        frappe.throw("An error occurred while updating the document.")
+        return False
