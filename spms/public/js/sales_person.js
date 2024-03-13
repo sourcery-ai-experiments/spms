@@ -236,7 +236,7 @@ frappe.ui.form.on('Sales Person', {
                             if (res) {
                                 frappe.msgprint(__('Set Target Successfully'));
                                 dialog.hide();
-                                frm.reload_doc();
+                                frm.save();
                             } else {
                                 frappe.msgprint(__('Error Setting Target'));
                             }

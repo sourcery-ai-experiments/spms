@@ -65,17 +65,12 @@ def remove_client_from_sales_person(values, doc):
 def set_target(values, doc):
     try:
         values = json.loads(values)
-        print("\n\n\n\n\n\n\n\n\nvalues")
-        print(values)
 
         doc_dict = json.loads(doc)
         docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
-        docc.from_ = values['from']
-        docc.to = values['to']
-        docc.target = values['target']
-        print(docc.target)
-        print(docc.from_)
-        print(docc.to)
+        docc.custom_from = values['from']
+        docc.custom_to = values['to']
+        docc.custom_target = values['target']
 
         docc.save()
 
