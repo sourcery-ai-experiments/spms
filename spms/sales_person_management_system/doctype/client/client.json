@@ -9,17 +9,18 @@
  "field_order": [
   "naming_series",
   "salutation",
+  "first_name",
+  "middle_name",
+  "last_name",
   "full_name",
-  "class",
-  "department",
   "type",
-  "territory",
   "column_break_5",
   "email",
   "phone",
   "address",
-  "reference_section",
-  "doctor_reference"
+  "class",
+  "territory",
+  "department"
  ],
  "fields": [
   {
@@ -48,8 +49,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Speciality",
-   "options": "Doctor Department",
-   "reqd": 1
+   "options": "Doctor Department"
   },
   {
    "fieldname": "territory",
@@ -84,18 +84,6 @@
    "label": "Address"
   },
   {
-   "fieldname": "reference_section",
-   "fieldtype": "Section Break",
-   "label": "Reference"
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fieldname": "doctor_reference",
-   "fieldtype": "Table",
-   "label": "Doctor Reference",
-   "options": "Doctor Reference"
-  },
-  {
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
@@ -119,11 +107,28 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Type"
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "middle_name",
+   "fieldtype": "Data",
+   "label": "Middle Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-13 13:36:49.999667",
+ "modified": "2024-03-13 13:52:22.535785",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Client",
