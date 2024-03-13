@@ -24,7 +24,7 @@ frappe.ui.form.on('Client', {
     //         frappe.validated = false; // Prevent saving if validation fails
     //     }
 	// }
-	validate : function(frm){
-		frm.set_value("full_name",frm.doc.first_name.trim() + " " + frm.doc.middle_name.trim() + " " + frm.doc.last_name.trim())
+	before_save : function(frm){
+		frm.set_value("full_name",frm.doc.salutation + " " +frm.doc.first_name.trim() + " " + frm.doc.middle_name.trim() + " " + frm.doc.last_name.trim())
 	}
 });
