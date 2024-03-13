@@ -31,6 +31,7 @@ def create_client_to_sales_person(values, doc,is_present,client):
         else:
             values = json.loads(values)
             values["doctype"] = "Client"
+            values["full_name"] = values.get("first_name")+ ((" " + values.get("middle_name")) if values.get("middle_name") != None else "")+ " " + values.get("last_name")
             new_doc = frappe.get_doc(values)
             new_doc.insert()
             doc_dict = json.loads(doc)
@@ -40,7 +41,7 @@ def create_client_to_sales_person(values, doc,is_present,client):
             docu.save()
             return True
     except Exception as e:
-        frappe.throw("An error occurred while adding client to sales person.")
+        frappe.throw("An error occurred while adding client to sales person.",e)
         return False
     
 @frappe.whitelist()
