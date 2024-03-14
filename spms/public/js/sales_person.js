@@ -55,7 +55,6 @@ frappe.ui.form.on('Sales Person', {
             var dialog = new frappe.ui.Dialog({
                 title: 'Create Client',
                 fields: [
-                    { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" },
                     {
                         'fieldname': 'first_name',
                         'fieldtype': 'Data',
@@ -78,8 +77,12 @@ frappe.ui.form.on('Sales Person', {
                                         frappe.db.get_doc('Client', suggestion.name).then(doc => {
                                             selected_suggestion = suggestion.full_name;
                                             selected_suggestion_id = suggestion.name;
+
                                             dialog.set_values({
-                                                'full_name': suggestion.full_name,
+                                                'first_name': doc.first_name,
+                                                'middle_name': doc.middle_name,
+                                                'last_name': doc.last_name,
+
                                                 'salutation': doc.salutation,
                                                 'class': doc.class,
                                                 'department': doc.department,
@@ -109,15 +112,38 @@ frappe.ui.form.on('Sales Person', {
                         'label': 'Last Name',
                         'reqd': 1
                     },
+                    {
+                        'fieldname': 'sb1',
+                        'fieldtype': 'Section Break',
+                    },
+                    { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
+                        'fieldname': 'tb1',
+                        'fieldtype': 'Column Break',
+                    },
                     { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
-                    { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 1, 'options': 'Doctor Department' },
+                    {
+                        'fieldname': 'sb2',
+                        'fieldtype': 'Section Break',
+                    },
+                    { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 1, 'options': 'Doctor Department' }, {
+                        'fieldname': 'tb2',
+                        'fieldtype': 'Column Break',
+                    },
                     { 'fieldname': 'phone', 'fieldtype': 'Phone', 'label': 'Phone', 'reqd': 1, "default": "+964-" },
+                    {
+                        'fieldname': 'sb3',
+                        'fieldtype': 'Section Break',
+                    },
                     { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
                 ],
                 primary_action_label: 'Submit',
                 primary_action(values) {
                     console.log(values);
-                    if (values.full_name == selected_suggestion) {
+                    var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
+                    console.log(fn);
+                    console.log(selected_suggestion);
+
+                    if (fn == selected_suggestion) {
                         frappe.call({
                             method: 'spms.utils.utils.create_client_to_sales_person',
                             args: {
@@ -165,7 +191,6 @@ frappe.ui.form.on('Sales Person', {
         });
 
         frm.add_custom_button(__('Set Target'), () => {
-
             let targets = frm.doc.custom_target_breakdown;
             console.log(targets);
 
@@ -175,12 +200,53 @@ frappe.ui.form.on('Sales Person', {
 
             // Add rows to the table
             for (let target of targets) {
-                tableHtml += `<tr><td>${target.item}</td><td contenteditable="true">${target.quantity}</td></tr>`;
+                tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
             }
 
-            tableHtml += '</tbody></table>';
+            // tableHtml += '</tbody></table>';
 
-            // Create the dialog
+            // Create the sub-dialog for adding a new row
+            let subDialog = new frappe.ui.Dialog({
+                title: 'Add New Row',
+                fields: [
+                    {
+                        'fieldname': 'item',
+                        'label': 'Item',
+                        'fieldtype': 'Link',
+                        'options': 'Item',
+                        'reqd': 1
+                    },
+                    {
+                        'fieldname': 'quantity',
+                        'label': 'Quantity',
+                        'fieldtype': 'Float',
+                        'reqd': 1
+                    }
+                ],
+                primary_action_label: 'Add Row',
+                primary_action() {
+                    // Retrieve entered values from the sub-dialog
+                    let newItem = subDialog.get_value('item').trim(); // Trim whitespace from the item
+                    let newQuantity = subDialog.get_value('quantity');
+
+                    // Append a new row to the table
+                    tableHtml += `<tr><td>${newItem}</td><td contenteditable="true" id="target_${newItem.replace(/\s+/g, '_')}">${newQuantity}</td></tr>`;
+
+                    // Update the HTML in the main dialog's table field
+                    dialog.get_field('targets_table').$wrapper.html(tableHtml);
+
+                    // Add the new target to the targets array
+                    targets.push({
+                        item: newItem,
+                        quantity: newQuantity
+                    });
+
+                    subDialog.hide(); // Hide the sub-dialog
+                }
+
+            });
+
+            // Create the main dialog
             let dialog = new frappe.ui.Dialog({
                 title: 'Set Target',
                 fields: [
@@ -188,7 +254,8 @@ frappe.ui.form.on('Sales Person', {
                         'fieldname': 'from',
                         'label': 'From',
                         'fieldtype': 'Date',
-                        'reqd': 1
+                        'reqd': 1,
+                        'default': frm.doc.custom_from
                     },
                     //add column break
                     {
@@ -199,7 +266,8 @@ frappe.ui.form.on('Sales Person', {
                         'fieldname': 'to',
                         'label': 'To',
                         'fieldtype': 'Date',
-                        'reqd': 1
+                        'reqd': 1,
+                        'default': frm.doc.custom_to
                     },
                     {
                         'fieldname': 'section_break',
@@ -209,7 +277,8 @@ frappe.ui.form.on('Sales Person', {
                         'fieldname': 'target',
                         'label': 'Target',
                         'fieldtype': 'Float',
-                        'reqd': 1
+                        'reqd': 1,
+                        'default': frm.doc.custom_target
                     },
                     {
                         'fieldname': 'section_break',
@@ -219,16 +288,41 @@ frappe.ui.form.on('Sales Person', {
                         'fieldname': 'targets_table',
                         'fieldtype': 'HTML',
                         'options': tableHtml
+                    },
+                    // Add a button to open the sub-dialog for adding a new row
+                    {
+                        'fieldname': 'add_row_button',
+                        'label': 'Add New Target',
+                        'fieldtype': 'Button',
+                        'icon': 'plus',
+                        'click': function () {
+                            subDialog.show();
+                        }
                     }
-
                 ],
                 primary_action_label: 'Set Target',
                 primary_action() {
+                    console.log(targets);
+                    let quantities = {};
+                    // Retrieve quantities from the table
+                    for (let target of targets) {
+                        console.log(target.item);
+                        let element = document.getElementById(`target_${target.item.replace(/\s+/g, '_')}`);
+                        if (element) {
+                            quantities[target.item] = parseFloat(element.innerText);
+                        } else {
+                            console.error(`Element with ID 'target_${target.item.replace(/\s+/g, '_')}' not found.`);
+                        }
+                    }
+
+
+                    console.log(quantities);
 
                     frappe.call({
                         method: 'spms.utils.utils.set_target',
                         args: {
                             'values': dialog.get_values(),
+                            'quantities': quantities, // Pass quantities as JSON
                             'doc': frm.doc
                         },
                         callback: function (response) {
@@ -236,25 +330,17 @@ frappe.ui.form.on('Sales Person', {
                             if (res) {
                                 frappe.msgprint(__('Set Target Successfully'));
                                 dialog.hide();
-                                frm.save();
+                                frm.refresh();
                             } else {
                                 frappe.msgprint(__('Error Setting Target'));
                             }
                         }
                     });
-
                 }
             });
 
+            // Show the main dialog
             dialog.show();
-
-            // // Add the HTML field to the dialog
-            // dialog.fields.push({
-            //     'fieldname': 'targets_table',
-            //     'fieldtype': 'HTML',
-            //     'options': tableHtml
-            // });
-
 
         }).addClass('bg-info').css({
             "color": "white",
