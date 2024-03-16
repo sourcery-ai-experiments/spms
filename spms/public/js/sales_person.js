@@ -254,16 +254,22 @@ frappe.ui.form.on('Sales Person', {
 		refresh_when_click_btn(frm)
 		progress_bar(frm, "custom_productivity", "achievement")
 		progress_bar(frm, "custom_target_breakdown", "achievement")
+        frm.set_df_property('custom_customer_collects_goal', 'reqd', 0) 
 	},
     "custom_to": function (frm) {
 		if (frm.doc.custom_to < frm.doc.custom_from) {
-			frappe.msgprint("Please, Select Valid Period for Target)")
+			frappe.throw("Please, Select Valid Period for Target")
 		}
 
 		// find diff between in and out date
 		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
 		frm.set_value("custom_number_of_days", diff_days);
-	}
+	},
+    "custom_to_": function (frm) {
+		if (frm.doc.custom_to_ < frm.doc.custom_from_) {
+			frappe.throw("Please, Select Valid Period for Collect")
+		}
+	},
 });
 frappe.ui.form.on('Productivity', {
 	/* A function that is called when the class field is changed. */
