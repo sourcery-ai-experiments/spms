@@ -61,7 +61,7 @@ def remove_client_from_sales_person(values, doc):
 
 
 @frappe.whitelist()
-def set_target(doc) -> None:
+def set_target(doc):
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
 
@@ -101,5 +101,6 @@ def set_target(doc) -> None:
             }) 
 
         doc_b.insert()
+        return f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
