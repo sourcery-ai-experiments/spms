@@ -144,10 +144,10 @@ function progress_bar(frm, table_name, field_name, options = { color: "", text: 
 based on the class of the doctor. */
 frappe.ui.form.on('Productivity', {
 	/* A function that is called when the class field is changed. */
-	class: function (frm, cdt, cdn) {
+	class_name: function (frm, cdt, cdn) {
 		let row = locals[cdt][cdn]
 		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
-		switch (row.class) {
+		switch (row.class_name) {
 			case "A":
 				row.number_of_visits = 3
 				break

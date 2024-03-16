@@ -2,7 +2,14 @@ var selected_suggestion = null;
 var selected_suggestion_id = null;
 frappe.ui.form.on('Sales Person', {
     refresh(frm) {
-      
+        frm.add_custom_button(__('Set Target'), function() {
+            frappe.call({
+                method: 'spms.utils.utils.set_target',
+                args: {
+                    doc: frm.doc,
+                },
+            });
+        });
         frm.add_custom_button(__('Remove Client'), () => {
             // Get the custom_productivity child table data
             let existingClients = frm.doc.custom_productivity;
@@ -273,10 +280,10 @@ frappe.ui.form.on('Sales Person', {
 });
 frappe.ui.form.on('Productivity', {
 	/* A function that is called when the class field is changed. */
-	class: function (frm, cdt, cdn) {
+	class_name: function (frm, cdt, cdn) {
 		let row = locals[cdt][cdn]
 		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
-		switch (row.class) {
+		switch (row.class_name) {
 			case "A":
 				row.number_of_visits = 3
 				break
