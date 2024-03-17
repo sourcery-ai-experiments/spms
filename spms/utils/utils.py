@@ -1,48 +1,70 @@
 import frappe
 import json
 
+    
 
-@frappe.whitelist()
-def add_client_to_sales_person(values, doc):
-    try:
-        values = json.loads(values)
-        doc_dict = json.loads(doc)
-        docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-        child = docu.append('custom_productivity', {})
-        child.client = values.get('client')
-        docu.save()
-        return True
-    except Exception as e:
-        frappe.throw("An error occurred while adding client to sales person.")
-        return False
+    
+# @frappe.whitelist()
+# def create_client_to_sales_person(values, doc,is_present,client):
+#     try:
+#         if(client!=""):
+#             values = json.loads(values)
+#             doc_dict = json.loads(doc)
+
+#             docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+#             child = docu.append('custom_productivity', {})
+#             child.client = client#values.get('client')
+#             docu.save()
+#             return True
+#         else:
+#             values = json.loads(values)
+#             values["doctype"] = "Client"
+#             values["full_name"] = values.get("first_name")+ ((" " + values.get("middle_name")) if values.get("middle_name") != None else "")+ " " + values.get("last_name")
+#             new_doc = frappe.get_doc(values)
+#             new_doc.insert()
+#             doc_dict = json.loads(doc)
+#             docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+#             child = docu.append('custom_productivity', {})
+#             child.client = new_doc.name
+#             docu.save()
+#             return True
+#     except Exception as e:
+#         frappe.throw("An error occurred while adding client to sales person.",e)
+#         return False
     
 @frappe.whitelist()
-def create_client_to_sales_person(values, doc,is_present,client):
+def create_client_to_sales_person(values, doc, is_present, client):
     try:
-        if(client!=""):
-            values = json.loads(values)
-            doc_dict = json.loads(doc)
+        if client:
+            # Check if client exists in the table
+            client_exists = frappe.db.exists("Client", client)
+            if not client_exists:
+                values = json.loads(values)
+                values["doctype"] = "Client"
+                values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
+                    "middle_name") is not None else "") + " " + values.get("last_name")
+                new_doc = frappe.get_doc(values)
+                new_doc.insert()
 
+            doc_dict = json.loads(doc)
             docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-            child = docu.append('custom_productivity', {})
-            child.client = client#values.get('client')
-            docu.save()
-            return True
+            # Check if the client is already appended
+            existing_clients = [row.client for row in docu.custom_productivity]
+            if client not in existing_clients:
+                child = docu.append('custom_productivity', {})
+                child.client = client
+                docu.save()
+                return True
+            else:
+                frappe.msgprint("Client already exists for this sales person.")
+                return False
         else:
-            values = json.loads(values)
-            values["doctype"] = "Client"
-            new_doc = frappe.get_doc(values)
-            new_doc.insert()
-            doc_dict = json.loads(doc)
-            docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-            child = docu.append('custom_productivity', {})
-            child.client = new_doc.name
-            docu.save()
-            return True
+            frappe.msgprint("Please provide a valid client name.")
+            return False
     except Exception as e:
-        frappe.throw("An error occurred while adding client to sales person.")
+        frappe.throw("An error occurred while adding client to sales person.", e)
         return False
-    
+
 @frappe.whitelist()
 def remove_client_from_sales_person(values, doc):
     try:
@@ -104,3 +126,4 @@ def set_target(doc):
         return f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
+
