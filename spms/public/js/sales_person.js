@@ -3,6 +3,25 @@ var selected_suggestion_id = null;
 frappe.ui.form.on('Sales Person', {
     refresh(frm) {
 
+        frm.add_custom_button(__('Set Target'), function() {
+            frappe.confirm(
+                __('Are you sure you want to set the target?'),
+                function() {
+                    frappe.call({
+                        method: 'spms.utils.utils.set_target',
+                        args: {
+                            doc: frm.doc,
+                        },
+                        callback: function(r) {
+                            frappe.msgprint(r.message);
+                        }
+                    });
+                }
+            );
+        });
+        
+        
+
         frm.add_custom_button(__('Remove Client'), () => {
             // Get the custom_productivity child table data
             let existingClients = frm.doc.custom_productivity;
@@ -412,42 +431,50 @@ frappe.ui.form.on('Sales Person', {
     }
 });
 frappe.ui.form.on('Sales Person', {
-    refresh: function (frm) {
-        refresh_when_click_btn(frm)
-        progress_bar(frm, "custom_productivity", "achievement")
-        progress_bar(frm, "custom_target_breakdown", "achievement")
-    },
-    "custom_to": function (frm) {
-        if (frm.doc.custom_to < frm.doc.custom_from) {
-            frappe.msgprint("Please, Select Valid Period for Target)")
-        }
 
-        // find diff between in and out date
-        let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
-        frm.set_value("custom_number_of_days", diff_days);
-    }
+	refresh: function (frm) {
+		refresh_when_click_btn(frm)
+		progress_bar(frm, "custom_productivity", "achievement")
+		progress_bar(frm, "custom_target_breakdown", "achievement")
+        frm.set_df_property('custom_customer_collects_goal', 'reqd', 0) 
+	},
+    "custom_to": function (frm) {
+		if (frm.doc.custom_to < frm.doc.custom_from) {
+			frappe.throw("Please, Select Valid Period for Target")
+		}
+
+		// find diff between in and out date
+		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
+		frm.set_value("custom_number_of_days", diff_days);
+	},
+    "custom_to_": function (frm) {
+		if (frm.doc.custom_to_ < frm.doc.custom_from_) {
+			frappe.throw("Please, Select Valid Period for Collect")
+		}
+	},
 });
 frappe.ui.form.on('Productivity', {
-    /* A function that is called when the class field is changed. */
-    class: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn]
-        /* A switch statement that is used to set the number of visits based on the class of the doctor. */
-        switch (row.class) {
-            case "A":
-                row.number_of_visits = 3
-                break
-            case "B":
-                row.number_of_visits = 2
-                break
-            case "C":
-                row.number_of_visits = 1
-                break
-            case "D":
-                row.number_of_visits = 1
-                break
-        }
-        frm.refresh()
-    }
+	/* A function that is called when the class field is changed. */
+	class_name: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn]
+		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
+		switch (row.class_name) {
+			case "A":
+				row.number_of_visits = 3
+				break
+			case "B":
+				row.number_of_visits = 2
+				break
+			case "C":
+				row.number_of_visits = 1
+				break
+			case "D":
+				row.number_of_visits = 1
+				break
+		}
+		frm.refresh()
+	}
+
 
 })
 

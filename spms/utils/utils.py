@@ -80,36 +80,50 @@ def remove_client_from_sales_person(values, doc):
         frappe.log_error(e, 'Error removing client from sales person')
         frappe.throw("An error occurred while removing client from sales person.")
         return False
+
+
 @frappe.whitelist()
-def set_target(values, quantities, doc):
-    try:
-        values = json.loads(values)
-        quantities = json.loads(quantities)  # Convert quantities to dictionary
+def set_target(doc):
+    if isinstance(doc, str):
+        doc = frappe.parse_json(doc)
 
-        # Load the document
-        doc_dict = json.loads(doc)
-        docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
+    # Access the 'name' field of the dictionary directly
+    sales_person_name = doc.get("name")
+    doc = frappe.get_doc("Sales Person", sales_person_name)
+    # Create a new document instance of Document Type B
+    if doc.custom_type == "Sales":
+        doc_b = frappe.new_doc("Visit Goal")
+        # Set field values from Document Type A to Document Type B
+        doc_b.sales_person = doc.sales_person_name
+        if(doc.employee != ""):
+            doc_b.employee = doc.employee
+        doc_b.territory = doc.territory
+        doc_b.from_ = doc.custom_from
+        doc_b.to = doc.custom_to
+        doc_b.target = doc.custom_target
+        doc_b.achieved = doc.custom_achieved
+        doc_b.number_of_days = doc.custom_number_of_days
 
-        # Update main document fields
-        docc.custom_from = values['from']
-        docc.custom_to = values['to']
-        docc.custom_target = values['target']
+        # Handle child tables if any
+        for child_a in doc.custom_target_breakdown:
+            doc_b.append("target_breakdown",{
+                "item" : child_a.item,
+                "quantity" : child_a.quantity,
+                "sold" : child_a.sold,
+                "achievement" : child_a.achievement,
+            })  # Append to child table of Document Type B
+        for child_a in doc.custom_productivity:
+            doc_b.append("productivity",{
+                "client": child_a.client,
+                "name1": child_a.name1,
+                "class_name": child_a.class_name,
+                "number_of_visits": child_a.number_of_visits,
+                "verified_visits": child_a.verified_visits,
+                "achievement": child_a.achievement,
+            }) 
 
-        # Update child table quantities or add new row
-        for item, quantity in quantities.items():
-            target_row = next((row for row in docc.custom_target_breakdown if row.item == item), None)
-            if target_row:
-                target_row.quantity = quantity
-            else:
-                docc.append('custom_target_breakdown', {
-                    'item': item,
-                    'quantity': quantity
-                })
+        doc_b.insert()
+        return f"New Visit Goal({doc_b.sales_person}) record was added"
 
-        # Save the document
-        docc.save()
+    
 
-        return True
-    except Exception as e:
-        frappe.throw("An error occurred while updating the document.")
-        return False
