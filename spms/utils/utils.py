@@ -2,6 +2,36 @@ import frappe
 import json
 
     
+
+    
+# @frappe.whitelist()
+# def create_client_to_sales_person(values, doc,is_present,client):
+#     try:
+#         if(client!=""):
+#             values = json.loads(values)
+#             doc_dict = json.loads(doc)
+
+#             docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+#             child = docu.append('custom_productivity', {})
+#             child.client = client#values.get('client')
+#             docu.save()
+#             return True
+#         else:
+#             values = json.loads(values)
+#             values["doctype"] = "Client"
+#             values["full_name"] = values.get("first_name")+ ((" " + values.get("middle_name")) if values.get("middle_name") != None else "")+ " " + values.get("last_name")
+#             new_doc = frappe.get_doc(values)
+#             new_doc.insert()
+#             doc_dict = json.loads(doc)
+#             docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+#             child = docu.append('custom_productivity', {})
+#             child.client = new_doc.name
+#             docu.save()
+#             return True
+#     except Exception as e:
+#         frappe.throw("An error occurred while adding client to sales person.",e)
+#         return False
+    
 @frappe.whitelist()
 def create_client_to_sales_person(values, doc, is_present, client):
     try:
@@ -53,44 +83,7 @@ def remove_client_from_sales_person(values, doc):
 
 
 @frappe.whitelist()
-def set_target(values, quantities, doc):
-    try:
-        values = json.loads(values)
-        quantities = json.loads(quantities)  # Convert quantities to dictionary
-
-        # Load the document
-        doc_dict = json.loads(doc)
-        docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
-        create_target_log(docc)
-        # Update main document fields
-        docc.custom_from = values['from']
-        docc.custom_to = values['to']
-        docc.custom_target = values['target']
-
-        # Update child table quantities or add new row
-        for item, quantity in quantities.items():
-            target_row = next((row for row in docc.custom_target_breakdown if row.item == item), None)
-            if target_row:
-                target_row.quantity = quantity
-            else:
-                docc.append('custom_target_breakdown', {
-                    'item': item,
-                    'quantity': quantity
-                })
-
-
-        # Save the document
-        docc.save()
-
-        return True
-    except Exception as e:
-        frappe.throw("An error occurred while updating the document.")
-        return False
-
-
-def create_target_log(doc):
-    print("\n\n\n\n\n\n\ndoc")
-    print(doc)
+def set_target(doc):
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
 
@@ -128,10 +121,9 @@ def create_target_log(doc):
                 "verified_visits": child_a.verified_visits,
                 "achievement": child_a.achievement,
             }) 
-        print("insert")
 
         doc_b.insert()
-        return True#f"New Visit Goal({doc_b.sales_person}) record was added"
+        return f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
 
