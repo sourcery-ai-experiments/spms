@@ -53,6 +53,23 @@ def remove_client_from_sales_person(values, doc):
 
 
 @frappe.whitelist()
+def remove_customer_from_sales_person(values, doc):
+    try:
+        values = json.loads(values)
+
+        doc_dict = json.loads(doc)
+        docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+        docu.custom_customer_collects_goal = [row for row in docu.custom_customer_collects_goal if row.customer not in values]
+        docu.save()
+
+        return True
+    except Exception as e:
+        frappe.log_error(e, 'Error removing customer from sales person')
+        frappe.throw("An error occurred while removing customer from sales person.")
+        return False
+
+
+@frappe.whitelist()
 def set_target(values, quantities, doc):
     try:
         values = json.loads(values)
@@ -87,6 +104,34 @@ def set_target(values, quantities, doc):
         frappe.throw("An error occurred while updating the document.")
         return False
 
+
+@frappe.whitelist()
+def set_collecting_target(values, quantities, doc):
+    try:
+        values = json.loads(values)
+        quantities = json.loads(quantities)  # Convert quantities to dictionary
+
+        doc_dict = json.loads(doc)
+        docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
+        docc.custom_from_ = values['from']
+        docc.custom_to_ = values['to']
+        docc.custom_additional_target = values['target']
+
+        for customer, amount_of_money in quantities.items():
+            
+            target_row = next((row for row in docc.custom_customer_collects_goal if row.customer == customer), None)
+            if target_row:
+                target_row.amount_of_money = amount_of_money
+            else:
+                docc.append('custom_customer_collects_goal', {
+                    'customer': customer,
+                    'amount_of_money': amount_of_money
+                })
+        docc.save()
+        return True
+    except Exception as e:
+        frappe.throw("An error occurred while updating the document.")
+        return False
 
 def create_target_log(doc):
 

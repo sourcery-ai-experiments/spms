@@ -2,350 +2,554 @@ var selected_suggestion = null;
 var selected_suggestion_id = null;
 frappe.ui.form.on('Sales Person', {
     refresh(frm) {
+        if (frm.doc.custom_type != "Collect") {
+            frm.add_custom_button(__('Remove Client'), () => {
+                // Get the custom_productivity child table data
+                let existingClients = frm.doc.custom_productivity;
 
-
-        frm.add_custom_button(__('Remove Client'), () => {
-            // Get the custom_productivity child table data
-            let existingClients = frm.doc.custom_productivity;
-
-            // Create the dialog
-            let dialog = new frappe.ui.Dialog({
-                title: 'Remove Clients',
-                fields: [
-                    {
-                        'fieldname': 'clients_table',
-                        'fieldtype': 'HTML',
-                        'options': `
+                // Create the dialog
+                let dialog = new frappe.ui.Dialog({
+                    title: 'Remove Clients',
+                    fields: [
+                        {
+                            'fieldname': 'clients_table',
+                            'fieldtype': 'HTML',
+                            'options': `
                             ${existingClients.map(client => `
                             <button class="btn  border" style="margin: 5px;" id="${client.client}" onclick="this.classList.toggle('btn-danger')">${client.name1}</button>                            `).join('')}
                         `
+                        }
+                    ],
+                    primary_action_label: 'Remove',
+                    primary_action() {
+                        let clientsToRemove = existingClients.filter(client => document.getElementById(client.client).classList.contains('btn-danger'));
+                        if (clientsToRemove.length > 0) {
+                            frappe.call({
+                                method: 'spms.utils.utils.remove_client_from_sales_person',
+                                args: {
+                                    'values': clientsToRemove.map(client => client.client), 'doc': frm.doc
+                                },
+                                callback: function (response) {
+                                    var res = response.message;
+                                    if (res) {
+                                        frappe.msgprint(__('Removed Clients Successfully'));
+                                        dialog.hide();
+                                        frm.reload_doc();
+                                    } else {
+                                        frappe.msgprint(__('Error Removing Client'));
+                                    }
+                                }
+                            });
+                        } else {
+                            frappe.msgprint(__('No Clients to Remove'));
+                        }
                     }
-                ],
-                primary_action_label: 'Remove',
-                primary_action() {
-                    let clientsToRemove = existingClients.filter(client => document.getElementById(client.client).classList.contains('btn-danger'));
-                    if (clientsToRemove.length > 0) {
+                });
+
+                dialog.show();
+            }).addClass('bg-danger').css({
+                "color": "white",
+            });
+
+            frm.add_custom_button(__('Add Client'), () => {
+                var dialog = new frappe.ui.Dialog({
+                    title: 'Create Client',
+                    fields: [
+                        { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
+                            'fieldname': 'tb1',
+                            'fieldtype': 'Column Break',
+                        }, {
+                            'fieldname': 'sb1',
+                            'fieldtype': 'Section Break',
+                        },
+                        {
+                            'fieldname': 'first_name',
+                            'fieldtype': 'Data',
+                            'label': 'First Name', 'reqd': 1,
+                            'onchange': function () {
+                                var inputName = this.get_value();
+                                frappe.db.get_list('Client', {
+                                    filters: {
+                                        'full_name': ['like', '%' + inputName + '%']
+                                    },
+                                    fields: ['full_name', 'name']
+                                }).then(suggestions => {
+                                    let htmlField = dialog.get_field('suggestions');
+                                    htmlField.$wrapper.empty(); // clear the HTML field
+                                    htmlField.$wrapper.append("Suggestions: <br>");
+
+                                    suggestions.forEach(suggestion => {
+                                        let suggestionElement = $(`<p><a style="color:blue;" href="">${suggestion.full_name}</a></p>`);
+                                        suggestionElement.click(() => {
+                                            frappe.db.get_doc('Client', suggestion.name).then(doc => {
+                                                selected_suggestion = suggestion.full_name;
+                                                selected_suggestion_id = suggestion.name;
+
+                                                dialog.set_values({
+                                                    'first_name': doc.first_name,
+                                                    'middle_name': doc.middle_name,
+                                                    'last_name': doc.last_name,
+
+                                                    'salutation': doc.salutation,
+                                                    'class': doc.class,
+                                                    'department': doc.department,
+                                                    'phone': doc.phone,
+                                                    'territory': doc.territory
+                                                });
+                                            });
+                                        });
+                                        htmlField.$wrapper.append(suggestionElement);
+                                    });
+                                });
+                            }
+                        },
+                        {
+                            'fieldname': 'suggestions',
+                            'fieldtype': 'HTML',
+                            'label': 'Suggestions'
+                        },
+                        {
+                            'fieldname': 'middle_name',
+                            'fieldtype': 'Data',
+                            'label': 'Middle Name',
+                        },
+                        {
+                            'fieldname': 'last_name',
+                            'fieldtype': 'Data',
+                            'label': 'Last Name',
+                            'reqd': 1
+                        },
+                        {
+                            'fieldname': 'sb1',
+                            'fieldtype': 'Section Break',
+                        },
+                        { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
+                        {
+                            'fieldname': 'sb2',
+                            'fieldtype': 'Section Break',
+                        },
+                        { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 1, 'options': 'Doctor Department' }, {
+                            'fieldname': 'tb2',
+                            'fieldtype': 'Column Break',
+                        },
+                        { 'fieldname': 'phone', 'fieldtype': 'Phone', 'label': 'Phone', 'reqd': 1, "default": "+964-" },
+                        {
+                            'fieldname': 'sb3',
+                            'fieldtype': 'Section Break',
+                        },
+                        { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
+                    ],
+                    primary_action_label: 'Submit',
+                    primary_action(values) {
+                        console.log(values);
+                        var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
+                        console.log(fn);
+                        console.log(selected_suggestion);
+
+                        if (fn == selected_suggestion) {
+                            frappe.call({
+                                method: 'spms.utils.utils.create_client_to_sales_person',
+                                args: {
+                                    'values': values,
+                                    'doc': frm.doc,
+                                    'is_present': true,
+                                    'client': selected_suggestion_id
+                                }, callback: function (response) {
+                                    var res = response.message;
+                                    if (res) {
+                                        frappe.msgprint(__('Added Client Successfully'));
+                                        dialog.hide();
+                                        frm.reload_doc();
+                                    } else {
+                                        frappe.msgprint(__('Error Adding Client'));
+                                    }
+                                }
+                            });
+                        } else {
+                            frappe.call({
+                                method: 'spms.utils.utils.create_client_to_sales_person',
+                                args: {
+                                    'values': values,
+                                    'doc': frm.doc,
+                                    'is_present': false,
+                                    'client': null
+                                }, callback: function (response) {
+                                    var res = response.message;
+                                    if (res) {
+                                        frappe.msgprint(__('Added Client Successfully'));
+                                        dialog.hide();
+                                        frm.reload_doc();
+                                    } else {
+                                        frappe.msgprint(__('Error Adding Client'));
+                                    }
+                                }
+                            });
+                        }
+                        // Your primary action code here
+                    }
+                });
+                dialog.show();
+            }).addClass('bg-success', 'text-white').css({
+                "color": "white",
+            });
+
+            frm.add_custom_button(__('Set Target'), () => {
+                let targets = frm.doc.custom_target_breakdown;
+                console.log(targets);
+
+                // Prepare the table HTML
+                let tableHtml = '<table class="table table-bordered">';
+                tableHtml += '<thead><tr><th>Item</th><th>Quantity</th></tr></thead><tbody>';
+
+                // Add rows to the table
+                for (let target of targets) {
+                    tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
+                }
+
+                // tableHtml += '</tbody></table>';
+
+                // Create the sub-dialog for adding a new row
+                let subDialog = new frappe.ui.Dialog({
+                    title: 'Add New Row',
+                    fields: [
+                        {
+                            'fieldname': 'item',
+                            'label': 'Item',
+                            'fieldtype': 'Link',
+                            'options': 'Item',
+                            'reqd': 1
+                        },
+                        {
+                            'fieldname': 'quantity',
+                            'label': 'Quantity',
+                            'fieldtype': 'Float',
+                            'reqd': 1
+                        }
+                    ],
+                    primary_action_label: 'Add Row',
+                    primary_action() {
+                        // Retrieve entered values from the sub-dialog
+                        let newItem = subDialog.get_value('item').trim(); // Trim whitespace from the item
+                        let newQuantity = subDialog.get_value('quantity');
+
+                        // Append a new row to the table
+                        tableHtml += `<tr><td>${newItem}</td><td contenteditable="true" id="target_${newItem.replace(/\s+/g, '_')}">${newQuantity}</td></tr>`;
+
+                        // Update the HTML in the main dialog's table field
+                        dialog.get_field('targets_table').$wrapper.html(tableHtml);
+
+                        // Add the new target to the targets array
+                        targets.push({
+                            item: newItem,
+                            quantity: newQuantity
+                        });
+
+                        subDialog.hide(); // Hide the sub-dialog
+                    }
+
+                });
+
+                // Create the main dialog
+                let dialog = new frappe.ui.Dialog({
+                    title: 'Set Target',
+                    fields: [
+                        {
+                            'fieldname': 'from',
+                            'label': 'From',
+                            'fieldtype': 'Date',
+                            'reqd': 1,
+                            'default': frm.doc.custom_from
+                        },
+                        //add column break
+                        {
+                            'fieldname': 'column_break',
+                            'fieldtype': 'Column Break',
+                        },
+                        {
+                            'fieldname': 'to',
+                            'label': 'To',
+                            'fieldtype': 'Date',
+                            'reqd': 1,
+                            'default': frm.doc.custom_to
+                        },
+                        {
+                            'fieldname': 'section_break',
+                            'fieldtype': 'Section Break',
+                        },
+                        {
+                            'fieldname': 'target',
+                            'label': 'Target',
+                            'fieldtype': 'Float',
+                            'reqd': 1,
+                            'default': frm.doc.custom_target
+                        },
+                        {
+                            'fieldname': 'section_break',
+                            'fieldtype': 'Section Break',
+                        },
+                        {
+                            'fieldname': 'targets_table',
+                            'fieldtype': 'HTML',
+                            'options': tableHtml
+                        },
+                        // Add a button to open the sub-dialog for adding a new row
+                        {
+                            'fieldname': 'add_row_button',
+                            'label': 'Add New Target',
+                            'fieldtype': 'Button',
+                            'icon': 'plus',
+                            'click': function () {
+                                subDialog.show();
+                            }
+                        }
+                    ],
+                    primary_action_label: 'Set Target',
+                    primary_action() {
+                        console.log(targets);
+                        let quantities = {};
+                        // Retrieve quantities from the table
+                        for (let target of targets) {
+                            console.log(target.item);
+                            let element = document.getElementById(`target_${target.item.replace(/\s+/g, '_')}`);
+                            if (element) {
+                                quantities[target.item] = parseFloat(element.innerText);
+                            } else {
+                                console.error(`Element with ID 'target_${target.item.replace(/\s+/g, '_')}' not found.`);
+                            }
+                        }
+
+
+                        console.log(quantities);
+
                         frappe.call({
-                            method: 'spms.utils.utils.remove_client_from_sales_person',
+                            method: 'spms.utils.utils.set_target',
                             args: {
-                                'values': clientsToRemove.map(client => client.client), 'doc': frm.doc
+                                'values': dialog.get_values(),
+                                'quantities': quantities, // Pass quantities as JSON
+                                'doc': frm.doc
                             },
                             callback: function (response) {
                                 var res = response.message;
                                 if (res) {
-                                    frappe.msgprint(__('Removed Clients Successfully'));
+                                    frappe.msgprint(__('Set Target Successfully'));
                                     dialog.hide();
-                                    frm.reload_doc();
+                                    frm.refresh();
                                 } else {
-                                    frappe.msgprint(__('Error Removing Client'));
+                                    frappe.msgprint(__('Error Setting Target'));
                                 }
                             }
                         });
-                    } else {
-                        frappe.msgprint(__('No Clients to Remove'));
                     }
-                }
+                });
+
+                // Show the main dialog
+                dialog.show();
+
+            }).addClass('bg-info').css({
+                "color": "white",
             });
+        }
+        if (frm.doc.custom_type != "Sales") { 
 
-            dialog.show();
-        }).addClass('bg-danger').css({
-            "color": "white",
-        });
-
-        frm.add_custom_button(__('Add Client'), () => {
-            var dialog = new frappe.ui.Dialog({
-                title: 'Create Client',
-                fields: [
-                    { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
-                        'fieldname': 'tb1',
-                        'fieldtype': 'Column Break',
-                    },
-                    {
-                        'fieldname': 'first_name',
-                        'fieldtype': 'Data',
-                        'label': 'First Name', 'reqd': 1,
-                        'onchange': function () {
-                            var inputName = this.get_value();
-                            frappe.db.get_list('Client', {
-                                filters: {
-                                    'full_name': ['like', '%' + inputName + '%']
+            frm.add_custom_button(__('Remove Customer'), () => {
+                // Get the custom_productivity child table data
+                let existingClients = frm.doc.custom_customer_collects_goal;
+                console.log("existingClients");
+                console.log(existingClients);
+            
+                // Create the dialog
+                let dialog = new frappe.ui.Dialog({
+                    title: 'Remove Clients',
+                    fields: [
+                        {
+                            'fieldname': 'clients_table',
+                            'fieldtype': 'HTML',
+                            'options': `
+                                        ${existingClients.map(client => `
+                                        <button class="btn  border" style="margin: 5px;" id="${client.customer}" onclick="this.classList.toggle('btn-danger')">${client.customer}</button>                            `).join('')}
+                                    `
+                        }
+                    ],
+                    primary_action_label: 'Remove',
+                    primary_action() {
+                        let clientsToRemove = existingClients.filter(client => document.getElementById(client.customer).classList.contains('btn-danger'));
+                        if (clientsToRemove.length > 0) {
+                            frappe.call({
+                                method: 'spms.utils.utils.remove_customer_from_sales_person',
+                                args: {
+                                    'values': clientsToRemove.map(client => client.customer), 'doc': frm.doc
                                 },
-                                fields: ['full_name', 'name']
-                            }).then(suggestions => {
-                                let htmlField = dialog.get_field('suggestions');
-                                htmlField.$wrapper.empty(); // clear the HTML field
-                                htmlField.$wrapper.append("Suggestions: <br>");
-
-                                suggestions.forEach(suggestion => {
-                                    let suggestionElement = $(`<p><a style="color:blue;" href="">${suggestion.full_name}</a></p>`);
-                                    suggestionElement.click(() => {
-                                        frappe.db.get_doc('Client', suggestion.name).then(doc => {
-                                            selected_suggestion = suggestion.full_name;
-                                            selected_suggestion_id = suggestion.name;
-
-                                            dialog.set_values({
-                                                'first_name': doc.first_name,
-                                                'middle_name': doc.middle_name,
-                                                'last_name': doc.last_name,
-
-                                                'salutation': doc.salutation,
-                                                'class': doc.class,
-                                                'department': doc.department,
-                                                'phone': doc.phone,
-                                                'territory': doc.territory
-                                            });
-                                        });
-                                    });
-                                    htmlField.$wrapper.append(suggestionElement);
-                                });
+                                callback: function (response) {
+                                    var res = response.message;
+                                    if (res) {
+                                        frappe.msgprint(__('Removed Clients Successfully'));
+                                        dialog.hide();
+                                        frm.reload_doc();
+                                    } else {
+                                        frappe.msgprint(__('Error Removing Client'));
+                                    }
+                                }
                             });
-                        }
-                    },
-                    {
-                        'fieldname': 'suggestions',
-                        'fieldtype': 'HTML',
-                        'label': 'Suggestions'
-                    },
-                    {
-                        'fieldname': 'middle_name',
-                        'fieldtype': 'Data',
-                        'label': 'Middle Name',
-                    },
-                    {
-                        'fieldname': 'last_name',
-                        'fieldtype': 'Data',
-                        'label': 'Last Name',
-                        'reqd': 1
-                    },
-                    {
-                        'fieldname': 'sb1',
-                        'fieldtype': 'Section Break',
-                    },
-                    { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
-                    {
-                        'fieldname': 'sb2',
-                        'fieldtype': 'Section Break',
-                    },
-                    { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 1, 'options': 'Doctor Department' }, {
-                        'fieldname': 'tb2',
-                        'fieldtype': 'Column Break',
-                    },
-                    { 'fieldname': 'phone', 'fieldtype': 'Phone', 'label': 'Phone', 'reqd': 1, "default": "+964-" },
-                    {
-                        'fieldname': 'sb3',
-                        'fieldtype': 'Section Break',
-                    },
-                    { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
-                ],
-                primary_action_label: 'Submit',
-                primary_action(values) {
-                    console.log(values);
-                    var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
-                    console.log(fn);
-                    console.log(selected_suggestion);
-
-                    if (fn == selected_suggestion) {
-                        frappe.call({
-                            method: 'spms.utils.utils.create_client_to_sales_person',
-                            args: {
-                                'values': values,
-                                'doc': frm.doc,
-                                'is_present': true,
-                                'client': selected_suggestion_id
-                            }, callback: function (response) {
-                                var res = response.message;
-                                if (res) {
-                                    frappe.msgprint(__('Added Client Successfully'));
-                                    dialog.hide();
-                                    frm.reload_doc();
-                                } else {
-                                    frappe.msgprint(__('Error Adding Client'));
-                                }
-                            }
-                        });
-                    } else {
-                        frappe.call({
-                            method: 'spms.utils.utils.create_client_to_sales_person',
-                            args: {
-                                'values': values,
-                                'doc': frm.doc,
-                                'is_present': false,
-                                'client': null
-                            }, callback: function (response) {
-                                var res = response.message;
-                                if (res) {
-                                    frappe.msgprint(__('Added Client Successfully'));
-                                    dialog.hide();
-                                    frm.reload_doc();
-                                } else {
-                                    frappe.msgprint(__('Error Adding Client'));
-                                }
-                            }
-                        });
-                    }
-                    // Your primary action code here
-                }
-            });
-            dialog.show();
-        }).addClass('bg-success', 'text-white').css({
-            "color": "white",
-        });
-
-        frm.add_custom_button(__('Set Target'), () => {
-            let targets = frm.doc.custom_target_breakdown;
-            console.log(targets);
-
-            // Prepare the table HTML
-            let tableHtml = '<table class="table table-bordered">';
-            tableHtml += '<thead><tr><th>Item</th><th>Quantity</th></tr></thead><tbody>';
-
-            // Add rows to the table
-            for (let target of targets) {
-                tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
-            }
-
-            // tableHtml += '</tbody></table>';
-
-            // Create the sub-dialog for adding a new row
-            let subDialog = new frappe.ui.Dialog({
-                title: 'Add New Row',
-                fields: [
-                    {
-                        'fieldname': 'item',
-                        'label': 'Item',
-                        'fieldtype': 'Link',
-                        'options': 'Item',
-                        'reqd': 1
-                    },
-                    {
-                        'fieldname': 'quantity',
-                        'label': 'Quantity',
-                        'fieldtype': 'Float',
-                        'reqd': 1
-                    }
-                ],
-                primary_action_label: 'Add Row',
-                primary_action() {
-                    // Retrieve entered values from the sub-dialog
-                    let newItem = subDialog.get_value('item').trim(); // Trim whitespace from the item
-                    let newQuantity = subDialog.get_value('quantity');
-
-                    // Append a new row to the table
-                    tableHtml += `<tr><td>${newItem}</td><td contenteditable="true" id="target_${newItem.replace(/\s+/g, '_')}">${newQuantity}</td></tr>`;
-
-                    // Update the HTML in the main dialog's table field
-                    dialog.get_field('targets_table').$wrapper.html(tableHtml);
-
-                    // Add the new target to the targets array
-                    targets.push({
-                        item: newItem,
-                        quantity: newQuantity
-                    });
-
-                    subDialog.hide(); // Hide the sub-dialog
-                }
-
-            });
-
-            // Create the main dialog
-            let dialog = new frappe.ui.Dialog({
-                title: 'Set Target',
-                fields: [
-                    {
-                        'fieldname': 'from',
-                        'label': 'From',
-                        'fieldtype': 'Date',
-                        'reqd': 1,
-                        'default': frm.doc.custom_from
-                    },
-                    //add column break
-                    {
-                        'fieldname': 'column_break',
-                        'fieldtype': 'Column Break',
-                    },
-                    {
-                        'fieldname': 'to',
-                        'label': 'To',
-                        'fieldtype': 'Date',
-                        'reqd': 1,
-                        'default': frm.doc.custom_to
-                    },
-                    {
-                        'fieldname': 'section_break',
-                        'fieldtype': 'Section Break',
-                    },
-                    {
-                        'fieldname': 'target',
-                        'label': 'Target',
-                        'fieldtype': 'Float',
-                        'reqd': 1,
-                        'default': frm.doc.custom_target
-                    },
-                    {
-                        'fieldname': 'section_break',
-                        'fieldtype': 'Section Break',
-                    },
-                    {
-                        'fieldname': 'targets_table',
-                        'fieldtype': 'HTML',
-                        'options': tableHtml
-                    },
-                    // Add a button to open the sub-dialog for adding a new row
-                    {
-                        'fieldname': 'add_row_button',
-                        'label': 'Add New Target',
-                        'fieldtype': 'Button',
-                        'icon': 'plus',
-                        'click': function () {
-                            subDialog.show();
-                        }
-                    }
-                ],
-                primary_action_label: 'Set Target',
-                primary_action() {
-                    console.log(targets);
-                    let quantities = {};
-                    // Retrieve quantities from the table
-                    for (let target of targets) {
-                        console.log(target.item);
-                        let element = document.getElementById(`target_${target.item.replace(/\s+/g, '_')}`);
-                        if (element) {
-                            quantities[target.item] = parseFloat(element.innerText);
                         } else {
-                            console.error(`Element with ID 'target_${target.item.replace(/\s+/g, '_')}' not found.`);
+                            frappe.msgprint(__('No Clients to Remove'));
                         }
                     }
+                });
+            
+                dialog.show();
+            }).addClass('bg-danger').css({
+                "color": "white",
+            });
+            frm.add_custom_button(__('Set Collecting Target'), () => {
+                let targets = frm.doc.custom_customer_collects_goal;
+                console.log(targets);
 
+                // Prepare the table HTML
+                let tableHtml = '<table class="table table-bordered">';
+                tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th></tr></thead><tbody>';
 
-                    console.log(quantities);
+                // Add rows to the table
+                for (let target of targets) {
+                    tableHtml += `<tr><td>${target.customer}</td><td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td></tr>`;
+                }
 
-                    frappe.call({
-                        method: 'spms.utils.utils.set_target',
-                        args: {
-                            'values': dialog.get_values(),
-                            'quantities': quantities, // Pass quantities as JSON
-                            'doc': frm.doc
+                // tableHtml += '</tbody></table>';
+
+                // Create the sub-dialog for adding a new row
+                let subDialog = new frappe.ui.Dialog({
+                    title: 'Add New Row',
+                    fields: [
+                        {
+                            'fieldname': 'customer',
+                            'label': 'Customer',
+                            'fieldtype': 'Link',
+                            'options': 'Customer',
+                            'reqd': 1
                         },
-                        callback: function (response) {
-                            var res = response.message;
-                            if (res) {
-                                frappe.msgprint(__('Set Target Successfully'));
-                                dialog.hide();
-                                frm.refresh();
-                            } else {
-                                frappe.msgprint(__('Error Setting Target'));
+                        {
+                            'fieldname': 'amount_of_money',
+                            'label': 'Amount of Money',
+                            'fieldtype': 'Float',
+                            'reqd': 1
+                        }
+                    ],
+                    primary_action_label: 'Add Row',
+                    primary_action() {
+                        // Retrieve entered values from the sub-dialog
+                        let newCustomer = subDialog.get_value('customer').trim(); // Trim whitespace from the item
+                        let newAmount = subDialog.get_value('amount_of_money');
+                        // Append a new row to the table
+                        tableHtml += `<tr><td>${newCustomer}</td><td contenteditable="true" id="target_${newCustomer.replace(/\s+/g, '_')}">${newAmount}</td></tr>`;
+                        // Update the HTML in the main dialog's table field
+                        dialog.get_field('targets_table').$wrapper.html(tableHtml);
+                        // Add the new target to the targets array
+                        console.log("newCustomer");
+                        console.log(newCustomer);
+                        
+                        targets.push({
+                            customer: newCustomer,
+                            amount_of_money: newAmount
+                        });
+                        subDialog.hide(); // Hide the sub-dialog
+                    }
+
+                });
+
+                // Create the main dialog
+                let dialog = new frappe.ui.Dialog({
+                    title: 'Set Target',
+                    fields: [
+                        {
+                            'fieldname': 'from',
+                            'label': 'From',
+                            'fieldtype': 'Date',
+                            'reqd': 1,
+                            'default': frm.doc.custom_from_
+                        },
+                        //add column break
+                        {
+                            'fieldname': 'column_break',
+                            'fieldtype': 'Column Break',
+                        },
+                        {
+                            'fieldname': 'to',
+                            'label': 'To',
+                            'fieldtype': 'Date',
+                            'reqd': 1,
+                            'default': frm.doc.custom_to_
+                        },
+                        {
+                            'fieldname': 'section_break',
+                            'fieldtype': 'Section Break',
+                        },
+                        {
+                            'fieldname': 'target',
+                            'label': 'Target',
+                            'fieldtype': 'Float',
+                            'reqd': 1,
+                            'default': frm.doc.custom_additional_target
+                        },
+                        {
+                            'fieldname': 'section_break',
+                            'fieldtype': 'Section Break',
+                        },
+                        {
+                            'fieldname': 'targets_table',
+                            'fieldtype': 'HTML',
+                            'options': tableHtml
+                        },
+                        // Add a button to open the sub-dialog for adding a new row
+                        {
+                            'fieldname': 'add_row_button',
+                            'label': 'Add New Customer',
+                            'fieldtype': 'Button',
+                            'icon': 'plus',
+                            'click': function () {
+                                subDialog.show();
                             }
                         }
-                    });
-                }
+                    ],
+                    primary_action_label: 'Set Target',
+                    primary_action() {
+                        let quantities = {};
+                        // Retrieve quantities from the table
+                        for (let target of targets) {
+                            let element = document.getElementById(`target_${target.customer.replace(/\s+/g, '_')}`);
+                            if (element) {
+                                quantities[target.customer] = parseFloat(element.innerText);
+                            } else {
+                                console.error(`Element with ID 'target_${target.customer.replace(/\s+/g, '_')}' not found.`);
+                            }
+                        }
+                        frappe.call({
+                            method: 'spms.utils.utils.set_collecting_target',
+                            args: {
+                                'values': dialog.get_values(),
+                                'quantities': quantities, // Pass quantities as JSON
+                                'doc': frm.doc
+                            },
+                            callback: function (response) {
+                                var res = response.message;
+                                if (res) {
+                                    frappe.msgprint(__('Set Target Successfully'));
+                                    dialog.hide();
+                                    frm.refresh();
+                                } else {
+                                    frappe.msgprint(__('Error Setting Target'));
+                                }
+                            }
+                        });
+                    }
+                });
+
+                // Show the main dialog
+                dialog.show();
+
+            }).addClass('bg-info').css({
+                "color": "white",
             });
 
-            // Show the main dialog
-            dialog.show();
-
-        }).addClass('bg-info').css({
-            "color": "white",
-        });
+        }
 
     }
 
