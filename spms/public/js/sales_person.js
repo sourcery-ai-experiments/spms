@@ -56,6 +56,10 @@ frappe.ui.form.on('Sales Person', {
             var dialog = new frappe.ui.Dialog({
                 title: 'Create Client',
                 fields: [
+                    { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
+                        'fieldname': 'tb1',
+                        'fieldtype': 'Column Break',
+                    },
                     {
                         'fieldname': 'first_name',
                         'fieldtype': 'Data',
@@ -116,10 +120,6 @@ frappe.ui.form.on('Sales Person', {
                     {
                         'fieldname': 'sb1',
                         'fieldtype': 'Section Break',
-                    },
-                    { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
-                        'fieldname': 'tb1',
-                        'fieldtype': 'Column Break',
                     },
                     { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
                     {
@@ -364,6 +364,99 @@ function progress_bar(frm, table_name, field_name, options = { color: "", text: 
 			</div>`
     }
 }
+function calculateProgressBar(frm) {
+    // Get the values from the form fields
+    var targetSales = frm.doc.custom_target || 0; // default to 0 if field is empty
+    var achievedSales = frm.doc.custom_achieved || 0; // default to 0 if field is empty
+
+    var totalCollected = frm.doc.custom_total_collected || 0; // default to 0 if field is empty
+    var additionalCollected = frm.doc.custom_additional_collected || 0; // default to 0 if field is empty
+
+    // Calculate the sales progress percentage
+    var salesPercentage = 0;
+    if (targetSales > 0) {
+        salesPercentage = (achievedSales / targetSales) * 100;
+    }
+
+    // Calculate productivity
+    var productivity = (totalCollected + additionalCollected) / 2;
+
+    // Update the progress bar for sales
+    var salesProgressBar = frm.fields_dict['custom_sales_achievement'];
+    salesProgressBar.$wrapper.css('width', salesPercentage + '%');
+    salesProgressBar.$wrapper.text(salesPercentage.toFixed(2) + '%');
+    salesProgressBar.$wrapper.css('color', 'white'); // Set text color to white
+    salesProgressBar.$wrapper.css('text-align', 'center'); // Center the text
+
+    // Change the color based on sales progress
+    if (salesPercentage < 50) {
+        salesProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
+    } else if (salesPercentage >= 50 && salesPercentage < 100) {
+        salesProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
+    } else {
+        salesProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
+    }
+
+    // Update the progress bar for productivity
+    var productivityProgressBar = frm.fields_dict['percentage']; // Assuming it's the same progress bar element
+    productivityProgressBar.$wrapper.css('width', productivity + '%');
+    productivityProgressBar.$wrapper.text(productivity.toFixed(2) + '%');
+    productivityProgressBar.$wrapper.css('color', 'white'); // Set text color to white
+    productivityProgressBar.$wrapper.css('text-align', 'center'); // Center the text
+
+    // Change the color based on productivity
+    if (productivity < 50) {
+        productivityProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
+    } else if (productivity >= 50 && productivity < 100) {
+        productivityProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
+    } else {
+        productivityProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
+    }
+}
+
+function set_css(frm) {
+    var data = frm.doc.custom_customer_collects_goal;
+    if (data) {
+
+        let total_number_of_visits = 0
+        let total_verified_visits = 0
+        for (let row of data) {
+            total_number_of_visits += row.number_of_visits
+            total_verified_visits += row.verified_visits
+        }
+
+        let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
+        var percentage;
+        if (frm.doc.custom_type == "Sales") {
+            percentage = (frm.doc.custom_achieved / frm.doc.custom_target) * 100
+        }
+        else {
+            percentage = (frm.doc.custom_total_collected / frm.doc.custom_total_targets) * 100
+
+        }
+
+        let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
+
+        document.getElementById("percentage").style.width = `${avg_percentage}%`
+        document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
+        document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+        if (avg_percentage >= 50 && avg_percentage < 90) {
+            document.getElementById("percentage").style.backgroundColor = `#edae49` // yellow 
+            document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+        }
+        else if (avg_percentage >= 90 && avg_percentage < 100) {
+            document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+            document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
+        }
+        else if (avg_percentage >= 100) {
+            document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
+            document.getElementById("percentage").innerText = `Completed ${Math.round(avg_percentage)}%`
+        }
+    }
+}
+
+
+
 let first_try = true
 function refresh_when_click_btn(frm) {
     /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
@@ -388,8 +481,13 @@ function refresh_when_click_btn(frm) {
 frappe.ui.form.on('Sales Person', {
     refresh: function (frm) {
         refresh_when_click_btn(frm)
-        progress_bar(frm, "custom_customer_collects_goal", "achieved_collects")
-        progress_bar(frm, "custom_customer_collects_goal", "achieved_visits")
+        set_css(frm);
+        progress_bar(frm, "custom_productivity", "achievement");
+        progress_bar(frm, "custom_target_breakdown", "achievement");
+
+        // progress_bar(frm, "custom_customer_collects_goal", "achieved_collects");
+        // progress_bar(frm, "custom_customer_collects_goal", "achieved_visits");
+        // calculateProgressBar(frm);
     },
     custom_fixed_target: function (frm) {
         frm.set_value("custom_total_targets", frm.doc.custom_fixed_target);
@@ -412,50 +510,50 @@ frappe.ui.form.on('Sales Person', {
         frm.set_df_property("custom_type", "read_only", 1)
     }
 });
-frappe.ui.form.on('Sales Person', {
+// frappe.ui.form.on('Sales Person', {
 
-	refresh: function (frm) {
-		refresh_when_click_btn(frm)
-		progress_bar(frm, "custom_productivity", "achievement")
-		progress_bar(frm, "custom_target_breakdown", "achievement")
-        frm.set_df_property('custom_customer_collects_goal', 'reqd', 0) 
-	},
-    "custom_to": function (frm) {
-		if (frm.doc.custom_to < frm.doc.custom_from) {
-			frappe.throw("Please, Select Valid Period for Target")
-		}
+// 	refresh: function (frm) {
+// 		refresh_when_click_btn(frm)
+// 		progress_bar(frm, "custom_productivity", "achievement")
+// 		progress_bar(frm, "custom_target_breakdown", "achievement")
+//         frm.set_df_property('custom_customer_collects_goal', 'reqd', 0) 
+// 	},
+//     "custom_to": function (frm) {
+// 		if (frm.doc.custom_to < frm.doc.custom_from) {
+// 			frappe.throw("Please, Select Valid Period for Target")
+// 		}
 
-		// find diff between in and out date
-		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
-		frm.set_value("custom_number_of_days", diff_days);
-	},
-    "custom_to_": function (frm) {
-		if (frm.doc.custom_to_ < frm.doc.custom_from_) {
-			frappe.throw("Please, Select Valid Period for Collect")
-		}
-	},
-});
+// 		// find diff between in and out date
+// 		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
+// 		frm.set_value("custom_number_of_days", diff_days);
+// 	},
+//     "custom_to_": function (frm) {
+// 		if (frm.doc.custom_to_ < frm.doc.custom_from_) {
+// 			frappe.throw("Please, Select Valid Period for Collect")
+// 		}
+// 	},
+// });
 frappe.ui.form.on('Productivity', {
-	/* A function that is called when the class field is changed. */
-	class_name: function (frm, cdt, cdn) {
-		let row = locals[cdt][cdn]
-		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
-		switch (row.class_name) {
-			case "A":
-				row.number_of_visits = 3
-				break
-			case "B":
-				row.number_of_visits = 2
-				break
-			case "C":
-				row.number_of_visits = 1
-				break
-			case "D":
-				row.number_of_visits = 1
-				break
-		}
-		frm.refresh()
-	}
+    /* A function that is called when the class field is changed. */
+    class_name: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn]
+        /* A switch statement that is used to set the number of visits based on the class of the doctor. */
+        switch (row.class_name) {
+            case "A":
+                row.number_of_visits = 3
+                break
+            case "B":
+                row.number_of_visits = 2
+                break
+            case "C":
+                row.number_of_visits = 1
+                break
+            case "D":
+                row.number_of_visits = 1
+                break
+        }
+        frm.refresh()
+    }
 
 
 })

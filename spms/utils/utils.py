@@ -89,8 +89,7 @@ def set_target(values, quantities, doc):
 
 
 def create_target_log(doc):
-    print("\n\n\n\n\n\n\ndoc")
-    print(doc)
+
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
 
