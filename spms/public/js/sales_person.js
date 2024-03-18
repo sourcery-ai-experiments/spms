@@ -3,24 +3,6 @@ var selected_suggestion_id = null;
 frappe.ui.form.on('Sales Person', {
     refresh(frm) {
 
-        frm.add_custom_button(__('Set Target'), function() {
-            frappe.confirm(
-                __('Are you sure you want to set the target?'),
-                function() {
-                    frappe.call({
-                        method: 'spms.utils.utils.set_target',
-                        args: {
-                            doc: frm.doc,
-                        },
-                        callback: function(r) {
-                            frappe.msgprint(r.message);
-                        }
-                    });
-                }
-            );
-        });
-        
-        
 
         frm.add_custom_button(__('Remove Client'), () => {
             // Get the custom_productivity child table data
