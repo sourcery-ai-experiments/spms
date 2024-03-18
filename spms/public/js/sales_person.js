@@ -349,14 +349,14 @@ frappe.ui.form.on('Sales Person', {
                 "color": "white",
             });
         }
-        if (frm.doc.custom_type != "Sales") { 
+        if (frm.doc.custom_type != "Sales") {
 
             frm.add_custom_button(__('Remove Customer'), () => {
                 // Get the custom_productivity child table data
                 let existingClients = frm.doc.custom_customer_collects_goal;
                 console.log("existingClients");
                 console.log(existingClients);
-            
+
                 // Create the dialog
                 let dialog = new frappe.ui.Dialog({
                     title: 'Remove Clients',
@@ -395,7 +395,7 @@ frappe.ui.form.on('Sales Person', {
                         }
                     }
                 });
-            
+
                 dialog.show();
             }).addClass('bg-danger').css({
                 "color": "white",
@@ -445,7 +445,7 @@ frappe.ui.form.on('Sales Person', {
                         // Add the new target to the targets array
                         console.log("newCustomer");
                         console.log(newCustomer);
-                        
+
                         targets.push({
                             customer: newCustomer,
                             amount_of_money: newAmount
@@ -550,7 +550,10 @@ frappe.ui.form.on('Sales Person', {
             });
 
         }
-
+        refresh_when_click_btn(frm)
+        set_css(frm);
+        progress_bar(frm, "custom_productivity", "achievement");
+        progress_bar(frm, "custom_target_breakdown", "achievement");
     }
 
 });
@@ -619,9 +622,12 @@ function calculateProgressBar(frm) {
 }
 
 function set_css(frm) {
-    var data = frm.doc.custom_customer_collects_goal;
+    if (frm.doc.custom_type == "Sales") {
+        var data = frm.doc.custom_productivity;
+    } else {
+        var data = frm.doc.custom_customer_collects_goal;
+    }
     if (data) {
-
         let total_number_of_visits = 0
         let total_verified_visits = 0
         for (let row of data) {
@@ -636,7 +642,6 @@ function set_css(frm) {
         }
         else {
             percentage = (frm.doc.custom_total_collected / frm.doc.custom_total_targets) * 100
-
         }
 
         let avg_percentage = (productivity_percentage + percentage) / 2 || 0;

@@ -116,6 +116,7 @@ def set_collecting_target(values, quantities, doc):
         docc.custom_from_ = values['from']
         docc.custom_to_ = values['to']
         docc.custom_additional_target = values['target']
+        create_collect_log(docc)
 
         for customer, amount_of_money in quantities.items():
             
@@ -178,4 +179,50 @@ def create_target_log(doc):
         return True#f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
+
+def create_collect_log(doc):
+
+    if isinstance(doc, str):
+        doc = frappe.parse_json(doc)
+
+    # Access the 'name' field of the dictionary directly
+    sales_person_name = doc.get("name")
+    doc = frappe.get_doc("Sales Person", sales_person_name)
+    # Create a new document instance of Document Type B
+    if doc.custom_type == "Collect":
+        doc_b = frappe.new_doc("Collects Goal")
+        # Set field values from Document Type A to Document Type B
+        doc_b.sales_person = doc.sales_person_name
+        # if(doc.employee != ""):
+        doc_b.employee = doc.employee
+        
+        doc_b.territory = doc.territory
+        doc_b.from_ = doc.custom_from
+        doc_b.set("from", doc.custom_from)
+
+        doc_b.to = doc.custom_to
+        
+        doc_b.fixed_target = doc.custom_fixed_target
+        doc_b.additional_target_int = doc.custom_additional_target
+        doc_b.total_targets = doc.custom_total_targets
+
+        # Handle child tables if any
+        for child_a in doc.custom_customer_collects_goal:
+            doc_b.append("customer_collects_goal",{
+                "customer" : child_a.customer,
+                "amount_of_money" : child_a.amount_of_money,
+                "verified_collects" : child_a.verified_collects,
+                "achieved_collects" : child_a.achieved_collects,    
+                "number_of_visits" : child_a.number_of_visits,
+                "verified_visits" : child_a.verified_visits,
+                "achieved_visits" : child_a.achieved_visits,
+            })  # Append to child table of Document Type B
+
+
+        doc_b.insert()
+        
+        return True
+
+    
+
 
