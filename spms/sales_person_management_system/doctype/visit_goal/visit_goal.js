@@ -127,7 +127,12 @@ function refresh_when_click_btn(frm) {
  * @param [options] - 
  */
 function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
+	console.log(frm);
+    console.log(table_name);
+    console.log(field_name);
 	for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
+		console.log(row);
+
 		let idx = $(row).data("idx") - 1
 		let row_info = frm.doc[table_name][idx]
 		const width = row_info[field_name]
