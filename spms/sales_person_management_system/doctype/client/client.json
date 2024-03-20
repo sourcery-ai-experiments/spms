@@ -70,7 +70,8 @@
    "options": "Email"
   },
   {
-   "description": "example: 07701234567",
+   "default": "+964-",
+   "description": "example: +964 770 1234 567",
    "fieldname": "phone",
    "fieldtype": "Phone",
    "label": "Phone",
@@ -95,10 +96,11 @@
   },
   {
    "fieldname": "type",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Type"
+   "label": "Type",
+   "options": "Client Types"
   },
   {
    "fieldname": "first_name",
@@ -120,7 +122,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-14 12:15:08.632442",
+ "modified": "2024-03-20 14:28:32.649234",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Client",

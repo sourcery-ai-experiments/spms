@@ -1,36 +1,90 @@
 import frappe
 import json
 
-    
-@frappe.whitelist()
-def create_client_to_sales_person(values, doc, is_present, client):
-    try:
-        if client:
-            # Check if client exists in the table
-            client_exists = frappe.db.exists("Client", client)
-            if not client_exists:
-                values = json.loads(values)
-                values["doctype"] = "Client"
-                values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
-                    "middle_name") is not None else "") + " " + values.get("last_name")
-                new_doc = frappe.get_doc(values)
-                new_doc.insert()
+# @frappe.whitelist()
+# def create_client_to_sales_person(values, doc, client, address):
+#     try:
+#         address_dict = json.loads(address)
 
-            doc_dict = json.loads(doc)
-            docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-            # Check if the client is already appended
-            existing_clients = [row.client for row in docu.custom_productivity]
-            if client not in existing_clients:
-                child = docu.append('custom_productivity', {})
-                child.client = client
-                docu.save()
-                return True
-            else:
-                frappe.msgprint("Client already exists for this sales person.")
-                return False
+#         # Check if client exists in the table
+#         client_exists = frappe.db.exists("Client", client)
+#         if not client_exists:
+#             values = json.loads(values)
+#             values["doctype"] = "Client"
+#             values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
+#                 "middle_name") is not None else "") + " " + values.get("last_name")
+#             print("client_exists")
+#             values["address_line1"] = address_dict.get("address_line_1")
+#             values["address_line2"] = address_dict.get("address_line_2")
+#             values["city"] = address_dict.get("city")
+#             values["state"] = address_dict.get("state")
+#             values["pincode"] = address_dict.get("zip_code")
+#             values["country"] = address_dict.get("country")
+#             new_doc = frappe.get_doc(values)
+#             new_doc.insert()
+#             print("new_doc")
+#             print(new_doc)
+
+#         doc_dict = json.loads(doc)
+#         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+
+#         existing_clients = [row.client for row in docu.custom_productivity]
+#         if client not in existing_clients:
+#             child = docu.append('custom_productivity', {})
+#             child.client = client
+#             docu.save()
+#             return True
+#         else:
+#             frappe.msgprint("Client already exists for this sales person.")
+#             return False
+
+#     except Exception as e:
+#         frappe.throw("An error occurred while adding client to sales person.", e)
+#         return False
+@frappe.whitelist()
+def create_client_to_sales_person(values, doc,  client, address):
+    try:
+        address_dict = json.loads(address)
+
+        # Create a new Address document
+        new_address = frappe.new_doc("Address")
+        new_address.address_title = address_dict.get("address_line_1")
+        new_address.address_line1 = address_dict.get("address_line_1")
+        new_address.address_line2 = address_dict.get("address_line_2")
+        new_address.city = address_dict.get("city")
+        new_address.state = address_dict.get("state")
+        new_address.pincode = address_dict.get("zip_code")
+        new_address.country = address_dict.get("country")
+        new_address.insert()
+
+        # Check if client exists in the table
+        client_exists = frappe.db.exists("Client", client)
+        if not client_exists:
+            values = json.loads(values)
+            values["doctype"] = "Client"
+            values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
+                "middle_name") is not None else "") + " " + values.get("last_name")
+            # Assign address to client
+            values["address"] = new_address.name
+            new_doc = frappe.get_doc(values)
+            new_doc.insert()
+
+        doc_dict = json.loads(doc)
+        docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+
+        # Check if the client is already appended
+        existing_clients = [row.client for row in docu.custom_productivity]
+
+        
+        if new_doc not in existing_clients:
+            child = docu.append('custom_productivity', {})
+            child.client = new_doc
+            docu.save()
+            return True
         else:
-            frappe.msgprint("Please provide a valid client name.")
+            frappe.msgprint("Client already exists for this sales person.")
             return False
+
     except Exception as e:
         frappe.throw("An error occurred while adding client to sales person.", e)
         return False

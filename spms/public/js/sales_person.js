@@ -55,10 +55,8 @@ frappe.ui.form.on('Sales Person', {
                 var dialog = new frappe.ui.Dialog({
                     title: 'Create Client',
                     fields: [
-                        { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" }, {
-                            'fieldname': 'tb1',
-                            'fieldtype': 'Column Break',
-                        }, {
+                        { 'fieldname': 'salutation', 'fieldtype': 'Link', 'label': 'Salutation', 'reqd': 1, 'options': "Salutation" },
+                        {
                             'fieldname': 'sb1',
                             'fieldtype': 'Section Break',
                         },
@@ -75,31 +73,32 @@ frappe.ui.form.on('Sales Person', {
                                     fields: ['full_name', 'name']
                                 }).then(suggestions => {
                                     let htmlField = dialog.get_field('suggestions');
-                                    htmlField.$wrapper.empty(); // clear the HTML field
-                                    htmlField.$wrapper.append("Suggestions: <br>");
+                                    if (suggestions.length > 0) {
+                                        htmlField.$wrapper.empty(); // clear the HTML field
+                                        htmlField.$wrapper.append("Suggestions: <br>");
 
-                                    suggestions.forEach(suggestion => {
-                                        let suggestionElement = $(`<p><a style="color:blue;" href="">${suggestion.full_name}</a></p>`);
-                                        suggestionElement.click(() => {
-                                            frappe.db.get_doc('Client', suggestion.name).then(doc => {
-                                                selected_suggestion = suggestion.full_name;
-                                                selected_suggestion_id = suggestion.name;
+                                        suggestions.forEach(suggestion => {
+                                            let suggestionElement = $(`<p><a class="btn btn-info" href="">${suggestion.full_name}</a></p>`);
+                                            suggestionElement.click(() => {
+                                                frappe.db.get_doc('Client', suggestion.name).then(doc => {
+                                                    selected_suggestion = suggestion.full_name;
+                                                    selected_suggestion_id = suggestion.name;
 
-                                                dialog.set_values({
-                                                    'first_name': doc.first_name,
-                                                    'middle_name': doc.middle_name,
-                                                    'last_name': doc.last_name,
-
-                                                    'salutation': doc.salutation,
-                                                    'class': doc.class,
-                                                    'department': doc.department,
-                                                    'phone': doc.phone,
-                                                    'territory': doc.territory
+                                                    dialog.set_values({
+                                                        'first_name': doc.first_name,
+                                                        'middle_name': doc.middle_name,
+                                                        'last_name': doc.last_name,
+                                                        'salutation': doc.salutation,
+                                                        'class': doc.class,
+                                                        'department': doc.department,
+                                                        'phone': doc.phone,
+                                                        'territory': doc.territory
+                                                    });
                                                 });
                                             });
+                                            htmlField.$wrapper.append(suggestionElement);
                                         });
-                                        htmlField.$wrapper.append(suggestionElement);
-                                    });
+                                    }
                                 });
                             }
                         },
@@ -128,7 +127,7 @@ frappe.ui.form.on('Sales Person', {
                             'fieldname': 'sb2',
                             'fieldtype': 'Section Break',
                         },
-                        { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 1, 'options': 'Doctor Department' }, {
+                        { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 0, 'options': 'Doctor Department' }, {
                             'fieldname': 'tb2',
                             'fieldtype': 'Column Break',
                         },
@@ -138,22 +137,38 @@ frappe.ui.form.on('Sales Person', {
                             'fieldtype': 'Section Break',
                         },
                         { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
-                    ],
+                        {
+                            'fieldname': 'address_html',
+                            'fieldtype': 'HTML',
+                            'label': 'Address',
+                            'reqd': 0,
+                            'options': ''
+                        }],
                     primary_action_label: 'Submit',
                     primary_action(values) {
-                        console.log(values);
                         var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
-                        console.log(fn);
-                        console.log(selected_suggestion);
+                        console.log(values);
+                        // Extract address values from HTML input fields
+                        var address_values_json = {
+                            'address_line_1': $('#address-line-1').val(),
+                            'address_line_2': $('#address-line-2').val(),
+                            'city': $('#city').val(),
+                            'state': $('#state').val(),
+                            'zip_code': $('#zip-code').val(),
+                            'country': $('#country').val()
+                        };
+
+                        console.log(address_values_json);
 
                         if (fn == selected_suggestion) {
+
                             frappe.call({
                                 method: 'spms.utils.utils.create_client_to_sales_person',
                                 args: {
                                     'values': values,
                                     'doc': frm.doc,
-                                    'is_present': true,
-                                    'client': selected_suggestion_id
+                                    'client': selected_suggestion_id,
+                                    'address': address_values_json
                                 }, callback: function (response) {
                                     var res = response.message;
                                     if (res) {
@@ -171,8 +186,8 @@ frappe.ui.form.on('Sales Person', {
                                 args: {
                                     'values': values,
                                     'doc': frm.doc,
-                                    'is_present': false,
-                                    'client': null
+                                    'client': null, 'address': address_values_json
+
                                 }, callback: function (response) {
                                     var res = response.message;
                                     if (res) {
@@ -189,6 +204,35 @@ frappe.ui.form.on('Sales Person', {
                     }
                 });
                 dialog.show();
+
+                // Set the HTML content for the address field
+                var address_html = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="address-line-1">Address Line 1:</label>
+                            <input type="text" id="address-line-1" name="address-line-1" class="form-control"><br>
+
+                            <label for="address-line-2">Address Line 2:</label>
+                            <input type="text" id="address-line-2" name="address-line-2" class="form-control"><br>
+
+                            <label for="city">City:</label>
+                            <input type="text" id="city" name="city" class="form-control"><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state">State:</label>
+                            <input type="text" id="state" name="state" class="form-control"><br>
+
+                            <label for="zip-code">Zip Code:</label>
+                            <input type="text" id="zip-code" name="zip-code" class="form-control"><br>
+
+                            <label for="country">Country:</label>
+                            <input type="text" id="country" name="country" class="form-control"><br>
+                        </div>
+                    </div>
+                `;
+
+                dialog.fields_dict.address_html.$wrapper.html(address_html);
+
             }).addClass('bg-success', 'text-white').css({
                 "color": "white",
             });

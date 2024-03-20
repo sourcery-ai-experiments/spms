@@ -25,6 +25,7 @@ frappe.ui.form.on('Client', {
     //     }
 	// }
 	before_save : function(frm){
-		frm.set_value("full_name",frm.doc.salutation + " " +frm.doc.first_name.trim() + " " + frm.doc.middle_name.trim() + " " + frm.doc.last_name.trim())
+		console.log(frm.doc.salutation + " " +frm.doc.first_name.trim() + ((frm.doc.middle_name == undefined||frm.doc.middle_name == null) ? "" : (" " + frm.doc.middle_name)) + " " + frm.doc.last_name.trim());
+		frm.set_value("full_name",frm.doc.salutation + " " +frm.doc.first_name.trim() + ((frm.doc.middle_name == undefined||frm.doc.middle_name == null) ? "" : (" " + frm.doc.middle_name)) + " " + frm.doc.last_name.trim())
 	}
 });
