@@ -1,7 +1,126 @@
 var selected_suggestion = null;
 var selected_suggestion_id = null;
+
+function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
+    for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
+        let idx = $(row).data("idx") - 1
+        let row_info = frm.doc[table_name][idx]
+        const width = row_info[field_name]
+        row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
+            .innerHTML =
+            `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
+				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
+			</div>`
+    }
+}
+function calculateProgressBar(frm) {
+    // Get the values from the form fields
+    var targetSales = frm.doc.custom_target || 0; // default to 0 if field is empty
+    var achievedSales = frm.doc.custom_achieved || 0; // default to 0 if field is empty
+
+    var totalCollected = frm.doc.custom_total_collected || 0; // default to 0 if field is empty
+    var additionalCollected = frm.doc.custom_additional_collected || 0; // default to 0 if field is empty
+
+    // Calculate the sales progress percentage
+    var salesPercentage = 0;
+    if (targetSales > 0) {
+        salesPercentage = (achievedSales / targetSales) * 100;
+    }
+
+    // Calculate productivity
+    var productivity = (totalCollected + additionalCollected) / 2;
+
+    // Update the progress bar for sales
+    var salesProgressBar = frm.fields_dict['custom_sales_achievement'];
+    salesProgressBar.$wrapper.css('width', salesPercentage + '%');
+    salesProgressBar.$wrapper.text(salesPercentage.toFixed(2) + '%');
+    salesProgressBar.$wrapper.css('color', 'white'); // Set text color to white
+    salesProgressBar.$wrapper.css('text-align', 'center'); // Center the text
+
+    // Change the color based on sales progress
+    if (salesPercentage < 50) {
+        salesProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
+    } else if (salesPercentage >= 50 && salesPercentage < 100) {
+        salesProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
+    } else {
+        salesProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
+    }
+
+    // Update the progress bar for productivity
+    var productivityProgressBar = frm.fields_dict['percentage']; // Assuming it's the same progress bar element
+    productivityProgressBar.$wrapper.css('width', productivity + '%');
+    productivityProgressBar.$wrapper.text(productivity.toFixed(2) + '%');
+    productivityProgressBar.$wrapper.css('color', 'white'); // Set text color to white
+    productivityProgressBar.$wrapper.css('text-align', 'center'); // Center the text
+
+    // Change the color based on productivity
+    if (productivity < 50) {
+        productivityProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
+    } else if (productivity >= 50 && productivity < 100) {
+        productivityProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
+    } else {
+        productivityProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
+    }
+}
+function set_css(frm, dataField, achievedField, targetField, percentageElementId) {
+    var data = frm.doc[dataField];
+
+    if (data) {
+        let total_number_of_visits = 0;
+        let total_verified_visits = 0;
+        for (let row of data) {
+            total_number_of_visits += row.number_of_visits;
+            total_verified_visits += row.verified_visits;
+        }
+
+        let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100;
+        var percentage;
+        percentage = (frm.doc[achievedField] / frm.doc[targetField]) * 100;
+
+        let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
+
+        let percentageElement = document.getElementById(percentageElementId);
+        percentageElement.style.width = `${avg_percentage}%`;
+        percentageElement.style.backgroundColor = `#ef476f`; // red
+        percentageElement.innerText = `${Math.round(avg_percentage)}%`;
+        if (avg_percentage >= 50 && avg_percentage < 90) {
+            percentageElement.style.backgroundColor = `#edae49`; // yellow
+            percentageElement.innerText = `${Math.round(avg_percentage)}%`;
+        }
+        else if (avg_percentage >= 90 && avg_percentage < 100) {
+            percentageElement.style.backgroundColor = `#57cc99`; // green
+            percentageElement.innerText = `${Math.round(avg_percentage)}%`;
+        }
+        else if (avg_percentage >= 100) {
+            percentageElement.style.backgroundColor = `#57cc99`; // green
+            percentageElement.innerText = `Completed ${Math.round(avg_percentage)}%`;
+        }
+    }
+}
+
+let first_try = true
+function refresh_when_click_btn(frm) {
+    /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
+    page. */
+    if (first_try) {
+        $(".next-page").click(function () {
+            frm.refresh()
+        })
+        $(".first-page").click(function () {
+            frm.refresh()
+        })
+        $(".prev-page").click(function () {
+            frm.refresh()
+        })
+        $(".last-page").click(function () {
+            frm.refresh()
+        })
+        first_try = false
+    }
+}
+
 frappe.ui.form.on('Sales Person', {
-    refresh(frm) {
+    refresh: function (frm) {
         if (frm.doc.custom_type != "Collect") {
             frm.add_custom_button(__('Remove Client'), () => {
                 // Get the custom_productivity child table data
@@ -15,9 +134,9 @@ frappe.ui.form.on('Sales Person', {
                             'fieldname': 'clients_table',
                             'fieldtype': 'HTML',
                             'options': `
-                            ${existingClients.map(client => `
-                            <button class="btn  border" style="margin: 5px;" id="${client.client}" onclick="this.classList.toggle('btn-danger')">${client.name1}</button>                            `).join('')}
-                        `
+                                ${existingClients.map(client => `
+                                <button class="btn  border" style="margin: 5px;" id="${client.client}" onclick="this.classList.toggle('btn-danger')">${client.name1}</button>                            `).join('')}
+                            `
                         }
                     ],
                     primary_action_label: 'Remove',
@@ -207,29 +326,29 @@ frappe.ui.form.on('Sales Person', {
 
                 // Set the HTML content for the address field
                 var address_html = `
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="address-line-1">Address Line 1:</label>
-                            <input type="text" id="address-line-1" name="address-line-1" class="form-control"><br>
-
-                            <label for="address-line-2">Address Line 2:</label>
-                            <input type="text" id="address-line-2" name="address-line-2" class="form-control"><br>
-
-                            <label for="city">City:</label>
-                            <input type="text" id="city" name="city" class="form-control"><br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="address-line-1">Address Line 1:</label>
+                                <input type="text" id="address-line-1" name="address-line-1" class="form-control"><br>
+    
+                                <label for="address-line-2">Address Line 2:</label>
+                                <input type="text" id="address-line-2" name="address-line-2" class="form-control"><br>
+    
+                                <label for="city">City:</label>
+                                <input type="text" id="city" name="city" class="form-control"><br>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="state">State:</label>
+                                <input type="text" id="state" name="state" class="form-control"><br>
+    
+                                <label for="zip-code">Zip Code:</label>
+                                <input type="text" id="zip-code" name="zip-code" class="form-control"><br>
+    
+                                <label for="country">Country:</label>
+                                <input type="text" id="country" name="country" class="form-control"><br>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="state">State:</label>
-                            <input type="text" id="state" name="state" class="form-control"><br>
-
-                            <label for="zip-code">Zip Code:</label>
-                            <input type="text" id="zip-code" name="zip-code" class="form-control"><br>
-
-                            <label for="country">Country:</label>
-                            <input type="text" id="country" name="country" class="form-control"><br>
-                        </div>
-                    </div>
-                `;
+                    `;
 
                 dialog.fields_dict.address_html.$wrapper.html(address_html);
 
@@ -441,9 +560,9 @@ frappe.ui.form.on('Sales Person', {
                             'fieldname': 'clients_table',
                             'fieldtype': 'HTML',
                             'options': `
-                                        ${existingClients.map(client => `
-                                        <button class="btn  border" style="margin: 5px;" id="${client.customer}" onclick="this.classList.toggle('btn-danger')">${client.customer}</button>                            `).join('')}
-                                    `
+                                            ${existingClients.map(client => `
+                                            <button class="btn  border" style="margin: 5px;" id="${client.customer}" onclick="this.classList.toggle('btn-danger')">${client.customer}</button>                            `).join('')}
+                                        `
                         }
                     ],
                     primary_action_label: 'Remove',
@@ -662,183 +781,18 @@ frappe.ui.form.on('Sales Person', {
             });
 
         }
-        // refresh_when_click_btn(frm)
-        // set_css(frm);
-        // progress_bar(frm, "custom_productivity", "achievement");
-        // progress_bar(frm, "custom_target_breakdown", "achievement");
-    }
-
-});
-
-
-function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
-    for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
-        let idx = $(row).data("idx") - 1
-        let row_info = frm.doc[table_name][idx]
-        const width = row_info[field_name]
-        row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-            .innerHTML =
-            `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
-			</div>`
-    }
-}
-function calculateProgressBar(frm) {
-    // Get the values from the form fields
-    var targetSales = frm.doc.custom_target || 0; // default to 0 if field is empty
-    var achievedSales = frm.doc.custom_achieved || 0; // default to 0 if field is empty
-
-    var totalCollected = frm.doc.custom_total_collected || 0; // default to 0 if field is empty
-    var additionalCollected = frm.doc.custom_additional_collected || 0; // default to 0 if field is empty
-
-    // Calculate the sales progress percentage
-    var salesPercentage = 0;
-    if (targetSales > 0) {
-        salesPercentage = (achievedSales / targetSales) * 100;
-    }
-
-    // Calculate productivity
-    var productivity = (totalCollected + additionalCollected) / 2;
-
-    // Update the progress bar for sales
-    var salesProgressBar = frm.fields_dict['custom_sales_achievement'];
-    salesProgressBar.$wrapper.css('width', salesPercentage + '%');
-    salesProgressBar.$wrapper.text(salesPercentage.toFixed(2) + '%');
-    salesProgressBar.$wrapper.css('color', 'white'); // Set text color to white
-    salesProgressBar.$wrapper.css('text-align', 'center'); // Center the text
-
-    // Change the color based on sales progress
-    if (salesPercentage < 50) {
-        salesProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
-    } else if (salesPercentage >= 50 && salesPercentage < 100) {
-        salesProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
-    } else {
-        salesProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
-    }
-
-    // Update the progress bar for productivity
-    var productivityProgressBar = frm.fields_dict['percentage']; // Assuming it's the same progress bar element
-    productivityProgressBar.$wrapper.css('width', productivity + '%');
-    productivityProgressBar.$wrapper.text(productivity.toFixed(2) + '%');
-    productivityProgressBar.$wrapper.css('color', 'white'); // Set text color to white
-    productivityProgressBar.$wrapper.css('text-align', 'center'); // Center the text
-
-    // Change the color based on productivity
-    if (productivity < 50) {
-        productivityProgressBar.$wrapper.removeClass('bg-success bg-warning').addClass('bg-danger');
-    } else if (productivity >= 50 && productivity < 100) {
-        productivityProgressBar.$wrapper.removeClass('bg-danger bg-success').addClass('bg-warning');
-    } else {
-        productivityProgressBar.$wrapper.removeClass('bg-danger bg-warning').addClass('bg-success');
-    }
-}
-
-function set_css_sales(frm) {
-    var data = frm.doc.custom_productivity;
-
-    if (data) {
-        let total_number_of_visits = 0
-        let total_verified_visits = 0
-        for (let row of data) {
-            total_number_of_visits += row.number_of_visits
-            total_verified_visits += row.verified_visits
-        }
-        let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
-        var percentage;
-        percentage = (frm.doc.custom_achieved / frm.doc.custom_target) * 100
-        let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
-        document.getElementById("percentage").style.width = `${avg_percentage}%`
-        document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
-        document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-        if (avg_percentage >= 50 && avg_percentage < 90) {
-            document.getElementById("percentage").style.backgroundColor = `#edae49` // yellow 
-            document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-        }
-        else if (avg_percentage >= 90 && avg_percentage < 100) {
-            document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
-            document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
-        }
-        else if (avg_percentage >= 100) {
-            document.getElementById("percentage").style.backgroundColor = `#57cc99` // green
-            document.getElementById("percentage").innerText = `Completed ${Math.round(avg_percentage)}%`
-        }
-    }
-}
-
-function set_css_collect(frm) {
-    var data = frm.doc.custom_customer_collects_goal;
-
-    if (data) {
-        let total_number_of_visits = 0
-        let total_verified_visits = 0
-        for (let row of data) {
-            total_number_of_visits += row.number_of_visits
-            total_verified_visits += row.verified_visits
-        }
-
-        let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
-        var percentage;
-        percentage = (frm.doc.custom_total_collected / frm.doc.custom_total_targets) * 100
-
-        let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
-
-        document.getElementById("percentage_collect").style.width = `${avg_percentage}%`
-        document.getElementById("percentage_collect").style.backgroundColor = `#ef476f` // red 
-        document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
-        if (avg_percentage >= 50 && avg_percentage < 90) {
-            document.getElementById("percentage_collect").style.backgroundColor = `#edae49` // yellow 
-            document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
-        }
-        else if (avg_percentage >= 90 && avg_percentage < 100) {
-            document.getElementById("percentage_collect").style.backgroundColor = `#57cc99` // green
-            document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
-        }
-        else if (avg_percentage >= 100) {
-            document.getElementById("percentage_collect").style.backgroundColor = `#57cc99` // green
-            document.getElementById("percentage_collect").innerText = `Completed ${Math.round(avg_percentage)}%`
-        }
-    }
-}
-
-
-let first_try = true
-function refresh_when_click_btn(frm) {
-    /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
-    page. */
-    if (first_try) {
-        $(".next-page").click(function () {
-            frm.refresh()
-        })
-        $(".first-page").click(function () {
-            frm.refresh()
-        })
-        $(".prev-page").click(function () {
-            frm.refresh()
-        })
-        $(".last-page").click(function () {
-            frm.refresh()
-        })
-        first_try = false
-    }
-}
-
-frappe.ui.form.on('Sales Person', {
-    refresh: function (frm) {
         refresh_when_click_btn(frm)
         if (frm.doc.custom_type == "Sales") {
-            set_css_sales(frm);
+            set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+
         } else if (frm.doc.custom_type == "Collect") {
-            set_css_collect(frm);
+            set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
         } else {
-            set_css_sales(frm);
-            set_css_collect(frm);
+            set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+            set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
         }
         progress_bar(frm, "custom_productivity", "achievement");
         progress_bar(frm, "custom_target_breakdown", "achievement");
-
-        // progress_bar(frm, "custom_customer_collects_goal", "achieved_collects");
-        // progress_bar(frm, "custom_customer_collects_goal", "achieved_visits");
-        // calculateProgressBar(frm);
     },
     custom_fixed_target: function (frm) {
         frm.set_value("custom_total_targets", frm.doc.custom_fixed_target);
@@ -889,8 +843,6 @@ frappe.ui.form.on('Productivity', {
         }
         frm.refresh()
     }
-
-
 })
 
 function reset_target_values(frm) {
