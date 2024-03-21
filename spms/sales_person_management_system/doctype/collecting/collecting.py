@@ -7,9 +7,18 @@ from spms.methods.utils import generate_qrcode
 from frappe.utils import cstr
 from spms.methods.utils import update_sales_person
 import hashlib
-
+from frappe import _
 
 class Collecting(WebsiteGenerator):
+	def validate(self):
+		total_paid = self.total_paid
+		total_allocated = 0
+		for inv in self.invoices:
+			total_allocated += inv.allocated
+			if(inv.allocated == 0):
+				frappe.throw(_(f'invoice {inv.invoice_no} has allocated value of 0'))
+		if(total_allocated>total_paid):
+			frappe.throw(_('The total allocated is more than the total paid.'))
 
 	def on_submit(self) -> None:
 		"""
@@ -50,4 +59,4 @@ class Collecting(WebsiteGenerator):
 			self.amount = self.total_paid - discount_value
 			self.discount_amount = discount_value
 		else:
-			frappe.msgprint(_('The discount must be less than {0}%').format(max_discount))
+			frappe.throw(_('The discount must be less than {0}%').format(max_discount))
