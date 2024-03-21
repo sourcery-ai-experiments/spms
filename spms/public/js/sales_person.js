@@ -251,7 +251,6 @@ frappe.ui.form.on('Sales Person', {
                 }
 
                 // tableHtml += '</tbody></table>';
-
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
                     title: 'Add New Row',
@@ -276,6 +275,12 @@ frappe.ui.form.on('Sales Person', {
                         let newItem = subDialog.get_value('item').trim(); // Trim whitespace from the item
                         let newQuantity = subDialog.get_value('quantity');
 
+                        // Check if the item already exists in targets
+                        if (targets.some(target => target.item === newItem)) {
+                            frappe.msgprint('Item already exists in the list.');
+                            return;
+                        }
+
                         // Append a new row to the table
                         tableHtml += `<tr><td>${newItem}</td><td contenteditable="true" id="target_${newItem.replace(/\s+/g, '_')}">${newQuantity}</td></tr>`;
 
@@ -288,15 +293,39 @@ frappe.ui.form.on('Sales Person', {
                             quantity: newQuantity
                         });
 
-                        subDialog.hide(); // Hide the sub-dialog
+                        // Hide the sub-dialog
+                        subDialog.hide();
+
+                        // Empty the form fields
+                        subDialog.fields_dict.item.set_value('');
+                        subDialog.fields_dict.quantity.set_value('');
                     }
 
                 });
+
 
                 // Create the main dialog
                 let dialog = new frappe.ui.Dialog({
                     title: 'Set Target',
                     fields: [
+                        {
+                            'fieldname': 'month_select',
+                            'label': 'Month (optional)',
+                            'fieldtype': 'Select',
+                            'options': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            'reqd': 0,
+                            'onchange': function () {
+                                let selectedMonth = dialog.get_value('month_select');
+                                let year = new Date().getFullYear(); // You can adjust the year as per your requirement
+                                let startDate = new Date(year, monthToIndex(selectedMonth), 1);
+                                let endDate = new Date(year, monthToIndex(selectedMonth) + 1, 0);
+                                dialog.fields_dict.from.set_value(startDate);
+                                dialog.fields_dict.to.set_value(endDate);
+                            }
+                        }, {
+                            'fieldname': 'section_break',
+                            'fieldtype': 'Section Break',
+                        },
                         {
                             'fieldname': 'from',
                             'label': 'From',
@@ -339,7 +368,7 @@ frappe.ui.form.on('Sales Person', {
                         // Add a button to open the sub-dialog for adding a new row
                         {
                             'fieldname': 'add_row_button',
-                            'label': 'Add New Target',
+                            'label': 'Add New Item',
                             'fieldtype': 'Button',
                             'icon': 'plus',
                             'click': function () {
@@ -388,7 +417,10 @@ frappe.ui.form.on('Sales Person', {
 
                 // Show the main dialog
                 dialog.show();
-
+                // Helper function to convert month name to index
+                function monthToIndex(month) {
+                    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month);
+                }
             }).addClass('bg-info').css({
                 "color": "white",
             });
@@ -477,24 +509,32 @@ frappe.ui.form.on('Sales Person', {
                             'reqd': 1
                         }
                     ],
-                    primary_action_label: 'Add Row',
+                    primary_action_label: 'Add Customer',
                     primary_action() {
+
                         // Retrieve entered values from the sub-dialog
                         let newCustomer = subDialog.get_value('customer').trim(); // Trim whitespace from the item
                         let newAmount = subDialog.get_value('amount_of_money');
+
+                        // Check if the item already exists in targets
+                        if (targets.some(target => target.customer === newCustomer)) {
+                            frappe.msgprint('Customer already exists in the list.');
+                            return;
+                        }
+
                         // Append a new row to the table
                         tableHtml += `<tr><td>${newCustomer}</td><td contenteditable="true" id="target_${newCustomer.replace(/\s+/g, '_')}">${newAmount}</td></tr>`;
                         // Update the HTML in the main dialog's table field
                         dialog.get_field('targets_table').$wrapper.html(tableHtml);
-                        // Add the new target to the targets array
-                        console.log("newCustomer");
-                        console.log(newCustomer);
+
 
                         targets.push({
                             customer: newCustomer,
                             amount_of_money: newAmount
                         });
-                        subDialog.hide(); // Hide the sub-dialog
+                        subDialog.hide(); // Hide the sub-dialog                        // Empty the form fields
+                        subDialog.fields_dict.customer.set_value('');
+                        subDialog.fields_dict.amount_of_money.set_value('');
                     }
 
                 });
@@ -502,56 +542,81 @@ frappe.ui.form.on('Sales Person', {
                 // Create the main dialog
                 let dialog = new frappe.ui.Dialog({
                     title: 'Set Target',
-                    fields: [
-                        {
-                            'fieldname': 'from',
-                            'label': 'From',
-                            'fieldtype': 'Date',
-                            'reqd': 1,
-                            'default': frm.doc.custom_from_
-                        },
-                        //add column break
-                        {
-                            'fieldname': 'column_break',
-                            'fieldtype': 'Column Break',
-                        },
-                        {
-                            'fieldname': 'to',
-                            'label': 'To',
-                            'fieldtype': 'Date',
-                            'reqd': 1,
-                            'default': frm.doc.custom_to_
-                        },
-                        {
-                            'fieldname': 'section_break',
-                            'fieldtype': 'Section Break',
-                        },
-                        {
-                            'fieldname': 'target',
-                            'label': 'Target',
-                            'fieldtype': 'Float',
-                            'reqd': 1,
-                            'default': frm.doc.custom_additional_target
-                        },
-                        {
-                            'fieldname': 'section_break',
-                            'fieldtype': 'Section Break',
-                        },
-                        {
-                            'fieldname': 'targets_table',
-                            'fieldtype': 'HTML',
-                            'options': tableHtml
-                        },
-                        // Add a button to open the sub-dialog for adding a new row
-                        {
-                            'fieldname': 'add_row_button',
-                            'label': 'Add New Customer',
-                            'fieldtype': 'Button',
-                            'icon': 'plus',
-                            'click': function () {
-                                subDialog.show();
-                            }
+                    fields: [{
+                        'fieldname': 'month_select',
+                        'label': 'Month (optional)',
+                        'fieldtype': 'Select',
+                        'options': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        'reqd': 0,
+                        'onchange': function () {
+                            let selectedMonth = dialog.get_value('month_select');
+                            let year = new Date().getFullYear(); // You can adjust the year as per your requirement
+                            let startDate = new Date(year, monthToIndex(selectedMonth), 1);
+                            let endDate = new Date(year, monthToIndex(selectedMonth) + 1, 0);
+                            dialog.fields_dict.from.set_value(startDate);
+                            dialog.fields_dict.to.set_value(endDate);
                         }
+                    }, {
+                        'fieldname': 'section_break',
+                        'fieldtype': 'Section Break',
+                    },
+                    {
+                        'fieldname': 'from',
+                        'label': 'From',
+                        'fieldtype': 'Date',
+                        'reqd': 1,
+                        'default': frm.doc.custom_from_
+                    },
+                    //add column break
+                    {
+                        'fieldname': 'column_break',
+                        'fieldtype': 'Column Break',
+                    },
+                    {
+                        'fieldname': 'to',
+                        'label': 'To',
+                        'fieldtype': 'Date',
+                        'reqd': 1,
+                        'default': frm.doc.custom_to_
+                    },
+                    {
+                        'fieldname': 'section_break',
+                        'fieldtype': 'Section Break',
+                    },
+                    {
+                        'fieldname': 'target_type',
+                        'label': 'Target Type',
+                        'fieldtype': 'Select',
+                        'reqd': 1,
+                        'options': "Customer Debt-based Target\nFixed Target",
+                        'default': frm.doc.custom__target_type
+                    },
+                    {
+                        'fieldname': 'target',
+                        'label': 'Target',
+                        'fieldtype': 'Float',
+                        'reqd': 1,
+                        'default': frm.doc.custom_additional_target
+                    },
+                    {
+                        'fieldname': 'section_break',
+                        'fieldtype': 'Section Break',
+                    },
+                    {
+                        'fieldname': 'targets_table',
+                        'fieldtype': 'HTML',
+                        'options': tableHtml
+                    },
+                    // Add a button to open the sub-dialog for adding a new row
+                    {
+                        'fieldname': 'add_row_button',
+                        'label': 'Add New Customer',
+                        'fieldtype': 'Button',
+                        'icon': 'plus',
+                        'click': function () {
+                            subDialog.show();
+                        }
+                    }
                     ],
                     primary_action_label: 'Set Target',
                     primary_action() {
@@ -585,7 +650,10 @@ frappe.ui.form.on('Sales Person', {
                         });
                     }
                 });
-
+                // Helper function to convert month name to index
+                function monthToIndex(month) {
+                    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month);
+                }
                 // Show the main dialog
                 dialog.show();
 
@@ -594,10 +662,10 @@ frappe.ui.form.on('Sales Person', {
             });
 
         }
-        refresh_when_click_btn(frm)
-        set_css(frm);
-        progress_bar(frm, "custom_productivity", "achievement");
-        progress_bar(frm, "custom_target_breakdown", "achievement");
+        // refresh_when_click_btn(frm)
+        // set_css(frm);
+        // progress_bar(frm, "custom_productivity", "achievement");
+        // progress_bar(frm, "custom_target_breakdown", "achievement");
     }
 
 });
@@ -665,12 +733,9 @@ function calculateProgressBar(frm) {
     }
 }
 
-function set_css(frm) {
-    if (frm.doc.custom_type == "Sales") {
-        var data = frm.doc.custom_productivity;
-    } else {
-        var data = frm.doc.custom_customer_collects_goal;
-    }
+function set_css_sales(frm) {
+    var data = frm.doc.custom_productivity;
+
     if (data) {
         let total_number_of_visits = 0
         let total_verified_visits = 0
@@ -678,18 +743,10 @@ function set_css(frm) {
             total_number_of_visits += row.number_of_visits
             total_verified_visits += row.verified_visits
         }
-
         let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
         var percentage;
-        if (frm.doc.custom_type == "Sales") {
-            percentage = (frm.doc.custom_achieved / frm.doc.custom_target) * 100
-        }
-        else {
-            percentage = (frm.doc.custom_total_collected / frm.doc.custom_total_targets) * 100
-        }
-
+        percentage = (frm.doc.custom_achieved / frm.doc.custom_target) * 100
         let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
-
         document.getElementById("percentage").style.width = `${avg_percentage}%`
         document.getElementById("percentage").style.backgroundColor = `#ef476f` // red 
         document.getElementById("percentage").innerText = `${Math.round(avg_percentage)}%`
@@ -708,6 +765,40 @@ function set_css(frm) {
     }
 }
 
+function set_css_collect(frm) {
+    var data = frm.doc.custom_customer_collects_goal;
+
+    if (data) {
+        let total_number_of_visits = 0
+        let total_verified_visits = 0
+        for (let row of data) {
+            total_number_of_visits += row.number_of_visits
+            total_verified_visits += row.verified_visits
+        }
+
+        let productivity_percentage = (total_verified_visits / total_number_of_visits) * 100
+        var percentage;
+        percentage = (frm.doc.custom_total_collected / frm.doc.custom_total_targets) * 100
+
+        let avg_percentage = (productivity_percentage + percentage) / 2 || 0;
+
+        document.getElementById("percentage_collect").style.width = `${avg_percentage}%`
+        document.getElementById("percentage_collect").style.backgroundColor = `#ef476f` // red 
+        document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
+        if (avg_percentage >= 50 && avg_percentage < 90) {
+            document.getElementById("percentage_collect").style.backgroundColor = `#edae49` // yellow 
+            document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
+        }
+        else if (avg_percentage >= 90 && avg_percentage < 100) {
+            document.getElementById("percentage_collect").style.backgroundColor = `#57cc99` // green
+            document.getElementById("percentage_collect").innerText = `${Math.round(avg_percentage)}%`
+        }
+        else if (avg_percentage >= 100) {
+            document.getElementById("percentage_collect").style.backgroundColor = `#57cc99` // green
+            document.getElementById("percentage_collect").innerText = `Completed ${Math.round(avg_percentage)}%`
+        }
+    }
+}
 
 
 let first_try = true
@@ -734,7 +825,14 @@ function refresh_when_click_btn(frm) {
 frappe.ui.form.on('Sales Person', {
     refresh: function (frm) {
         refresh_when_click_btn(frm)
-        set_css(frm);
+        if (frm.doc.custom_type == "Sales") {
+            set_css_sales(frm);
+        } else if (frm.doc.custom_type == "Collect") {
+            set_css_collect(frm);
+        } else {
+            set_css_sales(frm);
+            set_css_collect(frm);
+        }
         progress_bar(frm, "custom_productivity", "achievement");
         progress_bar(frm, "custom_target_breakdown", "achievement");
 
@@ -761,31 +859,15 @@ frappe.ui.form.on('Sales Person', {
     after_save: function (frm) {
         frm.set_df_property("custom_target_type", "read_only", 1)
         frm.set_df_property("custom_type", "read_only", 1)
+
+    },
+    validate: function (frm) {
+        let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
+        frm.set_value('custom_number_of_days', diff_days);
+
     }
 });
-// frappe.ui.form.on('Sales Person', {
 
-// 	refresh: function (frm) {
-// 		refresh_when_click_btn(frm)
-// 		progress_bar(frm, "custom_productivity", "achievement")
-// 		progress_bar(frm, "custom_target_breakdown", "achievement")
-//         frm.set_df_property('custom_customer_collects_goal', 'reqd', 0) 
-// 	},
-//     "custom_to": function (frm) {
-// 		if (frm.doc.custom_to < frm.doc.custom_from) {
-// 			frappe.throw("Please, Select Valid Period for Target")
-// 		}
-
-// 		// find diff between in and out date
-// 		let diff_days = frappe.datetime.get_day_diff(frm.doc.custom_to, frm.doc.custom_from);
-// 		frm.set_value("custom_number_of_days", diff_days);
-// 	},
-//     "custom_to_": function (frm) {
-// 		if (frm.doc.custom_to_ < frm.doc.custom_from_) {
-// 			frappe.throw("Please, Select Valid Period for Collect")
-// 		}
-// 	},
-// });
 frappe.ui.form.on('Productivity', {
     /* A function that is called when the class field is changed. */
     class_name: function (frm, cdt, cdn) {

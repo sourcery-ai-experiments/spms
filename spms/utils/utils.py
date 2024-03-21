@@ -137,7 +137,7 @@ def set_target(values, quantities, doc):
         docc.custom_from = values['from']
         docc.custom_to = values['to']
         docc.custom_target = values['target']
-
+        docc.custom_achieved =0
         # Update child table quantities or add new row
         for item, quantity in quantities.items():
             target_row = next((row for row in docc.custom_target_breakdown if row.item == item), None)
@@ -169,11 +169,20 @@ def set_collecting_target(values, quantities, doc):
         docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
         docc.custom_from_ = values['from']
         docc.custom_to_ = values['to']
-        docc.custom_additional_target = values['target']
-        create_collect_log(docc)
+        docc.custom__target_type = values['target_type']
 
+        if(values['target_type']) == "Customer Debt-based Target":
+            docc.custom_total_targets = values['target']
+        else:
+            docc.custom_total_targets = values['target']
+
+        create_collect_log(docc)
+        
+        docc.custom_additional_collected = 0
+        docc.custom_additional_target = 0
+        docc.custom_total_collected = 0
+        
         for customer, amount_of_money in quantities.items():
-            
             target_row = next((row for row in docc.custom_customer_collects_goal if row.customer == customer), None)
             if target_row:
                 target_row.amount_of_money = amount_of_money
@@ -197,7 +206,7 @@ def create_target_log(doc):
     sales_person_name = doc.get("name")
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
-    if doc.custom_type == "Sales":
+    if doc.custom_type != "Collect":
         doc_b = frappe.new_doc("Visit Goal")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name
@@ -227,15 +236,14 @@ def create_target_log(doc):
                 "verified_visits": child_a.verified_visits,
                 "achievement": child_a.achievement,
             }) 
-        print("insert")
-
         doc_b.insert()
+
+        
         return True#f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
 
 def create_collect_log(doc):
-
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
 
@@ -243,7 +251,7 @@ def create_collect_log(doc):
     sales_person_name = doc.get("name")
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
-    if doc.custom_type == "Collect":
+    if doc.custom_type != "Sales":
         doc_b = frappe.new_doc("Collects Goal")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name
