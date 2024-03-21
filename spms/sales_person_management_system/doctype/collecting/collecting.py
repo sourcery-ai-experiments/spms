@@ -38,3 +38,16 @@ class Collecting(WebsiteGenerator):
 			image_path = generate_qrcode(
 				site_name=site_name, route_name=self.route)
 			self.image = image_path
+
+	def before_save(self):
+		max_discount = frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting')
+		discount_value = 0
+		if self.discount_type == "Percentage":
+			discount_value = self.total_paid * (self.discount_percentage / 100)
+		else:
+			discount_value = self.discount
+		if discount_value < max_discount or max_discount == 0:
+			self.amount = self.total_paid - discount_value
+			self.discount_amount = discount_value
+		else:
+			frappe.msgprint(_('The discount must be less than {0}%').format(max_discount))
