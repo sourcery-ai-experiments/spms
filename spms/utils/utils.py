@@ -1,36 +1,90 @@
 import frappe
 import json
 
-    
-@frappe.whitelist()
-def create_client_to_sales_person(values, doc, is_present, client):
-    try:
-        if client:
-            # Check if client exists in the table
-            client_exists = frappe.db.exists("Client", client)
-            if not client_exists:
-                values = json.loads(values)
-                values["doctype"] = "Client"
-                values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
-                    "middle_name") is not None else "") + " " + values.get("last_name")
-                new_doc = frappe.get_doc(values)
-                new_doc.insert()
+# @frappe.whitelist()
+# def create_client_to_sales_person(values, doc, client, address):
+#     try:
+#         address_dict = json.loads(address)
 
-            doc_dict = json.loads(doc)
-            docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-            # Check if the client is already appended
-            existing_clients = [row.client for row in docu.custom_productivity]
-            if client not in existing_clients:
-                child = docu.append('custom_productivity', {})
-                child.client = client
-                docu.save()
-                return True
-            else:
-                frappe.msgprint("Client already exists for this sales person.")
-                return False
+#         # Check if client exists in the table
+#         client_exists = frappe.db.exists("Client", client)
+#         if not client_exists:
+#             values = json.loads(values)
+#             values["doctype"] = "Client"
+#             values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
+#                 "middle_name") is not None else "") + " " + values.get("last_name")
+#             print("client_exists")
+#             values["address_line1"] = address_dict.get("address_line_1")
+#             values["address_line2"] = address_dict.get("address_line_2")
+#             values["city"] = address_dict.get("city")
+#             values["state"] = address_dict.get("state")
+#             values["pincode"] = address_dict.get("zip_code")
+#             values["country"] = address_dict.get("country")
+#             new_doc = frappe.get_doc(values)
+#             new_doc.insert()
+#             print("new_doc")
+#             print(new_doc)
+
+#         doc_dict = json.loads(doc)
+#         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+
+#         existing_clients = [row.client for row in docu.custom_productivity]
+#         if client not in existing_clients:
+#             child = docu.append('custom_productivity', {})
+#             child.client = client
+#             docu.save()
+#             return True
+#         else:
+#             frappe.msgprint("Client already exists for this sales person.")
+#             return False
+
+#     except Exception as e:
+#         frappe.throw("An error occurred while adding client to sales person.", e)
+#         return False
+@frappe.whitelist()
+def create_client_to_sales_person(values, doc,  client, address):
+    try:
+        address_dict = json.loads(address)
+
+        # Create a new Address document
+        new_address = frappe.new_doc("Address")
+        new_address.address_title = address_dict.get("address_line_1")
+        new_address.address_line1 = address_dict.get("address_line_1")
+        new_address.address_line2 = address_dict.get("address_line_2")
+        new_address.city = address_dict.get("city")
+        new_address.state = address_dict.get("state")
+        new_address.pincode = address_dict.get("zip_code")
+        new_address.country = address_dict.get("country")
+        new_address.insert()
+
+        # Check if client exists in the table
+        client_exists = frappe.db.exists("Client", client)
+        if not client_exists:
+            values = json.loads(values)
+            values["doctype"] = "Client"
+            values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
+                "middle_name") is not None else "") + " " + values.get("last_name")
+            # Assign address to client
+            values["address"] = new_address.name
+            new_doc = frappe.get_doc(values)
+            new_doc.insert()
+
+        doc_dict = json.loads(doc)
+        docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
+
+        # Check if the client is already appended
+        existing_clients = [row.client for row in docu.custom_productivity]
+
+        
+        if new_doc not in existing_clients:
+            child = docu.append('custom_productivity', {})
+            child.client = new_doc
+            docu.save()
+            return True
         else:
-            frappe.msgprint("Please provide a valid client name.")
+            frappe.msgprint("Client already exists for this sales person.")
             return False
+
     except Exception as e:
         frappe.throw("An error occurred while adding client to sales person.", e)
         return False
@@ -83,7 +137,7 @@ def set_target(values, quantities, doc):
         docc.custom_from = values['from']
         docc.custom_to = values['to']
         docc.custom_target = values['target']
-
+        docc.custom_achieved =0
         # Update child table quantities or add new row
         for item, quantity in quantities.items():
             target_row = next((row for row in docc.custom_target_breakdown if row.item == item), None)
@@ -115,11 +169,20 @@ def set_collecting_target(values, quantities, doc):
         docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
         docc.custom_from_ = values['from']
         docc.custom_to_ = values['to']
-        docc.custom_additional_target = values['target']
-        create_collect_log(docc)
+        docc.custom__target_type = values['target_type']
 
+        if(values['target_type']) == "Customer Debt-based Target":
+            docc.custom_total_targets = values['target']
+        else:
+            docc.custom_total_targets = values['target']
+
+        create_collect_log(docc)
+        
+        docc.custom_additional_collected = 0
+        docc.custom_additional_target = 0
+        docc.custom_total_collected = 0
+        
         for customer, amount_of_money in quantities.items():
-            
             target_row = next((row for row in docc.custom_customer_collects_goal if row.customer == customer), None)
             if target_row:
                 target_row.amount_of_money = amount_of_money
@@ -143,7 +206,7 @@ def create_target_log(doc):
     sales_person_name = doc.get("name")
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
-    if doc.custom_type == "Sales":
+    if doc.custom_type != "Collect":
         doc_b = frappe.new_doc("Visit Goal")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name
@@ -173,15 +236,14 @@ def create_target_log(doc):
                 "verified_visits": child_a.verified_visits,
                 "achievement": child_a.achievement,
             }) 
-        print("insert")
-
         doc_b.insert()
+
+        
         return True#f"New Visit Goal({doc_b.sales_person}) record was added"
 
     
 
 def create_collect_log(doc):
-
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
 
@@ -189,7 +251,7 @@ def create_collect_log(doc):
     sales_person_name = doc.get("name")
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
-    if doc.custom_type == "Collect":
+    if doc.custom_type != "Sales":
         doc_b = frappe.new_doc("Collects Goal")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name

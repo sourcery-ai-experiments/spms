@@ -7,7 +7,7 @@ frappe.ui.form.on('Collecting', {
 		frm.set_query("customer", function () {
 			return {
 				filters: [
-					["Customer", "territory", "in", frm.doc.sales_person_territory]
+					// ["Customer", "territory", "in", frm.doc.sales_person_territory]
 				]
 			};
 		});
@@ -114,17 +114,25 @@ frappe.ui.form.on('Collecting', {
 });
 
 frappe.ui.form.on('Collecting', {
-	discount: function (frm) {
-		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(res => {
-			let max_discount = res;
-			if (frm.doc.discount < max_discount) {
-				frm.set_value("amount", frm.doc.total_paid - (frm.doc.total_paid * (frm.doc.discount / 100)));
-				frm.set_value("discount_amount", frm.doc.total_paid * (frm.doc.discount / 100));
-				frm.refresh();
-			} else {
-				frappe.msgprint('The discount must be less than ' + max_discount + '%');
-			}
-		});
+	after_save: function (frm) {
+		// frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(res => {
+		// 	let max_discount = res;
+		// 	var discount_value;
+		// 	if(frm.doc.discount_type == "Percentage"){
+		// 		discount_value=(frm.doc.total_paid * (frm.doc.discount_percentage / 100));
+		// 	}else{
+		// 		discount_value=frm.doc.discount;
+		// 	}
+		// 	if (discount_value < max_discount || max_discount == 0) {
+
+		// 		frm.set_value("amount", frm.doc.total_paid - discount_value);
+		// 		frm.set_value("discount_amount", discount_value);
+		// 		frm.save();
+		// 		// frm.refresh();
+		// 	} else {
+		// 		frappe.msgprint('The discount must be less than ' + max_discount + '%');
+		// 	}
+		// });
 	}
 });
 
@@ -149,9 +157,11 @@ frappe.ui.form.on('Collecting', {
 		/* A query to get the invoices that are not paid and belong to the customer. */
 		frm.set_query('invoice_no', 'invoices', function (doc, cdt, cdn) {
 			return {
+				
 				filters: [
 					['Sales Invoice', 'customer', 'in', frm.doc.customer],
-					['Sales Invoice', 'status', '!=', 'Paid']
+					// ['Sales Invoice', 'status', '!=', 'Paid']
+					['Sales Invoice', 'status', 'not in', ['Paid','Cancelled','Return','Draft']]
 				]
 			};
 		});

@@ -10,6 +10,7 @@
   "status",
   "total",
   "out_standing_amount",
+  "allocated",
   "date",
   "currency",
   "note"
@@ -70,12 +71,20 @@
    "in_list_view": 1,
    "label": "Currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "allocated",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Allocated",
+   "options": "currency"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-01-28 19:38:41.517871",
+ "modified": "2024-03-21 15:14:35.160946",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Reference Invoice Collects",

@@ -29,7 +29,9 @@
   "phone",
   "amount_section",
   "total_paid",
+  "discount_type",
   "discount",
+  "discount_percentage",
   "amount",
   "amount_other_currency",
   "column_break_18",
@@ -152,7 +154,7 @@
   },
   {
    "fieldname": "amount",
-   "fieldtype": "Currency",
+   "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Amount",
    "options": "amount_currency",
@@ -294,9 +296,11 @@
    "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
   },
   {
+   "depends_on": "eval:doc.discount_type != \"Percentage\"",
    "fieldname": "discount",
-   "fieldtype": "Percent",
+   "fieldtype": "Currency",
    "label": "Discount",
+   "options": "amount_currency",
    "precision": "2"
   },
   {
@@ -311,6 +315,18 @@
    "label": "Discount Amount",
    "options": "amount_currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "discount_type",
+   "fieldtype": "Select",
+   "label": "Discount Type",
+   "options": "Percentage\nFixed"
+  },
+  {
+   "depends_on": "eval:doc.discount_type == \"Percentage\"",
+   "fieldname": "discount_percentage",
+   "fieldtype": "Percent",
+   "label": "Discount Percentage"
   }
  ],
  "has_web_view": 1,
@@ -327,7 +343,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-09-26 15:15:39.604210",
+ "modified": "2024-03-21 14:19:46.827004",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
