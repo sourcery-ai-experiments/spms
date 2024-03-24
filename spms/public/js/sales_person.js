@@ -1,6 +1,9 @@
 var selected_suggestion = null;
 var selected_suggestion_id = null;
 
+var selected_customer_suggestion = null;
+var selected_customer_suggestion_id = null;
+var customer_address_values_json = null;
 function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
     for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
         let idx = $(row).data("idx") - 1
@@ -243,6 +246,11 @@ frappe.ui.form.on('Sales Person', {
                         },
                         { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
                         {
+                            'fieldname': 'sb5',
+                            'fieldtype': 'Section Break',
+                        },
+                        { 'fieldname': 'type', 'fieldtype': 'Link', 'label': 'Type', 'reqd': 1, 'options': 'Client Types' },
+                        {
                             'fieldname': 'sb2',
                             'fieldtype': 'Section Break',
                         },
@@ -262,7 +270,8 @@ frappe.ui.form.on('Sales Person', {
                             'label': 'Address',
                             'reqd': 0,
                             'options': ''
-                        }],
+                        }
+                    ],
                     primary_action_label: 'Submit',
                     primary_action(values) {
                         var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
@@ -276,9 +285,6 @@ frappe.ui.form.on('Sales Person', {
                             'zip_code': $('#zip-code').val(),
                             'country': $('#country').val()
                         };
-
-                        console.log(address_values_json);
-
                         if (fn == selected_suggestion) {
 
                             frappe.call({
@@ -372,7 +378,7 @@ frappe.ui.form.on('Sales Person', {
                 // tableHtml += '</tbody></table>';
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
-                    title: 'Add New Row',
+                    title: 'Add Item',
                     fields: [
                         {
                             'fieldname': 'item',
@@ -487,7 +493,7 @@ frappe.ui.form.on('Sales Person', {
                         // Add a button to open the sub-dialog for adding a new row
                         {
                             'fieldname': 'add_row_button',
-                            'label': 'Add New Item',
+                            'label': 'Add Item',
                             'fieldtype': 'Button',
                             'icon': 'plus',
                             'click': function () {
@@ -524,6 +530,15 @@ frappe.ui.form.on('Sales Person', {
                                 var res = response.message;
                                 if (res) {
                                     frappe.msgprint(__('Set Target Successfully'));
+                                    if (frm.doc.custom_type == "Sales") {
+                                        set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+                            
+                                    } else if (frm.doc.custom_type == "Collect") {
+                                        set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
+                                    } else {
+                                        set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+                                        set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
+                                    }
                                     dialog.hide();
                                     frm.refresh();
                                 } else {
@@ -612,20 +627,67 @@ frappe.ui.form.on('Sales Person', {
 
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
-                    title: 'Add New Row',
+                    title: 'Add Customer',
                     fields: [
                         {
                             'fieldname': 'customer',
                             'label': 'Customer',
-                            'fieldtype': 'Link',
-                            'options': 'Customer',
-                            'reqd': 1
+                            'fieldtype': 'Data',
+                            // 'options': 'Customer',
+                            'reqd': 1,
+                            'onchange': function () {
+                                var inputName = this.get_value();
+
+                                frappe.db.get_list('Customer', {
+                                    filters: {
+                                        'customer_name': ['like', '%' + inputName + '%']
+                                    },
+                                    fields: ['customer_name', 'name']
+                                }).then(suggestions => {
+                                    let htmlField = subDialog.get_field('suggestions_customer');
+                                    if (suggestions.length > 0) {
+                                        htmlField.$wrapper.empty(); // clear the HTML field
+                                        htmlField.$wrapper.append("Suggestions: <br>");
+
+                                        suggestions.forEach(suggestion => {
+                                            let suggestionElement = $(`<p><a class="btn btn-info" href="">${suggestion.customer_name}</a></p>`);
+                                            suggestionElement.click(() => {
+                                                subDialog.set_values({
+                                                    'customer': suggestion.customer_name
+                                                });
+                                            });
+                                            // Extract address values from HTML input fields
+                                            customer_address_values_json = {
+                                                'address_line_1': $('#address-line-1').val(),
+                                                'address_line_2': $('#address-line-2').val(),
+                                                'city': $('#city').val(),
+                                                'state': $('#state').val(),
+                                                'zip_code': $('#zip-code').val(),
+                                                'country': $('#country').val()
+                                            };
+                                            htmlField.$wrapper.append(suggestionElement);
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            'fieldname': 'suggestions_customer',
+                            'fieldtype': 'HTML',
+                            'label': 'Suggestions'
                         },
                         {
                             'fieldname': 'amount_of_money',
                             'label': 'Amount of Money',
                             'fieldtype': 'Float',
                             'reqd': 1
+                        },
+                        {
+                            'fieldname': 'address_html',
+                            'fieldtype': 'HTML',
+                            'label': 'Address',
+                            'reqd': 0,
+                            'options': ''
                         }
                     ],
                     primary_action_label: 'Add Customer',
@@ -708,7 +770,15 @@ frappe.ui.form.on('Sales Person', {
                         'fieldtype': 'Select',
                         'reqd': 1,
                         'options': "Customer Debt-based Target\nFixed Target",
-                        'default': frm.doc.custom__target_type
+                        'default': frm.doc.custom__target_type,
+                        'onchange': function () {
+                            let target_type = dialog.get_value('target_type');
+                            if (target_type === 'Customer Debt-based Target') {
+                                dialog.get_field('target').$wrapper.hide();
+                            } else {
+                                dialog.get_field('target').$wrapper.show();
+                            }
+                        }
                     },
                     {
                         'fieldname': 'target',
@@ -729,11 +799,39 @@ frappe.ui.form.on('Sales Person', {
                     // Add a button to open the sub-dialog for adding a new row
                     {
                         'fieldname': 'add_row_button',
-                        'label': 'Add New Customer',
+                        'label': 'Add Customer',
                         'fieldtype': 'Button',
                         'icon': 'plus',
                         'click': function () {
                             subDialog.show();
+
+                            // Set the HTML content for the address field
+                            var address_html = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="address-line-1">Address Line 1:</label>
+                                    <input type="text" id="address-line-1" name="address-line-1" class="form-control"><br>
+
+                                    <label for="address-line-2">Address Line 2:</label>
+                                    <input type="text" id="address-line-2" name="address-line-2" class="form-control"><br>
+
+                                    <label for="city">City:</label>
+                                    <input type="text" id="city" name="city" class="form-control"><br>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state">State:</label>
+                                    <input type="text" id="state" name="state" class="form-control"><br>
+
+                                    <label for="zip-code">Zip Code:</label>
+                                    <input type="text" id="zip-code" name="zip-code" class="form-control"><br>
+
+                                    <label for="country">Country:</label>
+                                    <input type="text" id="country" name="country" class="form-control"><br>
+                                </div>
+                            </div>
+                        `;
+
+                            subDialog.fields_dict.address_html.$wrapper.html(address_html);
                         }
                     }
                     ],
@@ -749,17 +847,28 @@ frappe.ui.form.on('Sales Person', {
                                 console.error(`Element with ID 'target_${target.customer.replace(/\s+/g, '_')}' not found.`);
                             }
                         }
+
                         frappe.call({
                             method: 'spms.utils.utils.set_collecting_target',
                             args: {
                                 'values': dialog.get_values(),
                                 'quantities': quantities, // Pass quantities as JSON
-                                'doc': frm.doc
+                                'doc': frm.doc,
+                                "address": customer_address_values_json,
                             },
                             callback: function (response) {
                                 var res = response.message;
                                 if (res) {
                                     frappe.msgprint(__('Set Target Successfully'));
+                                    if (frm.doc.custom_type == "Sales") {
+                                        set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+                            
+                                    } else if (frm.doc.custom_type == "Collect") {
+                                        set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
+                                    } else {
+                                        set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
+                                        set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
+                                    }
                                     dialog.hide();
                                     frm.refresh();
                                 } else {
@@ -775,7 +884,12 @@ frappe.ui.form.on('Sales Person', {
                 }
                 // Show the main dialog
                 dialog.show();
-
+                let target_type = dialog.get_value('target_type');
+                if (target_type === 'Customer Debt-based Target') {
+                    dialog.get_field('target').$wrapper.hide();
+                } else {
+                    dialog.get_field('target').$wrapper.show();
+                }
             }).addClass('bg-info').css({
                 "color": "white",
             });

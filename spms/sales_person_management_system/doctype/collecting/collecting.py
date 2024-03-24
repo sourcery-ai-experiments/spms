@@ -13,12 +13,14 @@ class Collecting(WebsiteGenerator):
 	def validate(self):
 		total_paid = self.total_paid
 		total_allocated = 0
+  
 		for inv in self.invoices:
 			total_allocated += inv.allocated
 			if(inv.allocated == 0):
 				frappe.throw(_(f'invoice {inv.invoice_no} has allocated value of 0'))
-		if(total_allocated>total_paid):
-			frappe.throw(_('The total allocated is more than the total paid.'))
+		if(total_paid != None):
+			if total_allocated>total_paid:
+				frappe.throw(_('The total allocated is more than the total paid.'))
 
 	def on_submit(self) -> None:
 		"""
@@ -49,14 +51,23 @@ class Collecting(WebsiteGenerator):
 			self.image = image_path
 
 	def before_save(self):
-		max_discount = frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting')
-		discount_value = 0
-		if self.discount_type == "Percentage":
-			discount_value = self.total_paid * (self.discount_percentage / 100)
+
+		if(self.total_paid != None):
+			init_amount = self.initial_amount
+			max_discount = frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting')
+			discount_value = 0
+			if self.discount_type == "Percentage":
+				discount_value = init_amount * (self.discount_percentage / 100)
+			else:
+				discount_value = self.discount
+
+			if discount_value < max_discount or max_discount == 0:
+				self.amount = init_amount - discount_value
+				self.discount_amount = discount_value
+			else:
+				frappe.throw(_('The discount must be less than {0}%').format(max_discount))
+
+		if(self.discount_amount != None):
+			self.initial_amount = self.amount + self.discount_amount
 		else:
-			discount_value = self.discount
-		if discount_value < max_discount or max_discount == 0:
-			self.amount = self.total_paid - discount_value
-			self.discount_amount = discount_value
-		else:
-			frappe.throw(_('The discount must be less than {0}%').format(max_discount))
+			self.initial_amount = self.amount
