@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestCollectsGoal(unittest.TestCase):
+class TestCollectionTarget(unittest.TestCase):
 	pass

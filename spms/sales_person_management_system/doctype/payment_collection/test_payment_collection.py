@@ -7,11 +7,11 @@ import hashlib
 import frappe
 from frappe.utils import cstr
 
-class TestCollecting(unittest.TestCase):
+class TestPaymentCollection(unittest.TestCase):
     def setUp(self):
         # Create a new instance of the doctype for testing
-        self.doc = frappe.new_doc("Collecting")
-        self.doc.name = "/test-the-collecting"
+        self.doc = frappe.new_doc("PaymentCollection")
+        self.doc.name = "/test-the-payment_collection"
 
     def test_before_submit_event(self):
         # Trigger the before_submit event

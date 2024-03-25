@@ -92,14 +92,14 @@ def get_visit_goal(sales_person, date, company):
     :param doc: The current document that is being saved
     :return: A dictionary with the name of the visit goal
     """
-    visit_goal_name = frappe.db.get_value("Visit Goal", {
+    visit_goal_name = frappe.db.get_value("Sales Target", {
         "sales_person": sales_person,
         "company": company,
         "from": ["<=", date],
         "to": [">=", date]
     }, ["name"], as_dict=1)
 
-    return frappe.get_doc("Visit Goal", visit_goal_name)
+    return frappe.get_doc("Sales Target", visit_goal_name)
 
 
 def update_sales_person_target(sales_invoice, method, operator) -> None:
@@ -306,6 +306,7 @@ def get_sales_person_doc(doc):
         'custom_to_': ['>=', doc.date]
     }, ['name'], as_dict=1)
 
+    print(sales_person_name)
     # Get objects for Specific Collects Goal
     return frappe.get_doc('Sales Person', sales_person_name)
 

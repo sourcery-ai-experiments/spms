@@ -9,7 +9,7 @@ from spms.methods.utils import update_sales_person
 import hashlib
 from frappe import _
 
-class Collecting(WebsiteGenerator):
+class PaymentCollection(WebsiteGenerator):
 	def validate(self):
 		total_paid = self.total_paid
 		total_allocated = 0

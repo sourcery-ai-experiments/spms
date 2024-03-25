@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 
-class VisitGoal(Document):
+class SalesTarget(Document):
     def before_save(self) -> None:
         """
         If the number of days is 0, throw an error. If the number of days is less than 0, throw an error
