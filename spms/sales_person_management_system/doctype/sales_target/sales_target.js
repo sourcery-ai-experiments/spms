@@ -3,7 +3,7 @@
 
 
 /* Adding a button to the form. */
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		frm.add_custom_button(__('Reset Fields'), function () {
 			resetFields(frm)
@@ -44,7 +44,7 @@ function get_progress_data(width) {
 
 
 /* Used to make sure that the user selects a valid period for the target. */
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
 	"to": function (frm) {
 		if (frm.doc.to < frm.doc.from) {
 			frappe.msgprint("Please, Select Valid Period for Target)")
@@ -57,7 +57,7 @@ frappe.ui.form.on('Visit Goal', {
 })
 
 /* Used to filter the doctors in the productivity table based on the territory of the visit goal. */
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		frm.set_query('doctor', 'productivity', function (doc, cdt, cdn) {
 			return {
@@ -71,7 +71,7 @@ frappe.ui.form.on('Visit Goal', {
 
 /* Used to calculate the achievement percentage for the productivity table and the target breakdown
 table. */
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		if (frm.doc.productivity) {
 			for (let row of frm.doc.productivity) {
@@ -88,7 +88,7 @@ frappe.ui.form.on('Visit Goal', {
 
 /* Used to refresh the page when the user clicks on the next page, first page, previous page, or last
 page. */
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		refresh_when_click_btn(frm)
 		progress_bar(frm, "productivity", "achievement")
@@ -174,8 +174,8 @@ frappe.ui.form.on('Productivity', {
 cur_frm.fields_dict['parent_visit_goal'].get_query = function (doc, cdt, cdn) {
 	return {
 		filters: [
-			['Visit Goal', 'is_group', '=', 1],
-			['Visit Goal', 'name', '!=', doc.name]
+			['Sales Target', 'is_group', '=', 1],
+			['Sales Target', 'name', '!=', doc.name]
 		]
 	}
 }
@@ -184,14 +184,14 @@ cur_frm.fields_dict['parent_visit_goal'].get_query = function (doc, cdt, cdn) {
 cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
 	return {
 		filters: [
-			['Visit Goal', 'is_group', '=', 1],
-			['Visit Goal', 'name', '!=', doc.name]
+			['Sales Target', 'is_group', '=', 1],
+			['Sales Target', 'name', '!=', doc.name]
 		]
 	}
 }
 
-/* Used to make the progress bar for the Visit Goal doctype. */
-frappe.ui.form.on('Visit Goal', {
+/* Used to make the progress bar for the Sales Target doctype. */
+frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		set_css(frm);
 	}

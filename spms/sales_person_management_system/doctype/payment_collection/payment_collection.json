@@ -353,7 +353,7 @@
  "modified": "2024-03-24 14:39:08.919184",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
- "name": "Collecting",
+ "name": "Payment Collection",
  "naming_rule": "By \"Naming Series\" field",
  "nsm_parent_field": "parent_collecting",
  "owner": "Administrator",

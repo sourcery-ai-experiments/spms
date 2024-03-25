@@ -8,7 +8,7 @@ frappe.ui.form.on('Sales Person', {
 
 });
 
-frappe.ui.form.on('Visit Goal', {
+frappe.ui.form.on('Sales Target', {
     refresh(frm) {
         frm.add_custom_button(__('Add Client'), () => {
         });

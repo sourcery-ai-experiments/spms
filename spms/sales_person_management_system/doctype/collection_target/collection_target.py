@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from datetime import datetime
 
 
-class CollectsGoal(Document):
+class CollectionTarget(Document):
     def before_save(self) -> None:
         """
         if doc.number_of_days == 0:

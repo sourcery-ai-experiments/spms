@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 /* A query that will filter the doctor name based on the territory. */
-frappe.ui.form.on('Visiting', {
+frappe.ui.form.on('Sales Visit', {
 	setup: function (frm) {
 		frm.set_query("client_name", function () {
 			return {
@@ -16,7 +16,7 @@ frappe.ui.form.on('Visiting', {
 
 
 /* A query that will filter the doctor name based on the territory. */
-frappe.ui.form.on('Visiting', {
+frappe.ui.form.on('Sales Visit', {
 	setup: function (frm) {
 		frm.set_query("reference", function () {
 			return {
@@ -29,7 +29,7 @@ frappe.ui.form.on('Visiting', {
 });
 
 // Get Location From The User
-frappe.ui.form.on('Visiting', {
+frappe.ui.form.on('Sales Visit', {
 	onload(frm) {
 		function onPositionReceived(position) {
 			let longitude = position.coords.longitude;
@@ -66,7 +66,7 @@ frappe.ui.form.on('Visiting', {
 
 
 /* Validating if the location service is off. */
-frappe.ui.form.on('Visiting', {
+frappe.ui.form.on('Sales Visit', {
 	before_save: function (frm) {
 		if (!frm.doc.longitude && !frm.doc.latitude) {
 			frappe.msgprint('Pleas Enable the Location Service');

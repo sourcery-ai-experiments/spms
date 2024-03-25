@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 /* Adding two buttons to the form. */
-frappe.ui.form.on('Collects Goal', {
+frappe.ui.form.on('Collection Target', {
 	refresh: function (frm) {
 		frm.add_custom_button(__('Reset Progress'), function () {
 			frappe.msgprint("this button will Reset Progress");
@@ -14,13 +14,13 @@ frappe.ui.form.on('Collects Goal', {
 	}
 });
 
-// tracking changes in the child table 'Customer Collects Goal' which is
+// tracking changes in the child table 'Customer Collection Target' which is
 let total = 0
 
-/* A trigger that is called when the user changes the value of the field "to" in the Collects Goal
+/* A trigger that is called when the user changes the value of the field "to" in the Collection Target
 doctype. */
-frappe.ui.form.on('Collects Goal', {
-	/* A trigger that is called when the user changes the value of the field "to" in the Collects Goal
+frappe.ui.form.on('Collection Target', {
+	/* A trigger that is called when the user changes the value of the field "to" in the Collection Target
 	doctype. */
 	"to": function (frm) {
 		if (frm.doc.to < frm.doc.from) {
@@ -33,14 +33,14 @@ frappe.ui.form.on('Collects Goal', {
 	},
 
 	/* A trigger that is called when the user changes the value of the field "fixed_target" in the
-	Collects Goal doctype. */
+	Collection Target doctype. */
 	fixed_target: function (frm) {
 		frm.set_value("total_targets", frm.doc.fixed_target);
 		frm.refresh();
 	},
 
 	/* A trigger that is called when the user changes the value of the field "additional_target_int" in
-	the Collects Goal doctype. */
+	the Collection Target doctype. */
 	additional_target_int: function (frm) {
 		frm.set_value("total_targets", total + frm.doc.additional_target_int);
 		frm.refresh();
@@ -54,7 +54,7 @@ frappe.ui.form.on('Collects Goal', {
 });
 
 /* A trigger that is called when the user adds a new row to the table. */
-frappe.ui.form.on('Customer Collects Goal', {
+frappe.ui.form.on('Customer Collection Target', {
 	customer_collects_goal_add: function (frm, cdt, cdn) {
 		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
@@ -69,7 +69,7 @@ frappe.ui.form.on('Customer Collects Goal', {
 });
 
 /* A trigger that is called when the user removes a row from the table. */
-frappe.ui.form.on('Customer Collects Goal', {
+frappe.ui.form.on('Customer Collection Target', {
 	customer_collects_goal_remove: function (frm, cdt, cdn) {
 		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
@@ -84,8 +84,8 @@ frappe.ui.form.on('Customer Collects Goal', {
 });
 
 /* A trigger that is called when the user changes the value of the field "amount_of_money" in the
-Customer Collects Goal doctype. */
-frappe.ui.form.on('Customer Collects Goal', {
+Customer Collection Target doctype. */
+frappe.ui.form.on('Customer Collection Target', {
 	amount_of_money: function (frm, cdt, cdn) {
 		total = 0;
 		$.each(frm.doc.customer_collects_goal || [], function (i, d) {
@@ -118,8 +118,8 @@ frappe.ui.form.on('Commissions range', {
 });
 
 /* A trigger that is called when the user changes the value of the field "territory" in the
-Collects Goal doctype. */
-frappe.ui.form.on('Collects Goal', {
+Collection Target doctype. */
+frappe.ui.form.on('Collection Target', {
 	refresh: function (frm) {
 		// progress_bar("customer_collects_goal","verified_collects",100,0,{text:"Done "})
 		/* A query that filters the customers based on the territory of the current form. */
@@ -134,28 +134,28 @@ frappe.ui.form.on('Collects Goal', {
 	}
 })
 
-/* Used to filter the parent field in the Collects Goal doctype. */
+/* Used to filter the parent field in the Collection Target doctype. */
 cur_frm.fields_dict['parent_collects_goal'].get_query = function (doc, cdt, cdn) {
 	return {
 		filters: [
-			['Collects Goal', 'is_group', '=', 1],
-			['Collects Goal', 'name', '!=', doc.name]
+			['Collection Target', 'is_group', '=', 1],
+			['Collection Target', 'name', '!=', doc.name]
 		]
 	}
 }
 
-/* Used to filter the old parent field in the Collects Goal doctype. */
+/* Used to filter the old parent field in the Collection Target doctype. */
 cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
 	return {
 		filters: [
-			['Collects Goal', 'is_group', '=', 1],
-			['Collects Goal', 'name', '!=', doc.name]
+			['Collection Target', 'is_group', '=', 1],
+			['Collection Target', 'name', '!=', doc.name]
 		]
 	}
 }
 
 /* Calculating the achieved collects and achieved visits for each row in the table. */
-frappe.ui.form.on('Collects Goal', {
+frappe.ui.form.on('Collection Target', {
 	refresh: function (frm) {
 		if (frm.doc.customer_collects_goal) {
 			for (let row of frm.doc.customer_collects_goal) {
@@ -169,7 +169,7 @@ frappe.ui.form.on('Collects Goal', {
 })
 
 /* A trigger that is called when the user refreshes the form. */
-frappe.ui.form.on('Collects Goal', {
+frappe.ui.form.on('Collection Target', {
 	refresh: function (frm) {
 		refresh_when_click_btn(frm)
 		progress_bar(frm, "customer_collects_goal", "achieved_collects")
@@ -178,7 +178,7 @@ frappe.ui.form.on('Collects Goal', {
 })
 
 /* It makes the target type field read only after saving the form. */
-frappe.ui.form.on('Collects Goal', {
+frappe.ui.form.on('Collection Target', {
 	after_save: function (frm) {
 		frm.set_df_property("target_type", "read_only", 1)
 	}

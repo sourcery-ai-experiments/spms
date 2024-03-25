@@ -198,7 +198,7 @@ def create_target_log(doc):
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
     if doc.custom_type != "Collect":
-        doc_b = frappe.new_doc("Visit Goal")
+        doc_b = frappe.new_doc("Sales Target")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name
         if(doc.employee != ""):
@@ -228,9 +228,8 @@ def create_target_log(doc):
                 "achievement": child_a.achievement,
             }) 
         doc_b.insert()
-
         
-        return True#f"New Visit Goal({doc_b.sales_person}) record was added"
+        return True
     
 def create_collect_log(doc):
     if isinstance(doc, str):
@@ -241,7 +240,7 @@ def create_collect_log(doc):
     doc = frappe.get_doc("Sales Person", sales_person_name)
     # Create a new document instance of Document Type B
     if doc.custom_type != "Sales":
-        doc_b = frappe.new_doc("Collects Goal")
+        doc_b = frappe.new_doc("Collection Target")
         # Set field values from Document Type A to Document Type B
         doc_b.sales_person = doc.sales_person_name
         # if(doc.employee != ""):

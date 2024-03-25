@@ -322,7 +322,7 @@
  "modified": "2024-03-18 15:47:44.798198",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
- "name": "Collects Goal",
+ "name": "Collection Target",
  "naming_rule": "By \"Naming Series\" field",
  "nsm_parent_field": "parent_collects_goal",
  "owner": "Administrator",

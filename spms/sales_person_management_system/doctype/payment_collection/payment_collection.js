@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 /* A filter for the customer field. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	setup: function (frm) {
 		frm.set_query("customer", function () {
 			return {
@@ -15,7 +15,7 @@ frappe.ui.form.on('Collecting', {
 });
 
 /* This code is used to get the location of the user and show it on the map. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	onload(frm) {
 		function onPositionReceived(position) {
 			let longitude = position.coords.longitude;
@@ -52,7 +52,7 @@ frappe.ui.form.on('Collecting', {
 
 
 /* A validation to check if the location service is off. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	before_save: function (frm) {
 		if (!frm.doc.longitude && !frm.doc.latitude) {
 			frappe.msgprint('Pleas Enable the Location Service');
@@ -62,7 +62,7 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	amount: function (frm) {
 		if (frm.doc.amount_currency != frm.doc.company_currency) {
 			calculateTheAmount(frm);
@@ -75,7 +75,7 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	amount_currency: function (frm) {
 		if (frm.doc.amount_currency != frm.doc.company_currency) {
 			frappe.db.get_value("Currency Exchange", {
@@ -95,7 +95,7 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	amount_currency: function (cur_frm) {
 		if (cur_frm.doc.amount_currency && cur_frm.doc.company_currency) {
 			let default_label = __(frappe.meta.docfield_map[cur_frm.doctype]["exchange_rate"].label);
@@ -107,13 +107,13 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	exchange_rate: function (frm) {
 		calculateTheAmount(frm);
 	}
 });
 
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	after_save: function (frm) {
 		// frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(res => {
 		// 	let max_discount = res;
@@ -152,7 +152,7 @@ function calculateTheAmount(frm) {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	refresh: function (frm) {
 		/* A query to get the invoices that are not paid and belong to the customer. */
 		frm.set_query('invoice_no', 'invoices', function (doc, cdt, cdn) {
@@ -179,7 +179,7 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the document status is not equal to 1 then add a button to get all the
 unpaid sales invoices. */
-frappe.ui.form.on('Collecting', {
+frappe.ui.form.on('Payment Collection', {
 	refresh: function (frm) {
 		if (frm.doc.docstatus != 1) {
 			frm.add_custom_button("Get All Unpaid Sales Invoice", function () {
