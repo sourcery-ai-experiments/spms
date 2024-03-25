@@ -152,20 +152,26 @@ frappe.ui.form.on('Productivity', {
 	class_name: function (frm, cdt, cdn) {
 		let row = locals[cdt][cdn]
 		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
-		switch (row.class_name) {
-			case "A":
-				row.number_of_visits = 3
-				break
-			case "B":
-				row.number_of_visits = 2
-				break
-			case "C":
-				row.number_of_visits = 1
-				break
-			case "D":
-				row.number_of_visits = 1
-				break
-		}
+        switch (row.class_name) {
+            case "A":
+                row.number_of_visits = 3
+                break            
+            case "A+":
+                row.number_of_visits = 4
+                break            
+            case "A-":
+                row.number_of_visits = 2
+                break
+            case "B":
+                row.number_of_visits = 2
+                break
+            case "C":
+                row.number_of_visits = 1
+                break
+            case "D":
+                row.number_of_visits = 1
+                break
+        }
 		frm.refresh()
 	}
 })

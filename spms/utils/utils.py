@@ -31,6 +31,8 @@ def create_client_to_sales_person(values, doc,  client, address):
                 
             new_doc = frappe.get_doc(values)
             new_doc.insert()
+        else:
+            new_doc = frappe.get_doc("Client",client)
 
         doc_dict = json.loads(doc)
         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
@@ -109,6 +111,12 @@ def set_target(values, quantities, doc):
                     'item': item,
                     'quantity': quantity
                 })
+                
+        for c in docc.custom_target_breakdown:
+            c.sold = 0
+            
+        for c in docc.custom_productivity:
+            c.verified_visits = 0
 
         docc.save()
 
