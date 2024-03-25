@@ -68,6 +68,13 @@ class PaymentCollection(WebsiteGenerator):
 				frappe.throw(_('The discount must be less than {0}%').format(max_discount))
 
 		if(self.discount_amount != None):
-			self.initial_amount = self.amount + self.discount_amount
+			self.amount = self.initial_amount - self.discount_amount
 		else:
-			self.initial_amount = self.amount
+			self.amount = self.initial_amount
+
+		total_allocated = 0
+		for i in self.invoices:
+			total_allocated += i.allocated
+   
+		total_unallocated = self.total_paid-total_allocated
+		self.total_unallocated = total_unallocated

@@ -102,6 +102,62 @@ frappe.ui.form.on('Payment Collection', {
 			cur_frm.fields_dict.exchange_rate.set_label(default_label +
 				repl(" (1 %(amount_currency)s = [?] %(company_currency)s)", cur_frm.doc));
 		}
+	},
+	discount_percentage: function (frm) {
+		var init_amount = frm.doc.initial_amount;
+		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(function (v) {
+			var max_discount = v;
+			var discount_value = 0;
+			if (frm.doc.discount_type === "Percentage") {
+				discount_value = init_amount * (frm.doc.discount_percentage / 100);
+			} else {
+				discount_value = frm.doc.discount;
+			}
+
+			if (discount_value < max_discount || max_discount === 0) {
+				frm.doc.amount = init_amount - discount_value;
+				frm.refresh_field("amount");
+				frm.refresh_field("discount_amount");
+				frm.doc.discount_amount = discount_value;
+				
+			} else {
+				console.log("gg");
+			}
+
+			if (frm.doc.discount_amount != null) {
+				frm.doc.initial_amount = frm.doc.amount + frm.doc.discount_amount;
+			} else {
+				frm.doc.initial_amount = frm.doc.amount;
+			}
+		});
+	}	,
+	discount: function (frm) {
+		var init_amount = frm.doc.initial_amount;
+		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(function (v) {
+			var max_discount = v;
+			var discount_value = 0;
+			if (frm.doc.discount_type === "Percentage") {
+				discount_value = init_amount * (frm.doc.discount_percentage / 100);
+			} else {
+				discount_value = frm.doc.discount;
+			}
+
+			if (discount_value < max_discount || max_discount === 0) {
+				frm.doc.amount = init_amount - discount_value;
+				frm.refresh_field("amount");
+				frm.refresh_field("discount_amount");
+				frm.doc.discount_amount = discount_value;
+				
+			} else {
+				console.log("gg");
+			}
+
+			if (frm.doc.discount_amount != null) {
+				frm.doc.initial_amount = frm.doc.amount + frm.doc.discount_amount;
+			} else {
+				frm.doc.initial_amount = frm.doc.amount;
+			}
+		});
 	}
 });
 
@@ -157,11 +213,11 @@ frappe.ui.form.on('Payment Collection', {
 		/* A query to get the invoices that are not paid and belong to the customer. */
 		frm.set_query('invoice_no', 'invoices', function (doc, cdt, cdn) {
 			return {
-				
+
 				filters: [
 					['Sales Invoice', 'customer', 'in', frm.doc.customer],
 					// ['Sales Invoice', 'status', '!=', 'Paid']
-					['Sales Invoice', 'status', 'not in', ['Paid','Cancelled','Return','Draft']]
+					['Sales Invoice', 'status', 'not in', ['Paid', 'Cancelled', 'Return', 'Draft']]
 				]
 			};
 		});
