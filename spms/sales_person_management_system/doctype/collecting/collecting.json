@@ -29,11 +29,12 @@
   "phone",
   "amount_section",
   "total_paid",
+  "initial_amount",
+  "amount",
+  "amount_other_currency",
   "discount_type",
   "discount",
   "discount_percentage",
-  "amount",
-  "amount_other_currency",
   "column_break_18",
   "amount_currency",
   "exchange_rate",
@@ -327,6 +328,12 @@
    "fieldname": "discount_percentage",
    "fieldtype": "Percent",
    "label": "Discount Percentage"
+  },
+  {
+   "fieldname": "initial_amount",
+   "fieldtype": "Float",
+   "label": "Initial Amount",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
@@ -343,7 +350,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2024-03-21 14:19:46.827004",
+ "modified": "2024-03-24 14:39:08.919184",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",

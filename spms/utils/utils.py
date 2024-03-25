@@ -1,61 +1,21 @@
 import frappe
 import json
 
-# @frappe.whitelist()
-# def create_client_to_sales_person(values, doc, client, address):
-#     try:
-#         address_dict = json.loads(address)
-
-#         # Check if client exists in the table
-#         client_exists = frappe.db.exists("Client", client)
-#         if not client_exists:
-#             values = json.loads(values)
-#             values["doctype"] = "Client"
-#             values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
-#                 "middle_name") is not None else "") + " " + values.get("last_name")
-#             print("client_exists")
-#             values["address_line1"] = address_dict.get("address_line_1")
-#             values["address_line2"] = address_dict.get("address_line_2")
-#             values["city"] = address_dict.get("city")
-#             values["state"] = address_dict.get("state")
-#             values["pincode"] = address_dict.get("zip_code")
-#             values["country"] = address_dict.get("country")
-#             new_doc = frappe.get_doc(values)
-#             new_doc.insert()
-#             print("new_doc")
-#             print(new_doc)
-
-#         doc_dict = json.loads(doc)
-#         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
-
-#         existing_clients = [row.client for row in docu.custom_productivity]
-#         if client not in existing_clients:
-#             child = docu.append('custom_productivity', {})
-#             child.client = client
-#             docu.save()
-#             return True
-#         else:
-#             frappe.msgprint("Client already exists for this sales person.")
-#             return False
-
-#     except Exception as e:
-#         frappe.throw("An error occurred while adding client to sales person.", e)
-#         return False
 @frappe.whitelist()
 def create_client_to_sales_person(values, doc,  client, address):
     try:
         address_dict = json.loads(address)
-
-        # Create a new Address document
-        new_address = frappe.new_doc("Address")
-        new_address.address_title = address_dict.get("address_line_1")
-        new_address.address_line1 = address_dict.get("address_line_1")
-        new_address.address_line2 = address_dict.get("address_line_2")
-        new_address.city = address_dict.get("city")
-        new_address.state = address_dict.get("state")
-        new_address.pincode = address_dict.get("zip_code")
-        new_address.country = address_dict.get("country")
-        new_address.insert()
+        if(address_dict.get("address_line_1") != ""):
+            # Create a new Address document
+            new_address = frappe.new_doc("Address")
+            new_address.address_title = address_dict.get("address_line_1")
+            new_address.address_line1 = address_dict.get("address_line_1")
+            new_address.address_line2 = address_dict.get("address_line_2")
+            new_address.city = address_dict.get("city")
+            new_address.state = address_dict.get("state")
+            new_address.pincode = address_dict.get("zip_code")
+            new_address.country = address_dict.get("country")
+            new_address.insert()
 
         # Check if client exists in the table
         client_exists = frappe.db.exists("Client", client)
@@ -65,7 +25,10 @@ def create_client_to_sales_person(values, doc,  client, address):
             values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
                 "middle_name") is not None else "") + " " + values.get("last_name")
             # Assign address to client
-            values["address"] = new_address.name
+            
+            if(address_dict.get("address_line_1") != ""):
+                values["address"] = new_address.name
+                
             new_doc = frappe.get_doc(values)
             new_doc.insert()
 
@@ -105,7 +68,6 @@ def remove_client_from_sales_person(values, doc):
         frappe.throw("An error occurred while removing client from sales person.")
         return False
 
-
 @frappe.whitelist()
 def remove_customer_from_sales_person(values, doc):
     try:
@@ -121,7 +83,6 @@ def remove_customer_from_sales_person(values, doc):
         frappe.log_error(e, 'Error removing customer from sales person')
         frappe.throw("An error occurred while removing customer from sales person.")
         return False
-
 
 @frappe.whitelist()
 def set_target(values, quantities, doc):
@@ -149,8 +110,6 @@ def set_target(values, quantities, doc):
                     'quantity': quantity
                 })
 
-
-        # Save the document
         docc.save()
 
         return True
@@ -160,7 +119,7 @@ def set_target(values, quantities, doc):
 
 
 @frappe.whitelist()
-def set_collecting_target(values, quantities, doc):
+def set_collecting_target(values, quantities, doc,address):
     try:
         values = json.loads(values)
         quantities = json.loads(quantities)  # Convert quantities to dictionary
@@ -170,11 +129,6 @@ def set_collecting_target(values, quantities, doc):
         docc.custom_from_ = values['from']
         docc.custom_to_ = values['to']
         docc.custom__target_type = values['target_type']
-
-        if(values['target_type']) == "Customer Debt-based Target":
-            docc.custom_total_targets = values['target']
-        else:
-            docc.custom_total_targets = values['target']
 
         create_collect_log(docc)
         
@@ -187,10 +141,47 @@ def set_collecting_target(values, quantities, doc):
             if target_row:
                 target_row.amount_of_money = amount_of_money
             else:
-                docc.append('custom_customer_collects_goal', {
-                    'customer': customer,
-                    'amount_of_money': amount_of_money
-                })
+                customer_exists = frappe.db.get_list("Customer", filters={"customer_name": customer})
+                if(customer_exists):
+                    # ctmr = frappe.get_doc("Customer", customer)
+                    docc.append('custom_customer_collects_goal', {
+                        'customer': customer,
+                        'amount_of_money': amount_of_money
+                    })
+                else:
+                    address_dict = json.loads(address)
+
+                    # Create a new Address document
+                    new_address = frappe.new_doc("Address")
+                    new_address.address_title = address_dict.get("address_line_1")
+                    new_address.address_line1 = address_dict.get("address_line_1")
+                    new_address.address_line2 = address_dict.get("address_line_2")
+                    new_address.city = address_dict.get("city")
+                    new_address.state = address_dict.get("state")
+                    new_address.pincode = address_dict.get("zip_code")
+                    new_address.country = address_dict.get("country")
+                    new_address.insert()
+
+                    new_customer = frappe.new_doc("Customer")
+                    new_customer.customer_name = customer
+                    new_customer.customer_primary_address = new_address.name
+                    new_customer.insert()
+
+                    docc.append('custom_customer_collects_goal', {
+                        'customer': customer,
+                        'amount_of_money': amount_of_money
+                    }) 
+                
+        if(values['target_type']) == "Customer Debt-based Target":
+            target_value = 0
+            for i in docc.custom_customer_collects_goal:
+                target_value += i.amount_of_money
+                
+            docc.custom_total_targets = target_value
+        else:
+            docc.custom_total_targets = values['target']
+            
+        docc.custom_total_collected = 0
         docc.save()
         return True
     except Exception as e:
@@ -240,9 +231,7 @@ def create_target_log(doc):
 
         
         return True#f"New Visit Goal({doc_b.sales_person}) record was added"
-
     
-
 def create_collect_log(doc):
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)
@@ -285,6 +274,4 @@ def create_collect_log(doc):
         
         return True
 
-    
-
-
+ 
