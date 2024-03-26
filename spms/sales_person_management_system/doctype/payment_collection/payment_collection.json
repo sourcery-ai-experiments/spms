@@ -207,7 +207,7 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "SPM-COL-.YYYY.-",
+   "options": "SPM-PYC-.YYYY.-",
    "reqd": 1
   },
   {
@@ -356,7 +356,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2024-03-25 16:27:31.684005",
+ "modified": "2024-03-26 13:13:27.746652",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Payment Collection",

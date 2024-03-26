@@ -45,11 +45,7 @@
   "more_tab",
   "is_group",
   "lft",
-  "rgt",
-  "column_break_wmum",
-  "old_parent",
-  "column_break_ruzz",
-  "parent_collects_goal"
+  "rgt"
  ],
  "fields": [
   {
@@ -177,7 +173,7 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "SPM-CG-.YYYY.-",
+   "options": "SPM-CT-.YYYY.-",
    "reqd": 1
   },
   {
@@ -253,18 +249,6 @@
    "label": "Is Group"
   },
   {
-   "fieldname": "old_parent",
-   "fieldtype": "Link",
-   "label": "Old Parent",
-   "options": "Collects Goal"
-  },
-  {
-   "fieldname": "parent_collects_goal",
-   "fieldtype": "Link",
-   "label": "Parent Collects Goal",
-   "options": "Collects Goal"
-  },
-  {
    "fetch_from": "sales_person.employee",
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -305,21 +289,12 @@
    "fieldname": "more_tab",
    "fieldtype": "Tab Break",
    "label": "More"
-  },
-  {
-   "fieldname": "column_break_wmum",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_ruzz",
-   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
- "is_tree": 1,
  "links": [],
- "modified": "2024-03-18 15:47:44.798198",
+ "modified": "2024-03-26 13:11:41.033468",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collection Target",
