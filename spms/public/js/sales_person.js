@@ -10,7 +10,7 @@ var customer_address_values_json = null;
 //         console.log(frm.doc[table_name]);
 //         console.log("idx");
 //         console.log(idx);
-        
+
 //         let row_info = frm.doc[table_name][idx];
 //         // console.log(row_info)
 //         // console.log("field_name")
@@ -57,7 +57,7 @@ var customer_address_values_json = null;
 // 			</div>`;
 //     }
 // }
-function progress_bar(frm, table_name,field_name, f1,f2, options = { color: "", text: "" }) {
+function progress_bar(frm, table_name, field_name, f1, f2, options = { color: "", text: "" }) {
     // Convert collection of rows to array for using indexOf
     let rows = Array.from($(`[data-fieldname = ${table_name}] .grid-body .rows`).children());
 
@@ -206,7 +206,7 @@ frappe.ui.form.on('Sales Person', {
                             clientsToRemove.push(button.dataset.client);
                             console.log("button.dataset.client");
                             console.log(button.dataset.client);
-                            
+
                         });
                         console.log("clientsToRemove");
                         console.log(clientsToRemove);
@@ -448,13 +448,25 @@ frappe.ui.form.on('Sales Person', {
 
                 // Prepare the table HTML
                 let tableHtml = '<table class="table table-bordered">';
-                tableHtml += '<thead><tr><th>Item</th><th>Quantity</th></tr></thead><tbody>';
+                tableHtml += `
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th class="bg-danger">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                `;
 
+                // // Add rows to the table
+                // for (let target of targets) {
+                //     tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
+                // }
                 // Add rows to the table
                 for (let target of targets) {
-                    tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
+                    tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td><td><input type="checkbox" id="checkbox_${target.item.replace(/\s+/g, '_')}"></td></tr>`;
                 }
-
                 // tableHtml += '</tbody></table>';
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
@@ -598,13 +610,23 @@ frappe.ui.form.on('Sales Person', {
 
 
                         console.log(quantities);
-
+                        let checkedItems = {};
+                        // Retrieve checked items
+                        targets.forEach(target => {
+                            let checkbox = document.getElementById(`checkbox_${target.item.replace(/\s+/g, '_')}`);
+                            if (checkbox && checkbox.checked) {
+                                // checkedItems.push({"item":target.item});
+                                checkedItems["item"] = target.item;
+                            }
+                        });
                         frappe.call({
                             method: 'spms.utils.utils.set_target',
                             args: {
                                 'values': dialog.get_values(),
                                 'quantities': quantities, // Pass quantities as JSON
-                                'doc': frm.doc
+                                'doc': frm.doc,
+                                'checked_items': checkedItems, // Pass checked items as JSON
+
                             },
                             callback: function (response) {
                                 var res = response.message;
@@ -638,6 +660,8 @@ frappe.ui.form.on('Sales Person', {
             }).addClass('bg-info').css({
                 "color": "white",
             });
+
+
         }
         if (frm.doc.custom_type != "Sales") {
 
@@ -690,20 +714,28 @@ frappe.ui.form.on('Sales Person', {
             }).addClass('bg-danger').css({
                 "color": "white",
             });
+
+
             frm.add_custom_button(__('Set Collecting Target'), () => {
                 let targets = frm.doc.custom_customer_collects_goal;
                 console.log(targets);
 
-                // Prepare the table HTML
-                let tableHtml = '<table class="table table-bordered">';
-                tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th></tr></thead><tbody>';
+// Prepare the table HTML
+let tableHtml = '<table class="table table-bordered">';
+tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th><th class="bg-danger">Delete</th></tr></thead><tbody>';
 
-                // Add rows to the table
-                for (let target of targets) {
-                    tableHtml += `<tr><td>${target.customer}</td><td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td></tr>`;
-                }
+// Add rows to the table
+for (let target of targets) {
+    tableHtml += `
+    <tr>
+        <td>${target.customer}</td>
+        <td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td>
+        <td><input type="checkbox" class="checkbox" id="checkbox_${target.customer.replace(/\s+/g, '_')}"></td>
+    </tr>`;
+}
 
-                // tableHtml += '</tbody></table>';
+tableHtml += '</tbody></table>';
+
 
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
@@ -927,7 +959,14 @@ frappe.ui.form.on('Sales Person', {
                                 console.error(`Element with ID 'target_${target.customer.replace(/\s+/g, '_')}' not found.`);
                             }
                         }
-
+                        let checkedItems = {};
+                        // Retrieve checked items
+                        targets.forEach(target => {
+                            let checkbox = document.getElementById(`checkbox_${target.customer.replace(/\s+/g, '_')}`);
+                            if (checkbox && checkbox.checked) {
+                                checkedItems["item"] = target.customer;
+                            }
+                        });
                         frappe.call({
                             method: 'spms.utils.utils.set_collecting_target',
                             args: {
@@ -935,6 +974,8 @@ frappe.ui.form.on('Sales Person', {
                                 'quantities': quantities, // Pass quantities as JSON
                                 'doc': frm.doc,
                                 "address": customer_address_values_json,
+                                'checked_items': checkedItems, // Pass checked items as JSON
+
                             },
                             callback: function (response) {
                                 var res = response.message;
@@ -985,8 +1026,8 @@ frappe.ui.form.on('Sales Person', {
             set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
             set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
         }
-        progress_bar(frm, "custom_productivity","achievement", "number_of_visits", "verified_visits");
-        progress_bar(frm, "custom_target_breakdown","achievement", "quantity", "sold");
+        progress_bar(frm, "custom_productivity", "achievement", "number_of_visits", "verified_visits");
+        progress_bar(frm, "custom_target_breakdown", "achievement", "quantity", "sold");
     },
     custom_fixed_target: function (frm) {
         frm.set_value("custom_total_targets", frm.doc.custom_fixed_target);
@@ -1024,10 +1065,10 @@ frappe.ui.form.on('Productivity', {
         switch (row.class_name) {
             case "A":
                 row.number_of_visits = 3
-                break            
+                break
             case "A+":
                 row.number_of_visits = 4
-                break            
+                break
             case "A-":
                 row.number_of_visits = 2
                 break
