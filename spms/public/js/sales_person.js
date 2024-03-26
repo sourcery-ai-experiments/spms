@@ -4,59 +4,9 @@ var selected_suggestion_id = null;
 var selected_customer_suggestion = null;
 var selected_customer_suggestion_id = null;
 var customer_address_values_json = null;
-// function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
-//     for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
-//         let idx = $(row).data("idx") - 1;
-//         console.log(frm.doc[table_name]);
-//         console.log("idx");
-//         console.log(idx);
 
-//         let row_info = frm.doc[table_name][idx];
-//         // console.log(row_info)
-//         // console.log("field_name")
-//         // console.log(field_name)
-//         // console.log("-----------")
 
-//         // console.log(row_info.hasOwnProperty(field_name)); // Check if the field exists in row_info
-//         // console.log(typeof row_info[field_name]); // Check the type of the field
-//         // console.log("-------------")
 
-//         const width = row_info[field_name]
-//         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-//             .innerHTML =
-//             `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-// 				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
-// 			</div>`
-//     }
-// }
-
-// function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
-//     for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
-//         let idx = parseInt($(row).data("idx")) - 1; // Corrected idx assignment
-//         let row_info = frm.doc[table_name][idx];
-//         const width = row_info[field_name]
-//         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-//             .innerHTML =
-//             `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-// 				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
-// 			</div>`
-//     }
-// }
-// function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
-//     // Convert collection of rows to array for using indexOf
-//     let rows = Array.from($(`[data-fieldname = ${table_name}] .grid-body .rows`).children());
-
-//     for (let row of rows) {
-//         let idx = rows.indexOf(row);
-//         let row_info = frm.doc[table_name][idx];
-//         const width = row_info[field_name];
-//         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
-//             .innerHTML =
-//             `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
-// 				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
-// 			</div>`;
-//     }
-// }
 function progress_bar(frm, table_name, field_name, f1, f2, options = { color: "", text: "" }) {
     // Convert collection of rows to array for using indexOf
     let rows = Array.from($(`[data-fieldname = ${table_name}] .grid-body .rows`).children());
