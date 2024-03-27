@@ -131,28 +131,51 @@ frappe.ui.form.on('Collection Target', {
 			};
 		});
 		set_css(frm);
+
+					
+		/* Used to filter the parent field in the Collection Target doctype. */
+		frm.fields_dict['parent_collects_goal'].get_query = function (doc, cdt, cdn) {
+			return {
+				filters: [
+					['Collection Target', 'is_group', '=', 1],
+					['Collection Target', 'name', '!=', doc.name]
+				]
+			}
+		}
+
+		/* Used to filter the old parent field in the Collection Target doctype. */
+		frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
+			return {
+				filters: [
+					['Collection Target', 'is_group', '=', 1],
+					['Collection Target', 'name', '!=', doc.name]
+				]
+			}
+		}
+
 	}
+
 })
 
-/* Used to filter the parent field in the Collection Target doctype. */
-cur_frm.fields_dict['parent_collects_goal'].get_query = function (doc, cdt, cdn) {
-	return {
-		filters: [
-			['Collection Target', 'is_group', '=', 1],
-			['Collection Target', 'name', '!=', doc.name]
-		]
-	}
-}
+// /* Used to filter the parent field in the Collection Target doctype. */
+// cur_frm.fields_dict['parent_collects_goal'].get_query = function (doc, cdt, cdn) {
+// 	return {
+// 		filters: [
+// 			['Collection Target', 'is_group', '=', 1],
+// 			['Collection Target', 'name', '!=', doc.name]
+// 		]
+// 	}
+// }
 
-/* Used to filter the old parent field in the Collection Target doctype. */
-cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
-	return {
-		filters: [
-			['Collection Target', 'is_group', '=', 1],
-			['Collection Target', 'name', '!=', doc.name]
-		]
-	}
-}
+// /* Used to filter the old parent field in the Collection Target doctype. */
+// cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
+// 	return {
+// 		filters: [
+// 			['Collection Target', 'is_group', '=', 1],
+// 			['Collection Target', 'name', '!=', doc.name]
+// 		]
+// 	}
+// }
 
 /* Calculating the achieved collects and achieved visits for each row in the table. */
 frappe.ui.form.on('Collection Target', {

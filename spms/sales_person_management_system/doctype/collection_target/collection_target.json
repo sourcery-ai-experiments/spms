@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "naming_series:",
+ "autoname": "naming_series:naming_series",
  "creation": "2022-09-17 11:06:08.439025",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -41,11 +41,7 @@
   "total_collected",
   "commissions_tab",
   "commissions_section",
-  "commissions_range",
-  "more_tab",
-  "is_group",
-  "lft",
-  "rgt"
+  "commissions_range"
  ],
  "fields": [
   {
@@ -227,28 +223,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "lft",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Left",
-   "no_copy": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "rgt",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Right",
-   "no_copy": 1,
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "is_group",
-   "fieldtype": "Check",
-   "label": "Is Group"
-  },
-  {
    "fetch_from": "sales_person.employee",
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -284,17 +258,11 @@
    "fieldname": "commissions_tab",
    "fieldtype": "Tab Break",
    "label": "Commissions"
-  },
-  {
-   "fieldname": "more_tab",
-   "fieldtype": "Tab Break",
-   "label": "More"
   }
  ],
  "index_web_pages_for_search": 1,
- "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2024-03-26 13:11:41.033468",
+ "modified": "2024-03-26 14:26:53.564406",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collection Target",
