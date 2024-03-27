@@ -4,18 +4,25 @@ var selected_suggestion_id = null;
 var selected_customer_suggestion = null;
 var selected_customer_suggestion_id = null;
 var customer_address_values_json = null;
-function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
-    for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
-        let idx = $(row).data("idx") - 1
-        let row_info = frm.doc[table_name][idx]
-        const width = row_info[field_name]
+
+
+
+function progress_bar(frm, table_name, field_name, f1, f2, options = { color: "", text: "" }) {
+    // Convert collection of rows to array for using indexOf
+    let rows = Array.from($(`[data-fieldname = ${table_name}] .grid-body .rows`).children());
+
+    for (let row of rows) {
+        let idx = rows.indexOf(row);
+        let row_info = frm.doc[table_name][idx];
+        const width = ((row_info[f2] / row_info[f1]) * 100).toFixed(1);
         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
             .innerHTML =
             `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
 				<div style="width:${width}%;background:${options.color && options.color};" class="progress-bar" role="progressbar">${options.text && options.text}${width}%</div>
-			</div>`
+			</div>`;
     }
 }
+
 function calculateProgressBar(frm) {
     // Get the values from the form fields
     var targetSales = frm.doc.custom_target || 0; // default to 0 if field is empty
@@ -128,7 +135,6 @@ frappe.ui.form.on('Sales Person', {
             frm.add_custom_button(__('Remove Client'), () => {
                 // Get the custom_productivity child table data
                 let existingClients = frm.doc.custom_productivity;
-
                 // Create the dialog
                 let dialog = new frappe.ui.Dialog({
                     title: 'Remove Clients',
@@ -137,19 +143,30 @@ frappe.ui.form.on('Sales Person', {
                             'fieldname': 'clients_table',
                             'fieldtype': 'HTML',
                             'options': `
-                                ${existingClients.map(client => `
-                                <button class="btn  border" style="margin: 5px;" id="${client.client}" onclick="this.classList.toggle('btn-danger')">${client.name1}</button>                            `).join('')}
-                            `
+                ${existingClients.map(client => `
+                    <button class="btn client-button border" style="margin: 5px;" data-client="${client.client}">${client.name1}</button>
+                `).join('')}
+            `
                         }
                     ],
                     primary_action_label: 'Remove',
                     primary_action() {
-                        let clientsToRemove = existingClients.filter(client => document.getElementById(client.client).classList.contains('btn-danger'));
+                        let clientsToRemove = [];
+                        document.querySelectorAll('.client-button.btn-danger').forEach(button => {
+                            clientsToRemove.push(button.dataset.client);
+                            console.log("button.dataset.client");
+                            console.log(button.dataset.client);
+
+                        });
+                        console.log("clientsToRemove");
+                        console.log(clientsToRemove);
+
                         if (clientsToRemove.length > 0) {
                             frappe.call({
                                 method: 'spms.utils.utils.remove_client_from_sales_person',
                                 args: {
-                                    'values': clientsToRemove.map(client => client.client), 'doc': frm.doc
+                                    'values': clientsToRemove,
+                                    'doc': frm.doc
                                 },
                                 callback: function (response) {
                                     var res = response.message;
@@ -167,6 +184,12 @@ frappe.ui.form.on('Sales Person', {
                         }
                     }
                 });
+
+                // Event delegation for click events
+                dialog.$wrapper.find('.client-button').on('click', function (event) {
+                    $(this).toggleClass('btn-danger');
+                });
+
 
                 dialog.show();
             }).addClass('bg-danger').css({
@@ -212,6 +235,7 @@ frappe.ui.form.on('Sales Person', {
                                                         'last_name': doc.last_name,
                                                         'salutation': doc.salutation,
                                                         'class': doc.class,
+                                                        'type': doc.type,
                                                         'department': doc.department,
                                                         'phone': doc.phone,
                                                         'territory': doc.territory
@@ -241,29 +265,34 @@ frappe.ui.form.on('Sales Person', {
                             'reqd': 1
                         },
                         {
+                            'fieldname': 'tb2',
+                            'fieldtype': 'Column Break',
+                        },
+                        { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
+                        { 'fieldname': 'phone', 'fieldtype': 'Phone', 'label': 'Phone', 'reqd': 1, "default": "+964-" },
+                        { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 0, 'options': 'Doctor Department' },
+
+                        {
                             'fieldname': 'sb1',
                             'fieldtype': 'Section Break',
                         },
                         { 'fieldname': 'class', 'fieldtype': 'Select', 'label': 'Class', 'reqd': 1, 'options': 'A\nA+\nB\nB+\nC' },
                         {
+                            'fieldname': 'tb5',
+                            'fieldtype': 'Column Break',
+                        },
+                        {
+                            'fieldname': 'type', 'fieldtype': 'Link', 'label': 'Type', 'reqd': 1,
+                            'options': 'Client Types'
+                        },
+                        {
                             'fieldname': 'sb5',
                             'fieldtype': 'Section Break',
                         },
-                        { 'fieldname': 'type', 'fieldtype': 'Link', 'label': 'Type', 'reqd': 1, 'options': 'Client Types' },
-                        {
-                            'fieldname': 'sb2',
-                            'fieldtype': 'Section Break',
-                        },
-                        { 'fieldname': 'department', 'fieldtype': 'Link', 'label': 'Department', 'reqd': 0, 'options': 'Doctor Department' }, {
-                            'fieldname': 'tb2',
-                            'fieldtype': 'Column Break',
-                        },
-                        { 'fieldname': 'phone', 'fieldtype': 'Phone', 'label': 'Phone', 'reqd': 1, "default": "+964-" },
                         {
                             'fieldname': 'sb3',
                             'fieldtype': 'Section Break',
                         },
-                        { 'fieldname': 'territory', 'fieldtype': 'Link', 'label': 'Territory', 'reqd': 1, 'options': 'Territory' },
                         {
                             'fieldname': 'address_html',
                             'fieldtype': 'HTML',
@@ -273,6 +302,7 @@ frappe.ui.form.on('Sales Person', {
                         }
                     ],
                     primary_action_label: 'Submit',
+                    size: 'large', // small, large, extra-large 
                     primary_action(values) {
                         var fn = values.first_name + (values.middle_name == "" ? "" : (" " + values.middle_name)) + " " + values.last_name;
                         console.log(values);
@@ -368,13 +398,25 @@ frappe.ui.form.on('Sales Person', {
 
                 // Prepare the table HTML
                 let tableHtml = '<table class="table table-bordered">';
-                tableHtml += '<thead><tr><th>Item</th><th>Quantity</th></tr></thead><tbody>';
+                tableHtml += `
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th class="bg-danger">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                `;
 
+                // // Add rows to the table
+                // for (let target of targets) {
+                //     tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
+                // }
                 // Add rows to the table
                 for (let target of targets) {
-                    tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td></tr>`;
+                    tableHtml += `<tr><td>${target.item}</td><td contenteditable="true" id="target_${target.item.replace(/\s+/g, '_')}">${target.quantity}</td><td><input type="checkbox" id="checkbox_${target.item.replace(/\s+/g, '_')}"></td></tr>`;
                 }
-
                 // tableHtml += '</tbody></table>';
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
@@ -518,13 +560,23 @@ frappe.ui.form.on('Sales Person', {
 
 
                         console.log(quantities);
-
+                        let checkedItems = {};
+                        // Retrieve checked items
+                        targets.forEach(target => {
+                            let checkbox = document.getElementById(`checkbox_${target.item.replace(/\s+/g, '_')}`);
+                            if (checkbox && checkbox.checked) {
+                                // checkedItems.push({"item":target.item});
+                                checkedItems["item"] = target.item;
+                            }
+                        });
                         frappe.call({
                             method: 'spms.utils.utils.set_target',
                             args: {
                                 'values': dialog.get_values(),
                                 'quantities': quantities, // Pass quantities as JSON
-                                'doc': frm.doc
+                                'doc': frm.doc,
+                                'checked_items': checkedItems, // Pass checked items as JSON
+
                             },
                             callback: function (response) {
                                 var res = response.message;
@@ -532,7 +584,7 @@ frappe.ui.form.on('Sales Person', {
                                     frappe.msgprint(__('Set Target Successfully'));
                                     if (frm.doc.custom_type == "Sales") {
                                         set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
-                            
+
                                     } else if (frm.doc.custom_type == "Collect") {
                                         set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
                                     } else {
@@ -558,6 +610,8 @@ frappe.ui.form.on('Sales Person', {
             }).addClass('bg-info').css({
                 "color": "white",
             });
+
+
         }
         if (frm.doc.custom_type != "Sales") {
 
@@ -610,20 +664,28 @@ frappe.ui.form.on('Sales Person', {
             }).addClass('bg-danger').css({
                 "color": "white",
             });
+
+
             frm.add_custom_button(__('Set Collecting Target'), () => {
                 let targets = frm.doc.custom_customer_collects_goal;
                 console.log(targets);
 
-                // Prepare the table HTML
-                let tableHtml = '<table class="table table-bordered">';
-                tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th></tr></thead><tbody>';
+// Prepare the table HTML
+let tableHtml = '<table class="table table-bordered">';
+tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th><th class="bg-danger">Delete</th></tr></thead><tbody>';
 
-                // Add rows to the table
-                for (let target of targets) {
-                    tableHtml += `<tr><td>${target.customer}</td><td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td></tr>`;
-                }
+// Add rows to the table
+for (let target of targets) {
+    tableHtml += `
+    <tr>
+        <td>${target.customer}</td>
+        <td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td>
+        <td><input type="checkbox" class="checkbox" id="checkbox_${target.customer.replace(/\s+/g, '_')}"></td>
+    </tr>`;
+}
 
-                // tableHtml += '</tbody></table>';
+tableHtml += '</tbody></table>';
+
 
                 // Create the sub-dialog for adding a new row
                 let subDialog = new frappe.ui.Dialog({
@@ -847,7 +909,14 @@ frappe.ui.form.on('Sales Person', {
                                 console.error(`Element with ID 'target_${target.customer.replace(/\s+/g, '_')}' not found.`);
                             }
                         }
-
+                        let checkedItems = {};
+                        // Retrieve checked items
+                        targets.forEach(target => {
+                            let checkbox = document.getElementById(`checkbox_${target.customer.replace(/\s+/g, '_')}`);
+                            if (checkbox && checkbox.checked) {
+                                checkedItems["item"] = target.customer;
+                            }
+                        });
                         frappe.call({
                             method: 'spms.utils.utils.set_collecting_target',
                             args: {
@@ -855,6 +924,8 @@ frappe.ui.form.on('Sales Person', {
                                 'quantities': quantities, // Pass quantities as JSON
                                 'doc': frm.doc,
                                 "address": customer_address_values_json,
+                                'checked_items': checkedItems, // Pass checked items as JSON
+
                             },
                             callback: function (response) {
                                 var res = response.message;
@@ -862,7 +933,7 @@ frappe.ui.form.on('Sales Person', {
                                     frappe.msgprint(__('Set Target Successfully'));
                                     if (frm.doc.custom_type == "Sales") {
                                         set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
-                            
+
                                     } else if (frm.doc.custom_type == "Collect") {
                                         set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
                                     } else {
@@ -905,8 +976,8 @@ frappe.ui.form.on('Sales Person', {
             set_css(frm, 'custom_productivity', 'custom_achieved', 'custom_target', 'percentage');
             set_css(frm, 'custom_customer_collects_goal', 'custom_total_collected', 'custom_total_targets', 'percentage_collect');
         }
-        progress_bar(frm, "custom_productivity", "achievement");
-        progress_bar(frm, "custom_target_breakdown", "achievement");
+        progress_bar(frm, "custom_productivity", "achievement", "number_of_visits", "verified_visits");
+        progress_bar(frm, "custom_target_breakdown", "achievement", "quantity", "sold");
     },
     custom_fixed_target: function (frm) {
         frm.set_value("custom_total_targets", frm.doc.custom_fixed_target);
@@ -944,6 +1015,12 @@ frappe.ui.form.on('Productivity', {
         switch (row.class_name) {
             case "A":
                 row.number_of_visits = 3
+                break
+            case "A+":
+                row.number_of_visits = 4
+                break
+            case "A-":
+                row.number_of_visits = 2
                 break
             case "B":
                 row.number_of_visits = 2

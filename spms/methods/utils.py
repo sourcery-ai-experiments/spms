@@ -306,8 +306,7 @@ def get_sales_person_doc(doc):
         'custom_to_': ['>=', doc.date]
     }, ['name'], as_dict=1)
 
-    print(sales_person_name)
-    # Get objects for Specific Collects Goal
+
     return frappe.get_doc('Sales Person', sales_person_name)
 
 # duprecated

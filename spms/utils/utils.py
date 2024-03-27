@@ -31,6 +31,8 @@ def create_client_to_sales_person(values, doc,  client, address):
                 
             new_doc = frappe.get_doc(values)
             new_doc.insert()
+        else:
+            new_doc = frappe.get_doc("Client",client)
 
         doc_dict = json.loads(doc)
         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
@@ -84,21 +86,26 @@ def remove_customer_from_sales_person(values, doc):
         frappe.throw("An error occurred while removing customer from sales person.")
         return False
 
+
 @frappe.whitelist()
-def set_target(values, quantities, doc):
+def set_target(values, quantities, doc, checked_items):
     try:
         values = json.loads(values)
         quantities = json.loads(quantities)  # Convert quantities to dictionary
+        checked_items = json.loads(checked_items)  # Convert quantities to dictionary
 
         # Load the document
         doc_dict = json.loads(doc)
         docc = frappe.get_doc(doc_dict['doctype'], doc_dict['name'])
         create_target_log(docc)
+        
         # Update main document fields
         docc.custom_from = values['from']
         docc.custom_to = values['to']
         docc.custom_target = values['target']
-        docc.custom_achieved =0
+        docc.custom_achieved = 0
+        
+
         # Update child table quantities or add new row
         for item, quantity in quantities.items():
             target_row = next((row for row in docc.custom_target_breakdown if row.item == item), None)
@@ -110,6 +117,18 @@ def set_target(values, quantities, doc):
                     'quantity': quantity
                 })
 
+        # Reset sold and verified_visits fields
+        for c in docc.custom_target_breakdown:
+            c.sold = 0
+            
+        for c in docc.custom_productivity:
+            c.verified_visits = 0
+            
+        for checked_item in checked_items.values():
+            for row in docc.custom_target_breakdown:
+                if row.item == checked_item:
+                    docc.custom_target_breakdown.remove(row)
+
         docc.save()
 
         return True
@@ -119,8 +138,10 @@ def set_target(values, quantities, doc):
 
 
 @frappe.whitelist()
-def set_collecting_target(values, quantities, doc,address):
+def set_collecting_target(values, quantities, doc,address,checked_items):
     try:
+
+        checked_items = json.loads(checked_items)
         values = json.loads(values)
         quantities = json.loads(quantities)  # Convert quantities to dictionary
 
@@ -182,6 +203,11 @@ def set_collecting_target(values, quantities, doc,address):
             docc.custom_total_targets = values['target']
             
         docc.custom_total_collected = 0
+        for checked_item in checked_items.values():
+            for row in docc.custom_customer_collects_goal:
+                if row.customer == checked_item:
+                    docc.custom_customer_collects_goal.remove(row)
+
         docc.save()
         return True
     except Exception as e:

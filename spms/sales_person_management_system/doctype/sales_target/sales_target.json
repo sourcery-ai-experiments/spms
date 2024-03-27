@@ -38,11 +38,7 @@
   "section_break_wvik",
   "is_group",
   "rgt",
-  "lft",
-  "column_break_acnd",
-  "old_parent",
-  "column_break_syub",
-  "parent_visit_goal"
+  "lft"
  ],
  "fields": [
   {
@@ -103,7 +99,7 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
-   "options": "SPM-VG-.YYYY.-"
+   "options": "SPM-SLT-.YYYY.-"
   },
   {
    "fieldname": "achievement",
@@ -178,18 +174,6 @@
    "label": "Is Group"
   },
   {
-   "fieldname": "old_parent",
-   "fieldtype": "Link",
-   "label": "Old Parent",
-   "options": "Visit Goal"
-  },
-  {
-   "fieldname": "parent_visit_goal",
-   "fieldtype": "Link",
-   "label": "Parent Visit Goal",
-   "options": "Visit Goal"
-  },
-  {
    "fetch_from": "sales_person.employee",
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -221,14 +205,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_syub",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_acnd",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "target_breakdown_tab",
    "fieldtype": "Tab Break",
    "label": "Target Breakdown"
@@ -252,9 +228,8 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "is_tree": 1,
  "links": [],
- "modified": "2024-03-16 18:37:04.910955",
+ "modified": "2024-03-26 13:10:24.996483",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Target",
