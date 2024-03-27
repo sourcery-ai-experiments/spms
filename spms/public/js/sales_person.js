@@ -14,7 +14,12 @@ function progress_bar(frm, table_name, field_name, f1, f2, options = { color: ""
     for (let row of rows) {
         let idx = rows.indexOf(row);
         let row_info = frm.doc[table_name][idx];
-        const width = ((row_info[f2] / row_info[f1]) * 100).toFixed(1);
+        var width = ((row_info[f2] / row_info[f1]) * 100).toFixed(1);
+
+        if (isNaN(width)) {
+            width = 0;
+        }
+
         row.firstChild.querySelector(`[data-fieldname=${field_name}]`)
             .innerHTML =
             `<div class="progress" style="height: 20px; font-size: 13px;font-weight:500;">
@@ -341,7 +346,8 @@ frappe.ui.form.on('Sales Person', {
                                 args: {
                                     'values': values,
                                     'doc': frm.doc,
-                                    'client': null, 'address': address_values_json
+                                    'client': null,
+                                    'address': address_values_json
 
                                 }, callback: function (response) {
                                     var res = response.message;
@@ -670,21 +676,21 @@ frappe.ui.form.on('Sales Person', {
                 let targets = frm.doc.custom_customer_collects_goal;
                 console.log(targets);
 
-// Prepare the table HTML
-let tableHtml = '<table class="table table-bordered">';
-tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th><th class="bg-danger">Delete</th></tr></thead><tbody>';
+                // Prepare the table HTML
+                let tableHtml = '<table class="table table-bordered">';
+                tableHtml += '<thead><tr><th>Customer</th><th>Amount of Money</th><th class="bg-danger">Delete</th></tr></thead><tbody>';
 
-// Add rows to the table
-for (let target of targets) {
-    tableHtml += `
+                // Add rows to the table
+                for (let target of targets) {
+                    tableHtml += `
     <tr>
         <td>${target.customer}</td>
         <td contenteditable="true" id="target_${target.customer.replace(/\s+/g, '_')}">${target.amount_of_money}</td>
         <td><input type="checkbox" class="checkbox" id="checkbox_${target.customer.replace(/\s+/g, '_')}"></td>
     </tr>`;
-}
+                }
 
-tableHtml += '</tbody></table>';
+                // tableHtml += '</tbody></table>';
 
 
                 // Create the sub-dialog for adding a new row
@@ -694,49 +700,9 @@ tableHtml += '</tbody></table>';
                         {
                             'fieldname': 'customer',
                             'label': 'Customer',
-                            'fieldtype': 'Data',
-                            // 'options': 'Customer',
+                            'fieldtype': 'Link',
+                            'options': 'Customer',
                             'reqd': 1,
-                            'onchange': function () {
-                                var inputName = this.get_value();
-
-                                frappe.db.get_list('Customer', {
-                                    filters: {
-                                        'customer_name': ['like', '%' + inputName + '%']
-                                    },
-                                    fields: ['customer_name', 'name']
-                                }).then(suggestions => {
-                                    let htmlField = subDialog.get_field('suggestions_customer');
-                                    if (suggestions.length > 0) {
-                                        htmlField.$wrapper.empty(); // clear the HTML field
-                                        htmlField.$wrapper.append("Suggestions: <br>");
-
-                                        suggestions.forEach(suggestion => {
-                                            let suggestionElement = $(`<p><a class="btn btn-info" href="">${suggestion.customer_name}</a></p>`);
-                                            suggestionElement.click(() => {
-                                                subDialog.set_values({
-                                                    'customer': suggestion.customer_name
-                                                });
-                                            });
-                                            // Extract address values from HTML input fields
-                                            customer_address_values_json = {
-                                                'address_line_1': $('#address-line-1').val(),
-                                                'address_line_2': $('#address-line-2').val(),
-                                                'city': $('#city').val(),
-                                                'state': $('#state').val(),
-                                                'zip_code': $('#zip-code').val(),
-                                                'country': $('#country').val()
-                                            };
-                                            htmlField.$wrapper.append(suggestionElement);
-                                        });
-                                    }
-                                });
-                            }
-                        },
-                        {
-                            'fieldname': 'suggestions_customer',
-                            'fieldtype': 'HTML',
-                            'label': 'Suggestions'
                         },
                         {
                             'fieldname': 'amount_of_money',
@@ -744,19 +710,12 @@ tableHtml += '</tbody></table>';
                             'fieldtype': 'Float',
                             'reqd': 1
                         },
-                        {
-                            'fieldname': 'address_html',
-                            'fieldtype': 'HTML',
-                            'label': 'Address',
-                            'reqd': 0,
-                            'options': ''
-                        }
                     ],
                     primary_action_label: 'Add Customer',
                     primary_action() {
 
                         // Retrieve entered values from the sub-dialog
-                        let newCustomer = subDialog.get_value('customer').trim(); // Trim whitespace from the item
+                        let newCustomer = subDialog.get_value('customer'); // Trim whitespace from the item
                         let newAmount = subDialog.get_value('amount_of_money');
 
                         // Check if the item already exists in targets
@@ -766,7 +725,11 @@ tableHtml += '</tbody></table>';
                         }
 
                         // Append a new row to the table
-                        tableHtml += `<tr><td>${newCustomer}</td><td contenteditable="true" id="target_${newCustomer.replace(/\s+/g, '_')}">${newAmount}</td></tr>`;
+                        tableHtml += `<tr>
+                        <td>${newCustomer}</td>
+                        <td contenteditable="true" id="target_${newCustomer.replace(/\s+/g, '_')}">${newAmount}</td>
+                        <td><input type="checkbox" class="checkbox" id="checkbox_${newCustomer.replace(/\s+/g, '_')}"></td>
+                        </tr>`;
                         // Update the HTML in the main dialog's table field
                         dialog.get_field('targets_table').$wrapper.html(tableHtml);
 
@@ -837,8 +800,14 @@ tableHtml += '</tbody></table>';
                             let target_type = dialog.get_value('target_type');
                             if (target_type === 'Customer Debt-based Target') {
                                 dialog.get_field('target').$wrapper.hide();
+                                dialog.get_field('targets_table').$wrapper.show();
+                                dialog.get_field('add_row_button').$wrapper.show();
+
                             } else {
                                 dialog.get_field('target').$wrapper.show();
+                                dialog.get_field('targets_table').$wrapper.hide();
+                                dialog.get_field('add_row_button').$wrapper.hide();
+                                
                             }
                         }
                     },
@@ -958,8 +927,14 @@ tableHtml += '</tbody></table>';
                 let target_type = dialog.get_value('target_type');
                 if (target_type === 'Customer Debt-based Target') {
                     dialog.get_field('target').$wrapper.hide();
+                    dialog.get_field('targets_table').$wrapper.show();
+                    dialog.get_field('add_row_button').$wrapper.show();
+
                 } else {
                     dialog.get_field('target').$wrapper.show();
+                    dialog.get_field('targets_table').$wrapper.hide();
+                    dialog.get_field('add_row_button').$wrapper.hide();
+
                 }
             }).addClass('bg-info').css({
                 "color": "white",

@@ -17,9 +17,9 @@ def create_client_to_sales_person(values, doc,  client, address):
             new_address.country = address_dict.get("country")
             new_address.insert()
 
-        # Check if client exists in the table
         client_exists = frappe.db.exists("Client", client)
-        if not client_exists:
+
+        if not client_exists or client != None:
             values = json.loads(values)
             values["doctype"] = "Client"
             values["full_name"] = values.get("first_name") + ((" " + values.get("middle_name")) if values.get(
@@ -37,18 +37,19 @@ def create_client_to_sales_person(values, doc,  client, address):
         doc_dict = json.loads(doc)
         docu = frappe.get_doc("Sales Person", doc_dict.get("name"))
 
-        # Check if the client is already appended
         existing_clients = [row.client for row in docu.custom_productivity]
-
         
         if new_doc not in existing_clients:
-            child = docu.append('custom_productivity', {})
-            child.client = new_doc
+            child_data = frappe._dict({
+                "client": new_doc.name,
+            })
+            docu.append('custom_productivity', child_data)
             docu.save()
             return True
         else:
             frappe.msgprint("Client already exists for this sales person.")
             return False
+
 
     except Exception as e:
         frappe.throw("An error occurred while adding client to sales person.", e)
@@ -170,28 +171,29 @@ def set_collecting_target(values, quantities, doc,address,checked_items):
                         'amount_of_money': amount_of_money
                     })
                 else:
-                    address_dict = json.loads(address)
+                    frappe.throw("Customer Does not exist")
+                #     address_dict = json.loads(address)
 
-                    # Create a new Address document
-                    new_address = frappe.new_doc("Address")
-                    new_address.address_title = address_dict.get("address_line_1")
-                    new_address.address_line1 = address_dict.get("address_line_1")
-                    new_address.address_line2 = address_dict.get("address_line_2")
-                    new_address.city = address_dict.get("city")
-                    new_address.state = address_dict.get("state")
-                    new_address.pincode = address_dict.get("zip_code")
-                    new_address.country = address_dict.get("country")
-                    new_address.insert()
+                #     # Create a new Address document
+                #     new_address = frappe.new_doc("Address")
+                #     new_address.address_title = address_dict.get("address_line_1")
+                #     new_address.address_line1 = address_dict.get("address_line_1")
+                #     new_address.address_line2 = address_dict.get("address_line_2")
+                #     new_address.city = address_dict.get("city")
+                #     new_address.state = address_dict.get("state")
+                #     new_address.pincode = address_dict.get("zip_code")
+                #     new_address.country = address_dict.get("country")
+                #     new_address.insert()
 
-                    new_customer = frappe.new_doc("Customer")
-                    new_customer.customer_name = customer
-                    new_customer.customer_primary_address = new_address.name
-                    new_customer.insert()
+                #     new_customer = frappe.new_doc("Customer")
+                #     new_customer.customer_name = customer
+                #     new_customer.customer_primary_address = new_address.name
+                #     new_customer.insert()
 
-                    docc.append('custom_customer_collects_goal', {
-                        'customer': customer,
-                        'amount_of_money': amount_of_money
-                    }) 
+                #     docc.append('custom_customer_collects_goal', {
+                #         'customer': customer,
+                #         'amount_of_money': amount_of_money
+                #     }) 
                 
         if(values['target_type']) == "Customer Debt-based Target":
             target_value = 0

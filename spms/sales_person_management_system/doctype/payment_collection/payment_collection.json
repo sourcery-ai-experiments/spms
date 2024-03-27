@@ -29,11 +29,11 @@
   "phone",
   "amount_section",
   "total_paid",
-  "initial_amount",
   "amount_other_currency",
   "discount_type",
   "discount",
   "discount_percentage",
+  "initial_amount",
   "column_break_18",
   "discount_amount",
   "amount",
@@ -339,7 +339,8 @@
   {
    "fieldname": "total_unallocated",
    "fieldtype": "Float",
-   "label": "Total Unallocated"
+   "label": "Total Unallocated",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
@@ -356,7 +357,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2024-03-26 13:13:27.746652",
+ "modified": "2024-03-27 14:53:55.400419",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Payment Collection",

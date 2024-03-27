@@ -117,9 +117,9 @@ frappe.ui.form.on('Payment Collection', {
 			if (discount_value < max_discount || max_discount === 0) {
 				frm.doc.amount = init_amount - discount_value;
 				frm.refresh_field("amount");
-				frm.refresh_field("discount_amount");
 				frm.doc.discount_amount = discount_value;
-				
+				frm.refresh_field("discount_amount");
+
 			} else {
 				console.log("gg");
 			}
@@ -130,7 +130,7 @@ frappe.ui.form.on('Payment Collection', {
 				frm.doc.initial_amount = frm.doc.amount;
 			}
 		});
-	}	,
+	},
 	discount: function (frm) {
 		var init_amount = frm.doc.initial_amount;
 		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(function (v) {
@@ -145,9 +145,9 @@ frappe.ui.form.on('Payment Collection', {
 			if (discount_value < max_discount || max_discount === 0) {
 				frm.doc.amount = init_amount - discount_value;
 				frm.refresh_field("amount");
-				frm.refresh_field("discount_amount");
 				frm.doc.discount_amount = discount_value;
-				
+				frm.refresh_field("discount_amount");
+
 			} else {
 				console.log("gg");
 			}
@@ -158,6 +158,41 @@ frappe.ui.form.on('Payment Collection', {
 				frm.doc.initial_amount = frm.doc.amount;
 			}
 		});
+	}, initial_amount: function (frm) {
+		var init_amount = frm.doc.initial_amount;
+		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(function (v) {
+			var max_discount = v;
+			var discount_value = 0;
+			if (frm.doc.discount_type === "Percentage") {
+				discount_value = init_amount * (frm.doc.discount_percentage / 100);
+			} else {
+				discount_value = frm.doc.discount;
+			}
+
+			if (discount_value < max_discount || max_discount === 0) {
+				frm.doc.amount = init_amount - discount_value;
+				frm.refresh_field("amount");
+				frm.doc.discount_amount = discount_value;
+				frm.refresh_field("discount_amount");
+
+			} else {
+				console.log("gg");
+			}
+
+			if (frm.doc.discount_amount != null) {
+				frm.doc.initial_amount = frm.doc.amount + frm.doc.discount_amount;
+			} else {
+				frm.doc.initial_amount = frm.doc.amount;
+			}
+		});
+	},
+	total_paid: function (frm) {
+		console.log("Abc");
+		var total_allocated = 0;
+		frm.doc.invoices.forEach(function (invoice) {
+			total_allocated += invoice.allocated;
+		});
+		frm.set_value('total_unallocated', frm.doc.total_paid - total_allocated);
 	}
 });
 
@@ -271,6 +306,13 @@ frappe.ui.form.on('Payment Collection', {
 								row.currency = element.currency;
 								frm.refresh_fields("invoices");
 							}
+							var total_allocated = 0;
+							frm.doc.invoices.forEach(function (invoice) {
+								if (!isNaN(invoice.allocated))
+									total_allocated += invoice.allocated;
+							});
+							frm.set_value('total_unallocated', frm.doc.total_paid - total_allocated);
+							frm.refresh_field('total_unallocated');
 						});
 						dialog.hide();
 					}
