@@ -125,9 +125,7 @@
    "fetch_from": "doctor_name.department",
    "fieldname": "department",
    "fieldtype": "Data",
-   "label": "Department",
-   "read_only": 1,
-   "reqd": 1
+   "label": "Department"
   },
   {
    "fetch_from": "doctor_name.class",
@@ -200,7 +198,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-26 13:10:03.344802",
+ "modified": "2024-03-26 15:29:47.207605",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Sales Visit",

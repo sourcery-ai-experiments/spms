@@ -15,9 +15,10 @@ class PaymentCollection(WebsiteGenerator):
 		total_allocated = 0
   
 		for inv in self.invoices:
-			total_allocated += inv.allocated
-			if(inv.allocated == 0):
+			if(inv.allocated == 0 or inv.allocated == None):
 				frappe.throw(_(f'invoice {inv.invoice_no} has allocated value of 0'))
+    
+			total_allocated += inv.allocated
 		if(total_paid != None):
 			if total_allocated>total_paid:
 				frappe.throw(_('The total allocated is more than the total paid.'))

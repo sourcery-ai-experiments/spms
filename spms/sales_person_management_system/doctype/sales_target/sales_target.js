@@ -128,8 +128,8 @@ function refresh_when_click_btn(frm) {
  */
 function progress_bar(frm, table_name, field_name, options = { color: "", text: "" }) {
 	console.log(frm);
-    console.log(table_name);
-    console.log(field_name);
+	console.log(table_name);
+	console.log(field_name);
 	for (let row of $(`[data-fieldname = ${table_name}] .grid-body .rows`).children()) {
 		console.log(row);
 
@@ -152,54 +152,55 @@ frappe.ui.form.on('Productivity', {
 	class_name: function (frm, cdt, cdn) {
 		let row = locals[cdt][cdn]
 		/* A switch statement that is used to set the number of visits based on the class of the doctor. */
-        switch (row.class_name) {
-            case "A":
-                row.number_of_visits = 3
-                break            
-            case "A+":
-                row.number_of_visits = 4
-                break            
-            case "A-":
-                row.number_of_visits = 2
-                break
-            case "B":
-                row.number_of_visits = 2
-                break
-            case "C":
-                row.number_of_visits = 1
-                break
-            case "D":
-                row.number_of_visits = 1
-                break
-        }
+		switch (row.class_name) {
+			case "A":
+				row.number_of_visits = 3
+				break
+			case "A+":
+				row.number_of_visits = 4
+				break
+			case "A-":
+				row.number_of_visits = 2
+				break
+			case "B":
+				row.number_of_visits = 2
+				break
+			case "C":
+				row.number_of_visits = 1
+				break
+			case "D":
+				row.number_of_visits = 1
+				break
+		}
 		frm.refresh()
 	}
 })
-
-/* Used to filter the parent field in the visit goal doctype. */
-cur_frm.fields_dict['parent_visit_goal'].get_query = function (doc, cdt, cdn) {
-	return {
-		filters: [
-			['Sales Target', 'is_group', '=', 1],
-			['Sales Target', 'name', '!=', doc.name]
-		]
-	}
-}
-
-/* Used to filter the old parent field in the visit goal doctype. */
-cur_frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
-	return {
-		filters: [
-			['Sales Target', 'is_group', '=', 1],
-			['Sales Target', 'name', '!=', doc.name]
-		]
-	}
-}
 
 /* Used to make the progress bar for the Sales Target doctype. */
 frappe.ui.form.on('Sales Target', {
 	refresh: function (frm) {
 		set_css(frm);
+
+		/* Used to filter the parent field in the visit goal doctype. */
+		frm.fields_dict['parent_visit_goal'].get_query = function (doc, cdt, cdn) {
+			return {
+				filters: [
+					['Sales Target', 'is_group', '=', 1],
+					['Sales Target', 'name', '!=', doc.name]
+				]
+			}
+		}
+
+		/* Used to filter the old parent field in the visit goal doctype. */
+		frm.fields_dict['old_parent'].get_query = function (doc, cdt, cdn) {
+			return {
+				filters: [
+					['Sales Target', 'is_group', '=', 1],
+					['Sales Target', 'name', '!=', doc.name]
+				]
+			}
+		}
+
 	}
 })
 
