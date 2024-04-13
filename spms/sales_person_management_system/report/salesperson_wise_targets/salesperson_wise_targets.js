@@ -38,7 +38,6 @@ frappe.query_reports["Salesperson-wise targets"] = {
 			label: __("Territory"),
 			fieldtype: "Link",
 			options: "Territory",
-			default: "Iraq",
 		}
 	]
 };

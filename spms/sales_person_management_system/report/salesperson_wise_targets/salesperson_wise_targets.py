@@ -73,93 +73,86 @@ def get_report_data(filters):
     end_date = get_last_day(month_name)
     for salesperson_tuple in sales_persons:
         salesperson = salesperson_tuple[0]
-        sales_target_amount = frappe.db.sql(
-            """
+        sales_target_amount = f"""
             SELECT sum(tvg.target) from `tabVisit Goal` tvg
-			where sales_person = %s
-            AND `from` >= %s
-            AND `to` <= %s
-            AND company = %s
-            AND territory = %s
-            """,
-            (salesperson, start_date, end_date, company, territory)
-        )[0][0] or 0
-
-        collection_target_amount = frappe.db.sql(
+            where sales_person = '{salesperson}'
+            AND `from` >= '{start_date}'
+            AND `to` <= '{end_date}'
+            AND company = '{company}'
             """
+        if territory:
+            sales_target_amount += f"AND territory = '{territory}'"
+        sales_target_amount = frappe.db.sql(sales_target_amount)[0][0] or 0
+
+        collection_target_amount = f"""
             SELECT SUM(`total_targets`)
             FROM `tabCollects Goal`
-            WHERE `sales_person` = %s
-            AND `from` >= %s
-            AND `to` <= %s
-            AND company = %s
-            AND territory = %s
-            """,
-            (salesperson, start_date, end_date, company, territory)
-        )[0][0] or 0
-
-        achieved_sales_amount = frappe.db.sql(
+            WHERE `sales_person` = '{salesperson}'
+            AND `from` >= '{start_date}'
+            AND `to` <= '{end_date}'
+            AND company = '{company}'
             """
+        if territory:
+            collection_target_amount += f"AND territory = '{territory}'"
+        collection_target_amount = frappe.db.sql(collection_target_amount)[0][0] or 0
+
+        achieved_sales_amount = f"""
             SELECT SUM(si.net_total) 
             FROM `tabSales Invoice` AS si
             JOIN `tabSales Team` AS st ON si.name = st.parent
-            WHERE st.sales_person = %s
-            AND si.posting_date BETWEEN %s AND %s
+            WHERE st.sales_person = '{salesperson}'
+            AND si.posting_date BETWEEN '{start_date}' AND '{end_date}'
             AND si.docstatus = 1
-            AND company = %s
-            """,
-            (salesperson, start_date, end_date, company)
-        )[0][0] or 0
-
-        achieved_payment_entry_amount = frappe.db.sql(
+            AND company = '{company}'
             """
+        achieved_sales_amount = frappe.db.sql(achieved_sales_amount)[0][0] or 0
+
+        achieved_payment_entry_amount = f"""
             SELECT SUM(pe.paid_amount)
             FROM `tabPayment Entry` AS pe
             JOIN `tabCommission` AS com ON pe.name = com.parent
-            WHERE com.sales_person = %s
-            AND pe.posting_date BETWEEN %s AND %s
+            WHERE com.sales_person = '{salesperson}'
+            AND pe.posting_date BETWEEN '{start_date}' AND '{end_date}'
             AND pe.docstatus = 1
-            AND company = %s
-            """,
-            (salesperson, start_date, end_date, company)
-        )[0][0] or 0
-
-        sales_visits_target = frappe.db.sql(
+            AND company = '{company}'
             """
+        achieved_payment_entry_amount = frappe.db.sql(achieved_payment_entry_amount)[0][0] or 0
+
+        sales_visits_target = f"""
             SELECT sum(p.number_of_visits) from `tabProductivity` p
-			join `tabVisit Goal` tvg 
-			on p.parent = tvg.name
-			WHERE tvg.sales_person = %s
-            AND tvg.creation BETWEEN %s AND %s
-            AND tvg.company = %s
-            AND tvg.territory = %s
-            """,
-            (salesperson, start_date, end_date, company, territory)
-        )[0][0] or 0
-
-        number_of_sales_visits = frappe.db.sql(
+            join `tabVisit Goal` tvg 
+            on p.parent = tvg.name
+            WHERE tvg.sales_person = '{salesperson}'
+            AND tvg.creation BETWEEN '{start_date}' AND '{end_date}'
+            AND tvg.company = '{company}'
             """
+
+        if territory:
+            sales_visits_target += f"AND tvg.territory = '{territory}'"
+
+        sales_visits_target = frappe.db.sql(sales_visits_target)[0][0] or 0
+
+        number_of_sales_visits = f"""
             SELECT COUNT(*)
             FROM `tabSales Visit`
-            WHERE visited_by = %s
-            AND creation BETWEEN %s AND %s
-            AND company = %s
-            AND territory = %s
-            """,
-            (salesperson, start_date, end_date, company, territory)
-        )[0][0] or 0
-
-        number_of_payment_visits = frappe.db.sql(
+            WHERE visited_by = '{salesperson}'
+            AND creation BETWEEN '{start_date}' AND '{end_date}'
+            AND company = '{company}'
             """
+        if territory:
+            number_of_sales_visits += f"AND territory = '{territory}'"
+        number_of_sales_visits = frappe.db.sql(number_of_sales_visits)[0][0] or 0
+
+        number_of_payment_visits = f"""
             SELECT COUNT(*)
             FROM `tabPayment Collection`
-            WHERE visited_by = %s
-            AND creation BETWEEN %s AND %s
-            AND company = %s
-            AND territory = %s
-            """,
-            (salesperson, start_date, end_date, company, territory)
-        )[0][0] or 0
+            WHERE visited_by = '{salesperson}'
+            AND creation BETWEEN '{start_date}' AND '{end_date}'
+            AND company = '{company}'
+            """
+        if territory:
+            number_of_payment_visits += f"AND territory = '{territory}'"
+        number_of_payment_visits = frappe.db.sql(number_of_payment_visits)[0][0] or 0
 
         data.append(
             {
