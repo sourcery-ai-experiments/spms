@@ -95,6 +95,7 @@ frappe.ui.form.on('Collecting', {
 
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
+
 frappe.ui.form.on('Collecting', {
 	amount_currency: function (cur_frm) {
 		if (cur_frm.doc.amount_currency && cur_frm.doc.company_currency) {
@@ -104,7 +105,6 @@ frappe.ui.form.on('Collecting', {
 		}
 	}
 });
-
 /* A validation to check if the amount currency is not equal to the company currency then calculate the
 amount. */
 frappe.ui.form.on('Collecting', {
@@ -112,23 +112,36 @@ frappe.ui.form.on('Collecting', {
 		calculateTheAmount(frm);
 	}
 });
-
+function calculate_amounts(frm){
+	frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(res => {
+		let max_discount = res;
+		if (frm.doc.discount < max_discount) {
+			frm.set_value("amount", frm.doc.total_paid - (frm.doc.total_paid * (frm.doc.discount / 100)));
+			frm.set_value("discount_amount", frm.doc.total_paid * (frm.doc.discount / 100));
+			frm.refresh();
+		} else {
+			frappe.msgprint('The discount must be less than ' + max_discount + '%');
+		}
+	});
+}
 frappe.ui.form.on('Collecting', {
 	discount: function (frm) {
-		frappe.db.get_single_value('SPMS Settings', 'max_discount_on_collecting').then(res => {
-			let max_discount = res;
-			if (frm.doc.discount < max_discount) {
-				frm.set_value("amount", frm.doc.total_paid - (frm.doc.total_paid * (frm.doc.discount / 100)));
-				frm.set_value("discount_amount", frm.doc.total_paid * (frm.doc.discount / 100));
-				frm.refresh();
-			} else {
-				frappe.msgprint('The discount must be less than ' + max_discount + '%');
-			}
-		});
+		calculate_amounts(frm)
+	},
+	total_paid: function(frm){
+		calculate_amounts(frm)
 	}
 });
 
-
+frappe.ui.form.on('Collecting', {
+	after_save : function (frm) {
+		let amount = frm.doc.amount
+		for(let row of frm.doc.invoices){
+			amount -= row.allocated_amount
+		}
+		frm.set_value("unallocated_amount",amount)
+	}
+});
 /**
  * "When the user changes the amount or exchange rate, calculate the amount in the other currency."
  * 
@@ -201,10 +214,12 @@ frappe.ui.form.on('Collecting', {
 								row.total = element.net_total;
 								row.posting_date = element.date;
 								row.out_standing_amount = element.outstanding_amount;
+								row.allocated_amount = element.outstanding_amount;
 								row.status = element.status;
 								row.currency = element.currency;
 								frm.refresh_fields("invoices");
 							}
+
 						});
 						dialog.hide();
 					}
