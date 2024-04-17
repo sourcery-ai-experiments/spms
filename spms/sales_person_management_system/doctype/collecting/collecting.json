@@ -311,8 +311,7 @@
    "fieldname": "discount_amount",
    "fieldtype": "Currency",
    "label": "Discount Amount",
-   "options": "amount_currency",
-   "read_only": 1
+   "options": "amount_currency"
   },
   {
    "fieldname": "unallocated_amount",
@@ -335,7 +334,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2024-04-15 16:47:13.911039",
+ "modified": "2024-04-17 20:06:41.651660",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",

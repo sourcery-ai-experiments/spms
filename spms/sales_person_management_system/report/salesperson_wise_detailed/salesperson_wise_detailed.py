@@ -46,13 +46,11 @@ def get_report_data(filters):
     customers_added = frappe.db.sql(customers_added, as_dict=False)
 
     sales_amount = f"""
-    SELECT SUM(si.grand_total) 
-    FROM `tabSales Invoice` AS si
-    JOIN `tabSales Team` AS st ON si.name = st.parent
-    WHERE st.sales_person = '{salesperson}'
-    AND si.creation BETWEEN '{from_date}' and '{to_date}'
-    AND si.docstatus = 1
-    AND si.company = '{company}'
+      SELECT sum(tvg.achieved) from `tabVisit Goal` tvg
+      where sales_person = '{salesperson}'
+      AND '{from_date}' <= `from`
+      AND '{to_date}' >= `to`
+      AND company = '{company}'
     """
     sales_amount = frappe.db.sql(sales_amount, as_dict=False)
 
@@ -68,12 +66,12 @@ def get_report_data(filters):
     sales_discounts = frappe.db.sql(sales_discounts, as_dict=False)
 
     sales_visits = f"""
-    SELECT COUNT(sv.name)
-    FROM `tabSales Visit` AS sv
-    WHERE sv.visited_by = '{salesperson}'
-    AND sv.docstatus = 1
-    AND sv.creation BETWEEN '{from_date}' AND '{to_date}'
-    AND sv.company = '{company}'
+    SELECT sum(p.verified_visits) from `tabProductivity` p
+    join `tabVisit Goal` tvg 
+    on p.parent = tvg.name
+    WHERE tvg.sales_person = '{salesperson}'
+    AND tvg.creation BETWEEN '{from_date}' AND '{to_date}'
+    AND tvg.company = '{company}'
     """
     if territory:
       sales_visits += f"AND territory = '{territory}'"
@@ -89,7 +87,6 @@ def get_report_data(filters):
     AND pe.company = '{company}'
     """
     payment_amount = frappe.db.sql(payment_amount, as_dict=False)
-
     payment_discounts = f"""
             SELECT SUM(
       CASE
@@ -106,12 +103,12 @@ def get_report_data(filters):
     """
     payment_discounts = frappe.db.sql(payment_discounts, as_dict=False)
     payment_visits = f"""
-    SELECT COUNT(pc.name)
-    FROM `tabPayment Collection` AS pc
-    WHERE pc.visited_by = '{salesperson}'
-    AND pc.docstatus = 1
-    AND pc.creation BETWEEN '{from_date}' AND '{to_date}'
-    AND pc.company = '{company}'
+    SELECT COUNT(*)
+    FROM `tabCollecting`
+    WHERE visited_by = '{salesperson}'
+    AND date BETWEEN '{from_date}' AND '{to_date}'
+    AND company = '{company}'
+    AND docstatus = 1
     """
     if territory:
       payment_visits += f"AND territory = '{territory}'"
@@ -121,13 +118,13 @@ def get_report_data(filters):
     data.append(
         {
             "salesperson": salesperson,
-            "customers_added": customers_added[0][0],
-            "sales_amount": sales_amount[0][0],
-            "sales_discounts": sales_discounts[0][0],
-            "payment_amount": payment_amount,
-            "payment_discounts": payment_discounts,
-            "sales_visits": sales_visits[0][0],
-            "payment_visits": payment_visits[0][0],
+            "customers_added": customers_added[0][0] or 0,
+            "sales_amount": sales_amount[0][0] or 0,
+            "sales_discounts": sales_discounts[0][0] or 0,
+            "payment_amount": payment_amount[0][0] or 0,
+            "payment_discounts": payment_discounts[0][0] or 0,
+            "sales_visits": sales_visits[0][0] or 0,
+            "payment_visits": payment_visits[0][0] or 0,
         }
     )
 

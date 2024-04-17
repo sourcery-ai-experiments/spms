@@ -4,7 +4,6 @@ frappe.ui.form.on('Item', {
             const ean13Barcode = generate_ean13();
             const child = frm.add_child('barcodes');
             frappe.model.set_value(child.doctype, child.name, 'barcode', ean13Barcode);
-            frappe.model.set_value(child.doctype, child.name, 'barcode_type', 'EAN');
             frm.refresh_field('barcodes');
         });
     }

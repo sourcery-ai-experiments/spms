@@ -130,18 +130,51 @@ frappe.ui.form.on('Collecting', {
 	},
 	total_paid: function(frm){
 		calculate_amounts(frm)
+	},
+	amount: function(frm){
+		frm.set_value("discount", (100/frm.doc.total_paid ) * (frm.doc.total_paid - frm.doc.amount) );
+		frm.set_value("discount_amount", frm.doc.total_paid * (frm.doc.discount / 100));
+		frm.refresh();
+	},
+	discount_amount: function(frm){
+		const discount = frm.doc.discount_amount/frm.doc.total_paid
+		frm.set_value("amount", frm.doc.total_paid - (frm.doc.total_paid * discount));
+		frm.set_value("discount", discount*100)
+		frm.refresh();
 	}
 });
 
 frappe.ui.form.on('Collecting', {
-	after_save : function (frm) {
-		let amount = frm.doc.amount
-		for(let row of frm.doc.invoices){
-			amount -= row.allocated_amount
+	// after_save : function (frm) {
+	// 	let amount = frm.doc.amount
+	// 	for(let row of frm.doc.invoices){
+	// 		amount -= row.allocated_amount
+	// 	}
+	// 	frm.set_value("unallocated_amount",amount)
+	// },
+	validate_filters_data: function(frm, filters) {
+		const fields = {
+			'Posting Date': ['from_posting_date', 'to_posting_date'],
+			'Due Date': ['from_posting_date', 'to_posting_date'],
+			'Advance Amount': ['from_posting_date', 'to_posting_date'],
+		};
+
+		for (let key in fields) {
+			let from_field = fields[key][0];
+			let to_field = fields[key][1];
+
+			if (filters[from_field] && !filters[to_field]) {
+				frappe.throw(
+					__("Error: {0} is mandatory field", [to_field.replace(/_/g, " ")])
+				);
+			} else if (filters[from_field] && filters[from_field] > filters[to_field]) {
+				frappe.throw(
+					__("{0}: {1} must be less than {2}", [key, from_field.replace(/_/g, " "), to_field.replace(/_/g, " ")])
+				);
+			}
 		}
-		frm.set_value("unallocated_amount",amount)
-	}
-});
+	},
+})
 /**
  * "When the user changes the amount or exchange rate, calculate the amount in the other currency."
  * 
@@ -201,24 +234,34 @@ frappe.ui.form.on('Collecting', {
 					primary_action(values) {
 						frappe.db.get_list('Sales Invoice', {
 							filters: {
-								'status': ['!=', 'Draft'],
+								'status': ['not in', ['Draft', 'Cancelled']],
 								'outstanding_amount': ['>', 0],
 								'customer': values.customer_name
 							},
 							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
 							limit: 500
 						}).then(res => {
+							let total = frm.doc.total_paid;
 							for (const element of res) {
 								let row = frappe.model.add_child(frm.doc, "Collects", "invoices");
 								row.invoice_no = element.name;
 								row.total = element.net_total;
 								row.posting_date = element.date;
 								row.out_standing_amount = element.outstanding_amount;
-								row.allocated_amount = element.outstanding_amount;
+								if(total >= element.outstanding_amount ){
+									row.allocated_amount = element.outstanding_amount;
+									total -= element.outstanding_amount
+								}
+								else{
+									row.allocated_amount = total
+									total = 0
+								}
 								row.status = element.status;
 								row.currency = element.currency;
 								frm.refresh_fields("invoices");
 							}
+							frm.set_value("unallocated_amount",Math.max(total,0))
+							frm.refresh()
 
 						});
 						dialog.hide();

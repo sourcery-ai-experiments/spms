@@ -104,7 +104,7 @@ def get_report_data(filters):
             AND si.posting_date BETWEEN '{start_date}' AND '{end_date}'
             AND si.docstatus = 1
             AND company = '{company}'
-            """
+        """
         achieved_sales_amount = frappe.db.sql(achieved_sales_amount)[0][0] or 0
 
         achieved_payment_entry_amount = f"""
@@ -133,11 +133,12 @@ def get_report_data(filters):
         sales_visits_target = frappe.db.sql(sales_visits_target)[0][0] or 0
 
         number_of_sales_visits = f"""
-            SELECT COUNT(*)
-            FROM `tabSales Visit`
-            WHERE visited_by = '{salesperson}'
-            AND creation BETWEEN '{start_date}' AND '{end_date}'
-            AND company = '{company}'
+            SELECT sum(p.verified_visits) from `tabProductivity` p
+            join `tabVisit Goal` tvg 
+            on p.parent = tvg.name
+            WHERE tvg.sales_person = '{salesperson}'
+            AND tvg.creation BETWEEN '{start_date}' AND '{end_date}'
+            AND tvg.company = '{company}'
             """
         if territory:
             number_of_sales_visits += f"AND territory = '{territory}'"
@@ -145,10 +146,11 @@ def get_report_data(filters):
 
         number_of_payment_visits = f"""
             SELECT COUNT(*)
-            FROM `tabPayment Collection`
+            FROM `tabCollecting`
             WHERE visited_by = '{salesperson}'
-            AND creation BETWEEN '{start_date}' AND '{end_date}'
+            AND date BETWEEN '{start_date}' AND '{end_date}'
             AND company = '{company}'
+            AND docstatus = 1
             """
         if territory:
             number_of_payment_visits += f"AND territory = '{territory}'"
