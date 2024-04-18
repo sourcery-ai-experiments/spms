@@ -234,7 +234,7 @@ frappe.ui.form.on('Collecting', {
 					primary_action(values) {
 						frappe.db.get_list('Sales Invoice', {
 							filters: {
-								'status': ['not in', ['Draft', 'Cancelled']],
+								'status': ['not in', ['Draft', 'Cancelled','Paid','Return']],
 								'outstanding_amount': ['>', 0],
 								'customer': values.customer_name
 							},

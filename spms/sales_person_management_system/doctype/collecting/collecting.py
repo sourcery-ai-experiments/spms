@@ -19,6 +19,7 @@ class Collecting(WebsiteGenerator):
 		number of collects
 		"""
 		update_collects_goal(self, 1)
+		self.update_invoices_childtable()
 
 	def on_cancel(self) -> None:
 		"""
@@ -38,3 +39,7 @@ class Collecting(WebsiteGenerator):
 			image_path = generate_qrcode(
 				site_name=site_name, route_name=self.route)
 			self.image = image_path
+
+	def update_invoices_childtable(self):
+		for row in self.get("invoices"):
+			row.out_standing_amount = row.total - row.allocated_amount
