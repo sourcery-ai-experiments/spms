@@ -41,4 +41,4 @@ class Collecting(WebsiteGenerator):
 			self.image = image_path
 		# Calculate outstanding amount for each invoice
 	        for invoice in self.invoices:
-	            invoice.out_standing_amount = invoice.total - invoice.allocated_amount
+			invoice.out_standing_amount = invoice.total - invoice.allocated_amount
