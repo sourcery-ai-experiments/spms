@@ -239,6 +239,7 @@ frappe.ui.form.on('Collecting', {
 								'customer': values.customer_name
 							},
 							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
+							order_by: 'posting_date asc',
 							limit: 500
 						}).then(res => {
 							let total = frm.doc.total_paid;
