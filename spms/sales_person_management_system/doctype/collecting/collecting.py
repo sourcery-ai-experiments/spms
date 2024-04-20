@@ -39,7 +39,6 @@ class Collecting(WebsiteGenerator):
 			image_path = generate_qrcode(
 				site_name=site_name, route_name=self.route)
 			self.image = image_path
-
-	def update_invoices_childtable(self):
-		for row in self.get("invoices"):
-			row.out_standing_amount = row.total - row.allocated_amount
+		# Calculate outstanding amount for each invoice
+	        for invoice in self.invoices:
+	            invoice.out_standing_amount = invoice.total - invoice.allocated_amount
