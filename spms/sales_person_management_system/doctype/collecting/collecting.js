@@ -216,60 +216,97 @@ frappe.ui.form.on('Collecting', {
 /* A validation to check if the document status is not equal to 1 then add a button to get all the
 unpaid sales invoices. */
 frappe.ui.form.on('Collecting', {
-	refresh: function (frm) {
-		if (frm.doc.docstatus != 1) {
-			frm.add_custom_button("Get All Unpaid Sales Invoice", function () {
-				let dialog = new frappe.ui.Dialog({
-					title: 'Enter Customer details',
-					fields: [
-						{
-							label: 'Customer Name',
-							fieldname: 'customer_name',
-							fieldtype: 'Link',
-							default: frm.doc.customer,
-							options: 'Customer'
-						}
-					],
-					primary_action_label: 'Get Invoices',
-					primary_action(values) {
-						frappe.db.get_list('Sales Invoice', {
-							filters: {
-								'status': ['not in', ['Draft', 'Cancelled','Paid','Return']],
-								'outstanding_amount': ['>', 0],
-								'customer': values.customer_name
-							},
-							fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
-							order_by: 'posting_date asc',
-							limit: 500
-						}).then(res => {
-							let total = frm.doc.total_paid;
-							for (const element of res) {
-								let row = frappe.model.add_child(frm.doc, "Collects", "invoices");
-								row.invoice_no = element.name;
-								row.total = element.net_total;
-								row.posting_date = element.date;
-								row.out_standing_amount = element.outstanding_amount;
-								if(total >= element.outstanding_amount ){
-									row.allocated_amount = element.outstanding_amount;
-									total -= element.outstanding_amount
-								}
-								else{
-									row.allocated_amount = total
-									total = 0
-								}
-								row.status = element.status;
-								row.currency = element.currency;
-								frm.refresh_fields("invoices");
-							}
-							frm.set_value("unallocated_amount",Math.max(total,0))
-							frm.refresh()
+    refresh: function (frm) {
+        if (frm.doc.docstatus != 1) {
+            frm.add_custom_button("Get All Unpaid Sales Invoice", function () {
+                let dialog = new frappe.ui.Dialog({
+                    title: 'Enter Customer details',
+                    fields: [
+                        {
+                            label: 'Customer Name',
+                            fieldname: 'customer_name',
+                            fieldtype: 'Link',
+                            default: frm.doc.customer,
+                            options: 'Customer'
+                        }
+                    ],
+                    primary_action_label: 'Get Invoices',
+                    primary_action(values) {
+                        frm.clear_table("invoices")
+                        frappe.db.get_list('Sales Invoice', {
+                            filters: {
+                                'status': ['not in', ['Draft', 'Cancelled', 'Paid', 'Return']],
+                                'outstanding_amount': ['>', 0],
+                                'customer': values.customer_name
+                            },
+                            fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
+                            order_by: 'posting_date asc',
+                            limit: 500
+                        }).then(res => {
+                            let total = frm.doc.total_paid;
+                            for (const element of res) {
+                                let row = frappe.model.add_child(frm.doc, "Collects", "invoices");
+                                row.invoice_no = element.name;
+                                row.total = element.net_total;
+                                row.posting_date = element.date;
+                                row.out_standing_amount = element.outstanding_amount;
+                                if (total >= element.outstanding_amount) {
+                                    row.allocated_amount = element.outstanding_amount;
+                                    total -= element.outstanding_amount
+                                }
+                                else {
+                                    row.allocated_amount = total
+                                    total = 0
+                                }
+                                row.status = element.status;
+                                row.currency = element.currency;
+                                frm.refresh_fields("invoices");
+                            }
+                            frm.set_value("unallocated_amount", Math.max(total, 0))
+                            frm.refresh()
 
-						});
-						dialog.hide();
-					}
-				});
-				dialog.show();
-			}).addClass("btn-primary").css({});
-		}
-	}
+                        });
+                        dialog.hide();
+                    }
+                });
+                dialog.show();
+            }).addClass("btn-primary").css({});
+        }
+    },
+    total_paid: function (frm) {
+        frm.clear_table("invoices")
+        frappe.db.get_list('Sales Invoice', {
+            filters: {
+                'status': ['not in', ['Draft', 'Cancelled', 'Paid', 'Return']],
+                'outstanding_amount': ['>', 0],
+                'customer': frm.doc.customer
+            },
+            fields: ['name', 'net_total', 'posting_date', 'outstanding_amount', 'status', 'currency'],
+            order_by: 'posting_date asc',
+            limit: 500
+        }).then(res => {
+            let total = frm.doc.total_paid;
+            for (const element of res) {
+                let row = frappe.model.add_child(frm.doc, "Collects", "invoices");
+                row.invoice_no = element.name;
+                row.total = element.net_total;
+                row.posting_date = element.date;
+                row.out_standing_amount = element.outstanding_amount;
+                if (total >= element.outstanding_amount) {
+                    row.allocated_amount = element.outstanding_amount;
+                    total -= element.outstanding_amount
+                }
+                else {
+                    row.allocated_amount = total
+                    total = 0
+                }
+                row.status = element.status;
+                row.currency = element.currency;
+                frm.refresh_fields("invoices");
+            }
+            frm.set_value("unallocated_amount", Math.max(total, 0))
+            frm.refresh()
+
+        })
+    }
 });
