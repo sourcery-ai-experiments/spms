@@ -19,7 +19,6 @@ class Collecting(WebsiteGenerator):
 		number of collects
 		"""
 		update_collects_goal(self, 1)
-		self.update_invoices_childtable()
 
 	def on_cancel(self) -> None:
 		"""
