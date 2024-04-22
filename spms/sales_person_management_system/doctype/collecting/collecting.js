@@ -57,6 +57,39 @@ frappe.ui.form.on('Collecting', {
 		if (!frm.doc.longitude && !frm.doc.latitude) {
 			frappe.msgprint('Pleas Enable the Location Service');
 		}
+
+		frm.set_value("remaining_account_balance", frm.doc.account_balance - frm.doc.total_paid)
+	},
+
+	customer: function (frm) {
+		 // Check if the 'customer' and 'company' fields are populated
+		 if (frm.doc.customer && frm.doc.company) {
+			// Retrieve the default currency for the company
+			let company_currency = frappe.get_doc(":Company", frm.doc.company).default_currency;
+   
+			// Make a server call to fetch party details
+			return frappe.call({
+			   method: "erpnext.accounts.doctype.payment_entry.payment_entry.get_party_details",
+			   args: {
+				  company: frm.doc.company,
+				  party_type: "Customer",
+				  party: frm.doc.customer,
+				  date: frm.doc.date,
+			   },
+			   // Callback function to handle the response
+			   callback: function(r, rt) {
+				  // Check if a valid response message is received
+				  
+				  if (r.message) {
+					 frappe.run_serially([
+						// Update the 'custom_previous_balance' field with the party balance
+					    () => frm.set_value("party_account_currency", r.message.party_account_currency),
+					    () => frm.set_value("account_balance", r.message.account_balance),
+					 ]);
+				  }
+			   }
+			});
+		 }
 	}
 });
 
