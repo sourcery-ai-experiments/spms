@@ -1,376 +1,375 @@
 {
-    "actions": [],
-    "allow_import": 1,
-    "autoname": "naming_series:",
-    "creation": "2022-09-17 11:06:08.439025",
-    "doctype": "DocType",
-    "editable_grid": 1,
-    "engine": "InnoDB",
-    "field_order": [
-        "achievement_section",
-        "achievement",
-        "section_break_2",
-        "naming_series",
-        "company",
-        "column_break_mofb",
-        "sales_person",
-        "territory",
-        "column_break_3",
-        "fullname",
-        "employee",
-        "period_section",
-        "from",
-        "column_break_7",
-        "to",
-        "column_break_chbo",
-        "number_of_days",
-        "column_break_heno",
-        "target_type",
-        "target_tab",
-        "target_section",
-        "customer_collects_goal",
-        "section_break_gxui",
-        "fixed_target",
-        "column_break_izne",
-        "additional_target_int",
-        "section_break_13",
-        "total_targets",
-        "incentives",
-        "column_break_15",
-        "additional_collected",
-        "total_collected",
-        "commissions_tab",
-        "commissions_section",
-        "commissions_range",
-        "more_tab",
-        "is_group",
-        "lft",
-        "rgt",
-        "column_break_wmum",
-        "old_parent",
-        "column_break_ruzz",
-        "parent_collects_goal"
-    ],
-    "fields": [
-        {
-            "fieldname": "sales_person",
-            "fieldtype": "Link",
-            "in_standard_filter": 1,
-            "label": "Sales Person",
-            "options": "Sales Person",
-            "reqd": 1
-        },
-        {
-            "fetch_from": "sales_person.sales_person_name",
-            "fieldname": "fullname",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Full Name",
-            "read_only": 1,
-            "reqd": 1
-        },
-        {
-            "fieldname": "column_break_3",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "company",
-            "fieldtype": "Link",
-            "in_standard_filter": 1,
-            "label": "Company",
-            "options": "Company"
-        },
-        {
-            "fieldname": "period_section",
-            "fieldtype": "Section Break",
-            "label": "Period"
-        },
-        {
-            "fieldname": "from",
-            "fieldtype": "Date",
-            "in_standard_filter": 1,
-            "label": "From",
-            "reqd": 1
-        },
-        {
-            "fieldname": "column_break_7",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "to",
-            "fieldtype": "Date",
-            "in_standard_filter": 1,
-            "label": "To",
-            "reqd": 1
-        },
-        {
-            "fieldname": "number_of_days",
-            "fieldtype": "Int",
-            "label": "Number of Days",
-            "read_only": 1
-        },
-        {
-            "fieldname": "target_section",
-            "fieldtype": "Section Break",
-            "label": "Target"
-        },
-        {
-            "allow_bulk_edit": 1,
-            "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
-            "fieldname": "customer_collects_goal",
-            "fieldtype": "Table",
-            "in_standard_filter": 1,
-            "label": "Customer Collects Goal",
-            "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
-            "options": "Customer Collects Goal"
-        },
-        {
-            "collapsible": 1,
-            "fieldname": "section_break_13",
-            "fieldtype": "Section Break"
-        },
-        {
-            "default": "0",
-            "fieldname": "total_targets",
-            "fieldtype": "Currency",
-            "in_list_view": 1,
-            "label": "Total Targets",
-            "options": "Company:company:default_currency",
-            "precision": "2",
-            "read_only": 1
-        },
-        {
-            "fieldname": "column_break_15",
-            "fieldtype": "Column Break"
-        },
-        {
-            "bold": 1,
-            "fieldname": "total_collected",
-            "fieldtype": "Currency",
-            "in_list_view": 1,
-            "label": "Total Collected",
-            "options": "Company:company:default_currency",
-            "precision": "2",
-            "read_only": 1
-        },
-        {
-            "fieldname": "incentives",
-            "fieldtype": "Currency",
-            "in_list_view": 1,
-            "label": "Incentives",
-            "options": "Company:company:default_currency",
-            "precision": "2",
-            "read_only": 1
-        },
-        {
-            "fieldname": "commissions_section",
-            "fieldtype": "Section Break",
-            "label": "Commissions"
-        },
-        {
-            "description": "The Commission Range On Which the Value of the Incentives is Based",
-            "fieldname": "commissions_range",
-            "fieldtype": "Table",
-            "label": "Commissions range",
-            "options": "Commissions range"
-        },
-        {
-            "fieldname": "naming_series",
-            "fieldtype": "Select",
-            "label": "Series",
-            "options": "SPM-CG-.YYYY.-",
-            "reqd": 1
-        },
-        {
-            "fieldname": "target_type",
-            "fieldtype": "Select",
-            "label": "Target Type",
-            "options": "Customer Debt-based Target\nFixed Target"
-        },
-        {
-            "depends_on": "eval:doc.target_type == 'Fixed Target'",
-            "fieldname": "fixed_target",
-            "fieldtype": "Currency",
-            "label": "Fixed Target",
-            "mandatory_depends_on": "eval:doc.target_type == 'Fixed Target'"
-        },
-        {
-            "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
-            "fieldname": "additional_target_int",
-            "fieldtype": "Currency",
-            "label": "Additional Target",
-            "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'"
-        },
-        {
-            "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
-            "fieldname": "additional_collected",
-            "fieldtype": "Currency",
-            "label": "Additional collected",
-            "read_only": 1
-        },
-        {
-            "fieldname": "achievement",
-            "fieldtype": "HTML",
-            "label": "Achievement",
-            "options": "<div class=\"progress\" style=\"height: 20px;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\" style=\"\"></div>\n</div>"
-        },
-        {
-            "fieldname": "section_break_2",
-            "fieldtype": "Section Break"
-        },
-        {
-            "depends_on": "eval: doc.__unsaved != 1",
-            "fieldname": "achievement_section",
-            "fieldtype": "Section Break",
-            "label": "Achievement"
-        },
-        {
-            "fetch_from": "sales_person.territory",
-            "fieldname": "territory",
-            "fieldtype": "Data",
-            "label": "Territory",
-            "read_only": 1
-        },
-        {
-            "fieldname": "lft",
-            "fieldtype": "Int",
-            "hidden": 1,
-            "label": "Left",
-            "no_copy": 1,
-            "read_only": 1
-        },
-        {
-            "fieldname": "rgt",
-            "fieldtype": "Int",
-            "hidden": 1,
-            "label": "Right",
-            "no_copy": 1,
-            "read_only": 1
-        },
-        {
-            "default": "0",
-            "fieldname": "is_group",
-            "fieldtype": "Check",
-            "label": "Is Group"
-        },
-        {
-            "fieldname": "old_parent",
-            "fieldtype": "Link",
-            "label": "Old Parent",
-            "options": "Collects Goal"
-        },
-        {
-            "fieldname": "parent_collects_goal",
-            "fieldtype": "Link",
-            "label": "Parent Collects Goal",
-            "options": "Collects Goal"
-        },
-        {
-            "fetch_from": "sales_person.employee",
-            "fieldname": "employee",
-            "fieldtype": "Link",
-            "label": "Employee",
-            "options": "Employee",
-            "reqd": 1
-        },
-        {
-            "fieldname": "column_break_mofb",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "column_break_chbo",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "column_break_heno",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "target_tab",
-            "fieldtype": "Tab Break",
-            "label": "Target"
-        },
-        {
-            "fieldname": "section_break_gxui",
-            "fieldtype": "Section Break"
-        },
-        {
-            "fieldname": "column_break_izne",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "commissions_tab",
-            "fieldtype": "Tab Break",
-            "label": "Commissions"
-        },
-        {
-            "fieldname": "more_tab",
-            "fieldtype": "Tab Break",
-            "label": "More"
-        },
-        {
-            "fieldname": "column_break_wmum",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "column_break_ruzz",
-            "fieldtype": "Column Break"
-        }
-    ],
-    "index_web_pages_for_search": 1,
-    "is_calendar_and_gantt": 1,
-    "is_tree": 1,
-    "links": [],
-    "modified": "2023-02-08 20:44:06.048166",
-    "modified_by": "Administrator",
-    "module": "Sales Person Management System",
-    "name": "Collects Goal",
-    "naming_rule": "By \"Naming Series\" field",
-    "nsm_parent_field": "parent_collects_goal",
-    "owner": "Administrator",
-    "permissions": [
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "System Manager",
-            "select": 1,
-            "share": 1,
-            "write": 1
-        },
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "Sales Manager",
-            "select": 1,
-            "share": 1,
-            "write": 1
-        },
-        {
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "Sales User",
-            "select": 1,
-            "share": 1,
-            "write": 1
-        }
-    ],
-    "search_fields": "fullname",
-    "show_name_in_global_search": 1,
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "states": [],
-    "track_changes": 1
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "naming_series:",
+ "creation": "2022-09-17 11:06:08.439025",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "achievement_section",
+  "achievement",
+  "section_break_2",
+  "naming_series",
+  "company",
+  "column_break_mofb",
+  "sales_person",
+  "territory",
+  "column_break_3",
+  "fullname",
+  "employee",
+  "period_section",
+  "from",
+  "column_break_7",
+  "to",
+  "column_break_chbo",
+  "number_of_days",
+  "column_break_heno",
+  "target_type",
+  "target_tab",
+  "target_section",
+  "customer_collects_goal",
+  "section_break_gxui",
+  "fixed_target",
+  "column_break_izne",
+  "additional_target_int",
+  "section_break_13",
+  "total_targets",
+  "incentives",
+  "column_break_15",
+  "additional_collected",
+  "total_collected",
+  "commissions_tab",
+  "commissions_section",
+  "commissions_range",
+  "more_tab",
+  "is_group",
+  "lft",
+  "rgt",
+  "column_break_wmum",
+  "old_parent",
+  "column_break_ruzz",
+  "parent_collects_goal"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sales Person",
+   "options": "Sales Person",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "sales_person.sales_person_name",
+   "fieldname": "fullname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "period_section",
+   "fieldtype": "Section Break",
+   "label": "Period"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Date",
+   "in_standard_filter": 1,
+   "label": "From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "in_standard_filter": 1,
+   "label": "To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "number_of_days",
+   "fieldtype": "Int",
+   "label": "Number of Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_section",
+   "fieldtype": "Section Break",
+   "label": "Target"
+  },
+  {
+   "allow_bulk_edit": 1,
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
+   "fieldname": "customer_collects_goal",
+   "fieldtype": "Table",
+   "in_standard_filter": 1,
+   "label": "Customer Collects Goal",
+   "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
+   "options": "Customer Collects Goal"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_targets",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Targets",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "total_collected",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Collected",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "incentives",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Incentives",
+   "options": "Company:company:default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "commissions_section",
+   "fieldtype": "Section Break",
+   "label": "Commissions"
+  },
+  {
+   "description": "The Commission Range On Which the Value of the Incentives is Based",
+   "fieldname": "commissions_range",
+   "fieldtype": "Table",
+   "label": "Commissions range",
+   "options": "Commissions range"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "SPM-CG-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_type",
+   "fieldtype": "Select",
+   "label": "Target Type",
+   "options": "Customer Debt-based Target\nFixed Target"
+  },
+  {
+   "depends_on": "eval:doc.target_type == 'Fixed Target'",
+   "fieldname": "fixed_target",
+   "fieldtype": "Currency",
+   "label": "Fixed Target",
+   "mandatory_depends_on": "eval:doc.target_type == 'Fixed Target'"
+  },
+  {
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
+   "fieldname": "additional_target_int",
+   "fieldtype": "Currency",
+   "label": "Additional Target",
+   "mandatory_depends_on": "eval:doc.target_type == 'Customer Debt-based Target'"
+  },
+  {
+   "depends_on": "eval:doc.target_type == 'Customer Debt-based Target'",
+   "fieldname": "additional_collected",
+   "fieldtype": "Currency",
+   "label": "Additional collected",
+   "read_only": 1
+  },
+  {
+   "fieldname": "achievement",
+   "fieldtype": "HTML",
+   "label": "Achievement",
+   "options": "<div class=\"progress\" style=\"height: 20px;\">\n  <div class=\"progress-bar\" id=\"percentage\" role=\"progressbar\" style=\"\"></div>\n</div>"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.__unsaved != 1",
+   "fieldname": "achievement_section",
+   "fieldtype": "Section Break",
+   "label": "Achievement"
+  },
+  {
+   "fetch_from": "sales_person.territory",
+   "fieldname": "territory",
+   "fieldtype": "Data",
+   "label": "Territory",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "Collects Goal"
+  },
+  {
+   "fieldname": "parent_collects_goal",
+   "fieldtype": "Link",
+   "label": "Parent Collects Goal",
+   "options": "Collects Goal"
+  },
+  {
+   "fetch_from": "sales_person.employee",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_mofb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_chbo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_heno",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_tab",
+   "fieldtype": "Tab Break",
+   "label": "Target"
+  },
+  {
+   "fieldname": "section_break_gxui",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_izne",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "commissions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Commissions"
+  },
+  {
+   "fieldname": "more_tab",
+   "fieldtype": "Tab Break",
+   "label": "More"
+  },
+  {
+   "fieldname": "column_break_wmum",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ruzz",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2024-04-18 15:54:20.338531",
+ "modified_by": "Administrator",
+ "module": "Sales Person Management System",
+ "name": "Collects Goal",
+ "naming_rule": "By \"Naming Series\" field",
+ "nsm_parent_field": "parent_collects_goal",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "fullname",
+ "show_name_in_global_search": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
 }
