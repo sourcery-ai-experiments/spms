@@ -38,3 +38,6 @@ class Collecting(WebsiteGenerator):
 			image_path = generate_qrcode(
 				site_name=site_name, route_name=self.route)
 			self.image = image_path
+		# Calculate outstanding amount for each invoice
+		for invoice in self.invoices:
+			invoice.out_standing_amount = invoice.out_standing_amount - invoice.allocated_amount

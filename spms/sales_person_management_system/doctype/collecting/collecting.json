@@ -36,6 +36,7 @@
   "amount_currency",
   "exchange_rate",
   "discount_amount",
+  "unallocated_amount",
   "invoice_section_section",
   "invoices",
   "location_section",
@@ -294,6 +295,7 @@
    "options": "According to Customer indebtedness\nFixed Target\nDebt + Additional Target"
   },
   {
+   "default": "0",
    "fieldname": "discount",
    "fieldtype": "Percent",
    "label": "Discount",
@@ -309,7 +311,12 @@
    "fieldname": "discount_amount",
    "fieldtype": "Currency",
    "label": "Discount Amount",
-   "options": "amount_currency",
+   "options": "amount_currency"
+  },
+  {
+   "fieldname": "unallocated_amount",
+   "fieldtype": "Currency",
+   "label": "Unallocated Amount",
    "read_only": 1
   }
  ],
@@ -327,7 +334,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-09-26 15:15:39.604210",
+ "modified": "2024-04-17 20:06:41.651660",
  "modified_by": "Administrator",
  "module": "Sales Person Management System",
  "name": "Collecting",
